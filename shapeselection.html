@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shape Hunter - Grade 1 & 2</title>
+    <title>Shape Hunter - Master Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -82,7 +82,7 @@
         <header class="text-center mb-8">
             <h1 class="text-4xl font-bold text-blue-600 mb-2" id="game-title">Shape Hunter! 🕵️‍♂️</h1>
             <div id="instruction-area" class="bg-yellow-100 border-2 border-yellow-400 rounded-2xl p-4 inline-block">
-                <p class="text-xl text-gray-800">Find the <span class="font-bold text-2xl text-blue-800">3</span> <span id="target-shape-name" class="font-black text-2xl text-blue-700 underline capitalize">Loading...</span>!</p>
+                <p class="text-xl text-gray-800">Find the <span id="target-count-display" class="font-bold text-2xl text-blue-800">3</span> <span id="target-shape-name" class="font-black text-2xl text-blue-700 underline capitalize">Loading...</span>!</p>
             </div>
         </header>
 
@@ -101,7 +101,7 @@
 
         <div id="start-overlay" class="absolute inset-0 bg-white/95 rounded-3xl flex flex-col items-center justify-center z-[60] p-6 text-center">
             <h2 class="text-5xl font-black text-blue-600 mb-4">Shape Hunter!</h2>
-            <p class="text-xl text-gray-600 mb-8 max-w-md">Find the 3 target shapes as fast as you can. Good luck!</p>
+            <p class="text-xl text-gray-600 mb-8 max-w-md">Find the target shapes as fast as you can. Can you reach Level 4?</p>
             <button onclick="startGame(1)" class="bg-blue-500 hover:bg-blue-600 text-white px-12 py-6 rounded-full font-bold transition-all shadow-xl text-2xl transform hover:scale-105">
                 Start Game ➔
             </button>
@@ -133,27 +133,50 @@
         const startOverlay = document.getElementById('start-overlay');
         const victoryOverlay = document.getElementById('victory-overlay');
         const targetText = document.getElementById('target-shape-name');
+        const targetCountText = document.getElementById('target-count-display');
         const profText = document.getElementById('prof-text');
         const levelDisplay = document.getElementById('current-level-display');
         
         let currentLevel = 1;
         let score = 0;
         let targetsFound = 0;
+        let totalTargetsRequired = 3;
         let sequenceIndex = 0;
         let startTime = 0;
         let timerInterval = null;
         let gameActive = false;
 
+        const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981', '#8b5cf6'];
+        const hardColors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#64748b', '#a855f7'];
+
         const levelData = {
             1: {
                 title: "Shape Hunter (2D)",
-                order: ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon'],
+                gridSize: 8,
+                targetCount: 3,
+                order: ['triangle', 'square', 'trapezoid', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon'],
                 pool: ['triangle', 'hexagon', 'rhombus', 'pentagon', 'square', 'rectangle', 'trapezoid', 'octagon']
             },
             2: {
                 title: "Solid Hunter (3D)",
+                gridSize: 8,
+                targetCount: 3,
                 order: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid'],
                 pool: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
+            },
+            3: {
+                title: "Master Hunter (2D & 3D)",
+                gridSize: 8,
+                targetCount: 3,
+                order: ['cone', 'octagon', 'sphere', 'rhombus', 'cylinder', 'pentagon', 'cube'],
+                pool: ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
+            },
+            4: {
+                title: "Impossible Hunter (Speed)",
+                gridSize: 12, // Bigger grid
+                targetCount: 4, // More items to find
+                order: ['trapezoid', 'rectangular prism', 'hexagon', 'square-based pyramid', 'rhombus', 'triangular prism', 'octagon', 'sphere'],
+                pool: ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
             }
         };
 
@@ -207,20 +230,15 @@
                 <path d="M15,70 L35,55 L95,55" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>`
         };
 
+        const shapes2D = ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'trapezoid'];
+
         function getShapeSVG(type, color, rotation = 0) {
             const rotateStr = rotation !== 0 ? `transform="rotate(${rotation} 50 50)"` : '';
-            
-            if (currentLevel === 1) {
+            if (shapes2D.includes(type)) {
                 const points = draw[type]();
-                return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto">
-                    <polygon points="${points}" fill="${color}" stroke="#333" stroke-width="2.5" ${rotateStr} />
-                </svg>`;
+                return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto"><polygon points="${points}" fill="${color}" stroke="#333" stroke-width="2.5" ${rotateStr} /></svg>`;
             } else {
-                return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto">
-                    <g ${rotateStr}>
-                        ${draw[type](color)}
-                    </g>
-                </svg>`;
+                return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto"><g ${rotateStr}>${draw[type](color)}</g></svg>`;
             }
         }
 
@@ -231,13 +249,19 @@
             sequenceIndex = 0;
             scoreDisplay.textContent = "0";
             startTime = Date.now();
+            if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 timerDisplay.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
             }, 100);
             startOverlay.classList.add('hidden');
             victoryOverlay.classList.add('hidden');
             document.getElementById('game-title').textContent = levelData[lvl].title;
-            profText.textContent = lvl === 1 ? "Level 1: 2D Shapes!" : "Level 2: 3D Solids!";
+            
+            if (lvl === 1) profText.textContent = "Level 1: 2D Shapes!";
+            else if (lvl === 2) profText.textContent = "Level 2: 3D Solids!";
+            else if (lvl === 3) profText.textContent = "Level 3: Master Challenge!";
+            else profText.textContent = "Level 4: IMPOSSIBLE MODE!";
+            
             spawnLevel();
         }
 
@@ -245,26 +269,45 @@
             gameGrid.innerHTML = '';
             targetsFound = 0;
             gameActive = true;
-            const currentTarget = levelData[currentLevel].order[sequenceIndex];
-            targetText.textContent = currentTarget + (currentTarget.endsWith('us') ? 'es' : 's');
             
-            let pool = levelData[currentLevel].pool.filter(s => s !== currentTarget);
-            let items = [currentTarget, currentTarget, currentTarget];
-            for (let i = 0; i < 5; i++) items.push(pool[Math.floor(Math.random() * pool.length)]);
+            const data = levelData[currentLevel];
+            const currentTarget = data.order[sequenceIndex];
+            totalTargetsRequired = data.targetCount;
+            
+            targetText.textContent = currentTarget + (currentTarget.endsWith('us') ? 'es' : 's');
+            targetCountText.textContent = totalTargetsRequired;
+
+            // Handle grid layout for Level 4
+            if (data.gridSize > 8) {
+                gameGrid.classList.remove('md:grid-cols-4');
+                gameGrid.classList.add('md:grid-cols-6');
+            } else {
+                gameGrid.classList.remove('md:grid-cols-6');
+                gameGrid.classList.add('md:grid-cols-4');
+            }
+            
+            let pool = data.pool.filter(s => s !== currentTarget);
+            let items = [];
+            
+            // Add targets
+            for (let i = 0; i < totalTargetsRequired; i++) items.push(currentTarget);
+            
+            // Fill rest with noise
+            while (items.length < data.gridSize) {
+                items.push(pool[Math.floor(Math.random() * pool.length)]);
+            }
             items.sort(() => 0.5 - Math.random());
 
+            const colorSet = currentLevel === 4 ? hardColors : colors;
+
             items.forEach((type) => {
-                // Determine rotatability
-                const rotatableShapes = ['rhombus', 'triangle', 'pentagon', 'hexagon', 'octagon', 'cylinder', 'cone', 'rectangular prism', 'triangular prism'];
+                const rotatableShapes = ['rhombus', 'triangle', 'pentagon', 'hexagon', 'octagon', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'trapezoid'];
                 let rotation = 0;
                 
                 if (rotatableShapes.includes(type)) {
-                    if (type === 'cylinder') {
-                        rotation = Math.random() > 0.5 ? 90 : 0;
-                    } else if (type === 'cone') {
-                        rotation = Math.random() > 0.5 ? 180 : 0;
-                    } else {
-                        // Standard random angles for 2D shapes
+                    if (type === 'cylinder') rotation = Math.random() > 0.5 ? 90 : 0;
+                    else if (type === 'cone') rotation = Math.random() > 0.5 ? 180 : 0;
+                    else {
                         const angles = [0, 45, 90, 135, 180, 225, 270, 315];
                         rotation = angles[Math.floor(Math.random() * angles.length)];
                     }
@@ -272,16 +315,16 @@
 
                 const card = document.createElement('div');
                 card.className = "shape-container bg-gray-50 p-4 rounded-2xl flex items-center justify-center border-4 border-transparent shadow-sm";
-                card.innerHTML = getShapeSVG(type, colors[Math.floor(Math.random() * colors.length)], rotation);
+                card.innerHTML = getShapeSVG(type, colorSet[Math.floor(Math.random() * colorSet.length)], rotation);
                 
                 card.onclick = () => {
                     if (!gameActive || card.dataset.done) return;
                     if (type === currentTarget) {
                         card.dataset.done = "true";
                         card.classList.add('correct');
-                        score += 10;
+                        score += (10 * currentLevel); // Bonus score for higher levels
                         targetsFound++;
-                        if (targetsFound === 3) {
+                        if (targetsFound === totalTargetsRequired) {
                             gameActive = false;
                             setTimeout(nextSubLevel, 600);
                         }
@@ -295,8 +338,6 @@
             });
         }
 
-        const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981', '#8b5cf6'];
-
         function nextSubLevel() {
             sequenceIndex++;
             if (sequenceIndex >= levelData[currentLevel].order.length) showVictory();
@@ -309,9 +350,10 @@
             document.getElementById('final-score').textContent = score;
             document.getElementById('final-time').textContent = timerDisplay.textContent + "s";
             const nextBtn = document.getElementById('next-lvl-btn');
-            if (currentLevel === 1) {
-                nextBtn.textContent = "Start Level 2 ➔";
-                nextBtn.onclick = () => startGame(2);
+            
+            if (currentLevel < 4) {
+                nextBtn.textContent = `Start Level ${currentLevel + 1} ➔`;
+                nextBtn.onclick = () => startGame(currentLevel + 1);
             } else {
                 nextBtn.textContent = "Play Again ↻";
                 nextBtn.onclick = () => startGame(1);
