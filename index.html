@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShabzLabs</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #dbeafe, #fef3c7);
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 35px 20px;
+    }
+
+    .hero {
+      background: white;
+      border-radius: 28px;
+      padding: 35px 25px;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      margin-bottom: 30px;
+    }
+
+    .mascot {
+      font-size: 70px;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      color: #2563eb;
+      margin: 0;
+    }
+
+    .hero p {
+      font-size: 20px;
+      margin-top: 10px;
+      color: #4b5563;
+    }
+
+    .menu-title {
+      font-size: 30px;
+      margin: 25px 0 18px;
+      text-align: center;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+    }
+
+    .game-card {
+      background: white;
+      border-radius: 24px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+      transition: 0.2s;
+      border: 4px solid transparent;
+    }
+
+    .game-card:hover {
+      transform: translateY(-6px);
+      border-color: #facc15;
+      box-shadow: 0 16px 28px rgba(0,0,0,0.18);
+    }
+
+    .game-icon {
+      font-size: 64px;
+      margin-bottom: 12px;
+    }
+
+    .game-card h3 {
+      font-size: 24px;
+      margin: 8px 0;
+      color: #1d4ed8;
+    }
+
+    .game-card p {
+      font-size: 16px;
+      color: #4b5563;
+      min-height: 48px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #fef3c7;
+      color: #92400e;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .play-btn {
+      display: inline-block;
+      margin-top: 12px;
+      background: #22c55e;
+      color: white;
+      text-decoration: none;
+      padding: 13px 24px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 17px;
+      box-shadow: 0 6px 0 #15803d;
+    }
+
+    .play-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #15803d;
+    }
+
+    .coming-soon {
+      display: inline-block;
+      margin-top: 12px;
+      background: #e5e7eb;
+      color: #374151;
+      padding: 13px 24px;
+      border-radius: 999px;
+      font-weight: bold;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 35px;
+      color: #4b5563;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <section class="hero">
+      <div class="mascot">👨‍🏫</div>
+      <h1>ShabzLabs</h1>
+      <p>Ontario Curriculum Made Fun</p>
+    </section>
+
+    <h2 class="menu-title">Choose Your Game</h2>
+
+    <section class="games-grid">
+
+      <div class="game-card">
+        <div class="game-icon">🕵️‍♂️</div>
+        <span class="tag">Math • Shapes</span>
+        <h3>Shape Hunter</h3>
+        <p>Find triangles, squares, rectangles, pentagons, and hexagons.</p>
+        <a class="play-btn" href="shapeselection.html">Play Now</a>
+      </div>
+
+      <div class="game-card">
+        <div class="game-icon">🔤</div>
+        <span class="tag">Language • Words</span>
+        <h3>Compound Words</h3>
+        <p>Combine two smaller words to make a compound word.</p>
+        <a class="play-btn" href="compound.html">Play Now</a>
+      </div>
+
+      <div class="game-card">
+        <div class="game-icon">⚽</div>
+        <span class="tag">Math • 3D Objects</span>
+        <h3>Roll or Stack?</h3>
+        <p>Decide if objects roll, stack, or can do both.</p>
+        <a class="play-btn" href="rollstack.html">Play Now</a>
+      </div>
+
+      <div class="game-card">
+        <div class="game-icon">⚠️</div>
+        <span class="tag">Science • Safety</span>
+        <h3>Safety Symbols</h3>
+        <p>Match safety symbols with their meanings.</p>
+        <span class="coming-soon">Coming Soon</span>
+      </div>
+
+    </section>
+
+    <div class="footer">
+      Learn. Play. Grow.
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShabzLabs - Compound Word Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #dbeafe, #fef3c7);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .game-container {
+      width: 90%;
+      max-width: 750px;
+      background: white;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .back-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: #2563eb;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .title {
+      font-size: 2.3rem;
+      color: #2563eb;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #374151;
+      margin-bottom: 20px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .score-box,
+    .question-box {
+      background: #eff6ff;
+      padding: 10px 18px;
+      border-radius: 14px;
+      font-weight: bold;
+      color: #1d4ed8;
+    }
+
+    .progress-wrapper {
+      width: 100%;
+      height: 18px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 15px 0 25px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, #60a5fa, #facc15);
+      transition: width 0.4s ease;
+    }
+
+    .word-card {
+      background: #f9fafb;
+      border-radius: 22px;
+      padding: 30px 20px;
+      margin-bottom: 25px;
+      border: 3px solid #e5e7eb;
+    }
+
+    .emoji-row {
+      font-size: 4rem;
+      margin-bottom: 10px;
+    }
+
+    .word-parts {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #111827;
+      margin-top: 10px;
+    }
+
+    .question {
+      font-size: 1.2rem;
+      margin: 20px 0;
+      color: #374151;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .choice-btn,
+    .restart-btn {
+      border: none;
+      border-radius: 18px;
+      padding: 16px 12px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .choice-btn {
+      background: #dbeafe;
+      color: #0f172a;
+    }
+
+    .choice-btn:hover,
+    .restart-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+    }
+
+    .feedback {
+      min-height: 32px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .stars {
+      font-size: 1.8rem;
+      margin-top: 10px;
+      min-height: 35px;
+    }
+
+    .restart-btn {
+      background: #2563eb;
+      color: white;
+      margin-top: 18px;
+      padding: 14px 24px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <a class="back-btn" href="index.html">← Back to Home</a>
+
+    <h1 class="title">ShabzLabs</h1>
+    <p class="subtitle">Compound Word Game</p>
+
+    <div class="top-bar">
+      <div class="question-box" id="questionText">Question 1 of 5</div>
+      <div class="score-box" id="scoreText">Score: 0</div>
+    </div>
+
+    <div class="progress-wrapper">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="word-card">
+      <div class="emoji-row" id="emojiRow">☀️ + 🌸</div>
+      <div class="word-parts" id="wordParts">sun + flower</div>
+      <p class="question">Which compound word is correct?</p>
+    </div>
+
+    <div class="button-grid" id="answerButtons"></div>
+
+    <div class="feedback" id="feedback"></div>
+    <div class="stars" id="stars"></div>
+
+    <button class="restart-btn" id="restartBtn" onclick="restartGame()">Play Again</button>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        emojis: "☀️ + 🌸",
+        parts: "sun + flower",
+        options: ["sunflower", "flowerpot", "sunbeam"],
+        answer: "sunflower"
+      },
+      {
+        emojis: "🌧️ + 🌈",
+        parts: "rain + bow",
+        options: ["raincoat", "rainbow", "bowtie"],
+        answer: "rainbow"
+      },
+      {
+        emojis: "🦷 + 🪥",
+        parts: "tooth + brush",
+        options: ["toothbrush", "hairbrush", "toothpick"],
+        answer: "toothbrush"
+      },
+      {
+        emojis: "⚽ + 🏀",
+        parts: "base + ball",
+        options: ["football", "basketball", "baseball"],
+        answer: "baseball"
+      },
+      {
+        emojis: "⭐ + 🐟",
+        parts: "star + fish",
+        options: ["jellyfish", "starfish", "goldfish"],
+        answer: "starfish"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let locked = false;
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+
+      document.getElementById("emojiRow").textContent = q.emojis;
+      document.getElementById("wordParts").textContent = q.parts;
+      document.getElementById("scoreText").textContent = "Score: " + score;
+      document.getElementById("questionText").textContent =
+        "Question " + (currentQuestion + 1) + " of " + questions.length;
+      document.getElementById("progressBar").style.width =
+        (currentQuestion / questions.length) * 100 + "%";
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("stars").textContent = "";
+
+      const answerButtons = document.getElementById("answerButtons");
+      answerButtons.innerHTML = "";
+
+      q.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.className = "choice-btn";
+        btn.textContent = option;
+        btn.onclick = () => checkAnswer(option);
+        answerButtons.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(choice) {
+      if (locked) return;
+      locked = true;
+
+      const feedback = document.getElementById("feedback");
+      const stars = document.getElementById("stars");
+      const correctAnswer = questions[currentQuestion].answer;
+
+      if (choice === correctAnswer) {
+        feedback.textContent = "Correct!";
+        feedback.style.color = "#16a34a";
+        stars.textContent = "⭐";
+        score++;
+      } else {
+        feedback.textContent = "Nice try! The correct answer was " + correctAnswer + ".";
+        feedback.style.color = "#dc2626";
+        stars.textContent = "";
+      }
+
+      document.getElementById("scoreText").textContent = "Score: " + score;
+
+      setTimeout(() => {
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+          loadQuestion();
+          locked = false;
+        } else {
+          endGame();
+        }
+      }, 1400);
+    }
+
+    function endGame() {
+      document.getElementById("emojiRow").textContent = "🎉";
+      document.getElementById("wordParts").textContent = "Great Job!";
+      document.getElementById("questionText").textContent = "Game Complete";
+      document.getElementById("progressBar").style.width = "100%";
+
+      const feedback = document.getElementById("feedback");
+      feedback.style.color = "#2563eb";
+      feedback.textContent = "Final Score: " + score + " / " + questions.length;
+
+      let starReward = "";
+      if (score === questions.length) {
+        starReward = "⭐⭐⭐ Amazing!";
+      } else if (score >= 3) {
+        starReward = "⭐⭐ Great work!";
+      } else {
+        starReward = "⭐ Keep practicing!";
+      }
+
+      document.getElementById("stars").textContent = starReward;
+      document.getElementById("answerButtons").innerHTML = "";
+      document.getElementById("restartBtn").style.display = "inline-block";
+      locked = false;
+    }
+
+    function restartGame() {
+      currentQuestion = 0;
+      score = 0;
+      locked = false;
+      document.getElementById("restartBtn").style.display = "none";
+      loadQuestion();
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>

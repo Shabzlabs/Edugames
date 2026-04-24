@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shape Hunter - Grade 1 & 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #f0f9ff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+        .shape-container {
+            transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
+            cursor: pointer;
+        }
+        .shape-container:hover {
+            transform: scale(1.05);
+        }
+        .correct {
+            border: 4px solid #22c55e !important;
+            border-radius: 1rem;
+            background-color: #dcfce7 !important;
+        }
+        .incorrect {
+            border: 4px solid #ef4444 !important;
+            border-radius: 1rem;
+            background-color: #fee2e2 !important;
+            opacity: 0.6;
+        }
+        @keyframes pop-in {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop-in {
+            animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .hidden {
+            display: none;
+        }
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(10deg); }
+        }
+        .wave-hand {
+            animation: wave 2s infinite ease-in-out;
+            transform-origin: bottom center;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 h-screen flex items-center justify-center">
+    
+    <!-- Top Navigation Link -->
+    <a href="index.html" class="fixed top-6 right-6 z-[100] bg-white/80 backdrop-blur px-4 py-2 rounded-full border-2 border-blue-400 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition-all shadow-md flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Shabzlabs
+    </a>
+
+    <!-- Cartoon Professor Character -->
+    <div class="hidden lg:flex fixed right-4 top-24 flex-col items-center z-10">
+        <svg width="180" height="260" viewBox="0 0 200 300">
+            <path d="M50,150 L150,150 L160,280 L40,280 Z" fill="#3b82f6" />
+            <polygon points="70,180 85,180 77,165" fill="#fbbf24" opacity="0.8" />
+            <rect x="110" y="190" width="15" height="15" fill="#f87171" opacity="0.8" />
+            <circle cx="80" cy="230" r="8" fill="#34d399" opacity="0.8" />
+            <polygon points="120,240 135,240 140,255 115,255" fill="#a78bfa" opacity="0.8" />
+            <circle cx="100" cy="100" r="55" fill="#ffdbac" />
+            <path d="M45,90 Q45,30 100,30 Q155,30 155,90" fill="#4b2c20" />
+            <g stroke="#333" stroke-width="3" fill="none">
+                <circle cx="80" cy="100" r="18" fill="white" fill-opacity="0.3" />
+                <circle cx="120" cy="100" r="18" fill="white" fill-opacity="0.3" />
+                <path d="M98,100 L102,100" />
+            </g>
+            <circle cx="80" cy="100" r="4" fill="#333" />
+            <circle cx="120" cy="100" r="4" fill="#333" />
+            <path d="M85,130 Q100,145 115,130" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round" />
+            <g class="wave-hand">
+                <path d="M40,180 Q10,160 15,140" stroke="#ffdbac" stroke-width="15" stroke-linecap="round" fill="none" />
+            </g>
+        </svg>
+        <div class="bg-white border-2 border-blue-400 p-2 rounded-xl shadow-md -mt-8 relative z-20">
+            <p id="prof-text" class="text-sm font-bold text-blue-600">Level 1: 2D Shapes!</p>
+        </div>
+    </div>
+
+    <div class="max-w-5xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-10 relative">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2" id="game-title">Shape Hunter! 🕵️‍♂️</h1>
+            <div id="instruction-area" class="bg-yellow-100 border-2 border-yellow-400 rounded-2xl p-4 inline-block">
+                <p class="text-xl text-gray-800">Find the <span class="font-bold text-2xl text-blue-800">3</span> <span id="target-shape-name" class="font-black text-2xl text-blue-700 underline capitalize">Loading...</span>!</p>
+            </div>
+        </header>
+
+        <div class="flex flex-wrap justify-between items-center mb-6 bg-blue-50 p-4 rounded-2xl gap-4">
+            <div class="flex gap-8 items-center">
+                <div class="text-xl font-bold text-blue-800">Score: <span id="score">0</span></div>
+                <div class="text-xl font-bold text-indigo-600">⏱️ Time: <span id="timer">0.0</span>s</div>
+            </div>
+            <div class="text-sm font-bold text-gray-500 uppercase tracking-wider">
+                Level: <span id="current-level-display">1</span>
+            </div>
+            <div id="feedback-message" class="font-bold text-lg transition-all duration-300 h-6 min-w-[100px] text-right"></div>
+        </div>
+
+        <div id="game-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 min-h-[350px]"></div>
+
+        <!-- START OVERLAY -->
+        <div id="start-overlay" class="absolute inset-0 bg-white/95 rounded-3xl flex flex-col items-center justify-center z-[60] p-6 text-center">
+            <h2 class="text-5xl font-black text-blue-600 mb-4">Shape Hunter!</h2>
+            <p class="text-xl text-gray-600 mb-8 max-w-md">Find the 3 target shapes as fast as you can. Good luck!</p>
+            <div class="flex gap-4">
+                <button onclick="startGame(1)" class="bg-blue-500 hover:bg-blue-600 text-white px-12 py-6 rounded-full font-bold transition-all shadow-xl text-2xl transform hover:scale-105">
+                    Start Game ➔
+                </button>
+            </div>
+        </div>
+
+        <!-- LEVEL COMPLETE / VICTORY OVERLAY -->
+        <div id="victory-overlay" class="hidden absolute inset-0 bg-blue-600 rounded-3xl flex flex-col items-center justify-center z-[70] p-6 text-center text-white animate-pop-in">
+            <div class="text-8xl mb-4">🎉</div>
+            <h2 class="text-5xl font-black mb-2" id="victory-title">Level Complete!</h2>
+            <p class="text-xl mb-6 opacity-90" id="victory-msg">You found all the shapes!</p>
+            
+            <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 mb-8 w-full max-w-sm flex justify-around">
+                <div>
+                    <p class="text-xs uppercase font-bold opacity-70">Score</p>
+                    <p id="final-score" class="text-3xl font-black">0</p>
+                </div>
+                <div>
+                    <p class="text-xs uppercase font-bold opacity-70">Time</p>
+                    <p id="final-time" class="text-3xl font-black">0.0s</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-4 w-full max-w-xs">
+                <button id="next-lvl-btn" class="bg-yellow-400 hover:bg-yellow-500 text-blue-900 py-4 rounded-xl font-black transition-all shadow-xl text-xl transform hover:scale-105">
+                    Go to Level 2 (3D) ➔
+                </button>
+                <button onclick="location.reload()" class="bg-white/20 hover:bg-white/30 text-white py-4 rounded-xl font-bold transition-all text-lg">
+                    Back to Menu ↻
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const gameGrid = document.getElementById('game-grid');
+        const scoreDisplay = document.getElementById('score');
+        const timerDisplay = document.getElementById('timer');
+        const startOverlay = document.getElementById('start-overlay');
+        const victoryOverlay = document.getElementById('victory-overlay');
+        const targetText = document.getElementById('target-shape-name');
+        const profText = document.getElementById('prof-text');
+        const levelDisplay = document.getElementById('current-level-display');
+        
+        let currentLevel = 1;
+        let score = 0;
+        let targetsFound = 0;
+        const totalTargets = 3;
+        let sequenceIndex = 0;
+        let startTime = 0;
+        let timerInterval = null;
+        let gameActive = false;
+
+        const levelData = {
+            1: {
+                title: "Shape Hunter (2D)",
+                order: ['triangle', 'square', 'rectangle', 'rhombus', 'pentagon', 'hexagon'],
+                pool: ['triangle', 'hexagon', 'pentagon', 'rhombus', 'square', 'rectangle', 'trapezoid']
+            },
+            2: {
+                title: "Solid Hunter (3D)",
+                order: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid', 'triangular-based pyramid'],
+                pool: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid', 'triangular-based pyramid']
+            }
+        };
+
+        const draw = {
+            // 2D Shapes
+            triangle: () => "50,15 85,85 15,85",
+            square: () => "25,25 75,25 75,75 25,75",
+            rectangle: () => "15,35 85,35 85,65 15,65",
+            rhombus: () => "50,15 85,50 50,85 15,50",
+            pentagon: () => "50,10 90,40 75,90 25,90 10,40",
+            hexagon: () => "25,15 75,15 95,50 75,85 25,85 5,50",
+            trapezoid: () => "25,25 75,25 90,75 10,75",
+
+            // 3D Solids
+            sphere: (c) => `
+                <defs><radialGradient id="grad-sphere"><stop offset="10%" stop-color="white"/><stop offset="100%" stop-color="${c}"/></radialGradient></defs>
+                <circle cx="50" cy="50" r="40" fill="url(#grad-sphere)" stroke="#333" stroke-width="2"/>
+                <ellipse cx="50" cy="50" rx="40" ry="12" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>`,
+            cube: (c) => `
+                <path d="M25,75 L25,35 L65,35 L65,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+                <path d="M25,35 L40,20 L80,20 L65,35 Z" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
+                <path d="M65,35 L80,20 L80,60 L65,75 Z" fill="${c}" opacity="0.6" stroke="#333" stroke-width="2"/>
+                <path d="M25,75 L40,60 L80,60" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+                <path d="M40,60 L40,20" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>`,
+            cylinder: (c) => {
+                const horizontal = Math.random() > 0.5;
+                if (horizontal) {
+                    return `
+                        <g transform="rotate(90, 50, 50)">
+                            <ellipse cx="50" cy="25" rx="30" ry="10" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
+                            <rect x="20" y="25" width="60" height="50" fill="${c}" stroke="#333" stroke-width="0"/>
+                            <line x1="20" y1="25" x2="20" y2="75" stroke="#333" stroke-width="2"/>
+                            <line x1="80" y1="25" x2="80" y2="75" stroke="#333" stroke-width="2"/>
+                            <ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" stroke="#333" stroke-width="2"/>
+                            <path d="M20,25 Q50,35 80,25" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                        </g>`;
+                }
+                return `
+                    <ellipse cx="50" cy="25" rx="30" ry="10" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
+                    <rect x="20" y="25" width="60" height="50" fill="${c}" stroke="#333" stroke-width="0"/>
+                    <line x1="20" y1="25" x2="20" y2="75" stroke="#333" stroke-width="2"/>
+                    <line x1="80" y1="25" x2="80" y2="75" stroke="#333" stroke-width="2"/>
+                    <ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" stroke="#333" stroke-width="2"/>
+                    <path d="M20,25 Q50,35 80,25" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>`;
+            },
+            cone: (c) => {
+                const upsideDown = Math.random() > 0.5;
+                const rotation = upsideDown ? "rotate(180, 50, 50)" : "";
+                return `
+                    <g transform="${rotation}">
+                        <path d="M50,15 L20,75 L80,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+                        <ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>
+                        <path d="M20,75 Q50,65 80,75" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+                    </g>`;
+            },
+            'rectangular prism': (c) => `
+                <path d="M15,45 L65,45 L65,75 L15,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+                <path d="M15,45 L35,25 L85,25 L65,45 Z" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
+                <path d="M65,45 L85,25 L85,55 L65,75 Z" fill="${c}" opacity="0.6" stroke="#333" stroke-width="2"/>
+                <path d="M15,75 L35,55 L85,55" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
+                <path d="M35,55 L35,25" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>`,
+            'triangular prism': (c) => {
+                const standing = Math.random() > 0.5;
+                if (standing) {
+                    return `
+                        <path d="M30,80 L70,80 L50,65 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+                        <path d="M30,80 L30,30 L50,15 L70,30 L70,80" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>
+                        <line x1="30" y1="30" x2="70" y2="30" stroke="#333" stroke-width="2"/>
+                        <path d="M50,65 L50,15" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>`;
+                }
+                return `
+                    <path d="M20,75 L50,25 L50,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+                    <path d="M50,25 L80,35 L80,85 L50,75 Z" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>
+                    <path d="M20,75 L50,85 L80,85" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.4"/>`;
+            },
+            'square-based pyramid': (c) => `
+                <path d="M50,15 L15,70 L75,70 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+                <path d="M50,15 L75,70 L90,55 L50,15" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>
+                <path d="M15,70 L30,55 L90,55" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>
+                <path d="M30,55 L50,15" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>`,
+            'triangular-based pyramid': (c) => `
+                <!-- Triangular Based Pyramid (Tetrahedron) design -->
+                <!-- Front left face -->
+                <path d="M50,10 L15,75 L50,90 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+                <!-- Front right face -->
+                <path d="M50,10 L50,90 L85,75 Z" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>
+                <!-- Internal/Hidden edge to back vertex -->
+                <path d="M15,75 L85,75" fill="none" stroke="#333" stroke-width="2" stroke-dasharray="3,3" opacity="0.4"/>
+                <path d="M50,90 L50,10" fill="none" stroke="#333" stroke-width="2" opacity="0.8"/>`
+        };
+
+        function getShapeSVG(type, color) {
+            if (currentLevel === 1) {
+                return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto"><polygon points="${draw[type]()}" fill="${color}" stroke="#333" stroke-width="2.5" /></svg>`;
+            } else {
+                return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto">${draw[type](color)}</svg>`;
+            }
+        }
+
+        function startGame(lvl) {
+            currentLevel = lvl;
+            levelDisplay.textContent = lvl;
+            score = 0;
+            sequenceIndex = 0;
+            scoreDisplay.textContent = "0";
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                timerDisplay.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
+            }, 100);
+            startOverlay.classList.add('hidden');
+            victoryOverlay.classList.add('hidden');
+            document.getElementById('game-title').textContent = levelData[lvl].title;
+            profText.textContent = lvl === 1 ? "Level 1: 2D Shapes!" : "Level 2: 3D Solids!";
+            spawnLevel();
+        }
+
+        function spawnLevel() {
+            gameGrid.innerHTML = '';
+            targetsFound = 0;
+            gameActive = true;
+            
+            const currentTarget = levelData[currentLevel].order[sequenceIndex];
+            targetText.textContent = currentTarget + (currentTarget.endsWith('s') ? 'es' : 's');
+            
+            let pool = levelData[currentLevel].pool.filter(s => s !== currentTarget);
+            let items = [currentTarget, currentTarget, currentTarget];
+            for (let i = 0; i < 5; i++) items.push(pool[Math.floor(Math.random() * pool.length)]);
+            items.sort(() => 0.5 - Math.random());
+
+            items.forEach(type => {
+                const card = document.createElement('div');
+                card.className = "shape-container bg-gray-50 p-4 rounded-2xl flex items-center justify-center border-4 border-transparent shadow-sm";
+                card.dataset.type = type;
+                card.innerHTML = getShapeSVG(type, colors[Math.floor(Math.random() * colors.length)]);
+                card.onclick = () => handleItemClick(card, type, currentTarget);
+                gameGrid.appendChild(card);
+            });
+        }
+
+        const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4'];
+
+        function handleItemClick(el, type, target) {
+            if (!gameActive || el.dataset.done) return;
+            if (type === target) {
+                el.dataset.done = "true";
+                el.classList.add('correct');
+                score += 10;
+                targetsFound++;
+                if (targetsFound === 3) {
+                    gameActive = false;
+                    setTimeout(nextSubLevel, 600);
+                }
+            } else {
+                el.classList.add('incorrect');
+                score = Math.max(0, score - 5);
+            }
+            scoreDisplay.textContent = score;
+        }
+
+        function nextSubLevel() {
+            sequenceIndex++;
+            if (sequenceIndex >= levelData[currentLevel].order.length) {
+                showVictory();
+            } else {
+                spawnLevel();
+            }
+        }
+
+        function showVictory() {
+            clearInterval(timerInterval);
+            victoryOverlay.classList.remove('hidden');
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('final-time').textContent = timerDisplay.textContent + "s";
+            
+            const nextBtn = document.getElementById('next-lvl-btn');
+            if (currentLevel === 1) {
+                document.getElementById('victory-title').textContent = "2D Master!";
+                document.getElementById('victory-msg').textContent = "Ready for the 3D challenge?";
+                nextBtn.classList.remove('hidden');
+                nextBtn.onclick = () => startGame(2);
+            } else {
+                document.getElementById('victory-title').textContent = "Shape Master!";
+                document.getElementById('victory-msg').textContent = "You've mastered both levels!";
+                nextBtn.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
