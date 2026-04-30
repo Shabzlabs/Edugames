@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spinner Adventure - Final Ratios</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #fefce8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            height: calc(100vh - 100px);
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .panel {
+            flex: 1;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border-bottom: 8px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            min-width: 0;
+            position: relative;
+        }
+
+        #spinner {
+            transition: transform 3s cubic-bezier(0.15, 0, 0.15, 1);
+            transform-origin: center center;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .tally-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 32px;
+            width: 32px;
+            margin-right: 12px;
+        }
+
+        .tally-mark {
+            width: 3px;
+            height: 24px;
+            background-color: #1f2937;
+            margin-right: 3px;
+            border-radius: 1px;
+        }
+
+        .tally-slash {
+            position: absolute;
+            width: 3px;
+            height: 34px;
+            background-color: #1f2937; 
+            transform: rotate(-70deg);
+            left: 10px; 
+            top: -1px;
+            border-radius: 1px;
+            pointer-events: none;
+        }
+
+        @keyframes bounce-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .animate-win {
+            animation: bounce-scale 0.5s ease-in-out 3;
+        }
+
+        #tally-alert {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ea580c;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            border-top-left-radius: 24px;
+            border-top-right-radius: 24px;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        #tally-alert.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        #level-up-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 50;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            border-radius: 24px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .icon-box {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            body { overflow: auto; height: auto; }
+            .game-container { flex-direction: column; height: auto; }
+            .panel { width: 100%; height: auto; margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="h-[80px] flex flex-col justify-center items-center text-center">
+        <h1 id="game-title" class="text-3xl font-black text-orange-600">Animal Spinner Adventure! 🎡</h1>
+        <div class="flex gap-4 items-center">
+            <p class="text-gray-500 font-medium text-sm">Level: <span id="level-indicator" class="text-orange-600 font-black">1</span></p>
+            <p class="text-gray-500 font-medium text-sm">Spins: <span id="spin-counter" class="text-blue-600 font-black">0</span>/10</p>
+        </div>
+    </header>
+
+    <main class="game-container">
+        
+        <div class="panel">
+            <div id="level-up-overlay">
+                <h2 id="overlay-title" class="text-5xl font-black mb-4">LEVEL UP! 🍬</h2>
+                <p id="overlay-desc" class="text-xl mb-8">Next Level loading...</p>
+                <button id="overlay-btn" onclick="" class="bg-blue-500 text-white font-black px-8 py-4 rounded-2xl text-2xl hover:bg-blue-400 transition-transform active:scale-95 shadow-lg">GO!</button>
+            </div>
+
+            <h2 id="spinner-subtitle" class="text-lg font-bold text-gray-400 mb-4 uppercase text-center">The Spinner</h2>
+            
+            <div class="relative w-full max-w-[320px] aspect-square mb-6">
+                <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                        <path d="M20 40 L0 0 L40 0 Z" fill="#ef4444" stroke="white" stroke-width="3"/>
+                    </svg>
+                </div>
+                
+                <svg id="spinner" viewBox="0 0 200 200" class="drop-shadow-2xl">
+                    </svg>
+            </div>
+
+            <button id="spin-button" onclick="spinWheel()" class="bg-orange-500 hover:bg-orange-600 text-white text-2xl font-black py-4 px-10 rounded-2xl shadow-xl transform transition-all active:scale-95 border-b-4 border-orange-700">
+                SPIN! 🚀
+            </button>
+            
+            <div id="result-text" class="mt-4 text-xl font-black text-gray-800 h-8 text-center w-full"></div>
+        </div>
+
+        <div class="panel" id="tally-panel">
+            <div id="tally-alert">✨ Add your tally!</div>
+            
+            <div class="w-full flex justify-between items-center mb-6 mt-4">
+                <h2 class="text-lg font-bold text-gray-400 uppercase">Tally Chart</h2>
+                <button onclick="resetData()" class="text-xs text-red-400 font-bold border border-red-100 px-2 py-1 rounded hover:bg-red-50">RESET ALL</button>
+            </div>
+            
+            <div id="tally-rows-container" class="w-full space-y-4">
+                </div>
+            
+            <p class="mt-6 text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center" id="status-message">Spin the wheel to start!</p>
+        </div>
+
+    </main>
+
+    <script>
+        let currentLevel = 1;
+        let spinCount = 0;
+        let currentRotation = 0;
+        let isSpinning = false;
+        let waitingForTally = false;
+        let currentCounts = {};
+
+        const levelConfigs = {
+            1: {
+                title: "Animal Spinner Adventure! 🎡",
+                subtitle: "The Animal Kingdom",
+                options: [
+                    { id: 'cow', name: 'Cow', emoji: '🐮', color: '#f1f5f9', stroke: '#334155', weight: 1 },
+                    { id: 'tiger', name: 'Tiger', emoji: '🐯', color: '#ffedd5', stroke: '#c2410c', weight: 1 },
+                    { id: 'bird', name: 'Bird', emoji: '🐦', color: '#eff6ff', stroke: '#1d4ed8', weight: 1 }
+                ]
+            },
+            2: {
+                title: "Candy Shop Challenge! 🍬",
+                subtitle: "The Candy Spinner",
+                options: [
+                    { id: 'red_candy', name: 'Red Candy', color: '#fee2e2', stroke: '#b91c1c', primaryColor: '#ef4444', weight: 2 }, // 2/4 = 1/2
+                    { id: 'blue_candy', name: 'Blue Candy', color: '#e0f2fe', stroke: '#0369a1', primaryColor: '#3b82f6', weight: 1 }, // 1/4
+                    { id: 'green_candy', name: 'Green Candy', color: '#f0fdf4', stroke: '#15803d', primaryColor: '#22c55e', weight: 1 } // 1/4
+                ]
+            },
+            3: {
+                title: "Wriggly Worm World! 🪱",
+                subtitle: "The Worm Spinner",
+                options: [
+                    { id: 'red_worm', name: 'Red Worm', color: '#fee2e2', stroke: '#b91c1c', primaryColor: '#ef4444', weight: 1 }, // 1/6
+                    { id: 'purple_worm', name: 'Purple Worm', color: '#f3e8ff', stroke: '#7e22ce', primaryColor: '#a855f7', weight: 3 }, // 3/6
+                    { id: 'green_worm', name: 'Green Worm', color: '#f0fdf4', stroke: '#15803d', primaryColor: '#22c55e', weight: 2 } // 2/6
+                ]
+            }
+        };
+
+        const animalAssets = {
+            cow: `
+    <image 
+        href="cow.png" 
+        x="65" 
+        y="25" 
+        width="70" 
+        height="70"
+        preserveAspectRatio="xMidYMid meet"
+    />
+    `,
+            tiger: `
+<image 
+    href="./tiger.png" 
+    x="55" 
+    y="20" 
+    width="70" 
+    height="70"
+    preserveAspectRatio="xMidYMid meet"
+/>
+`,
+            bird: `
+<image 
+    href="./bird.png" 
+    x="60" 
+    y="20" 
+    width="80" 
+    height="80"
+    preserveAspectRatio="xMidYMid meet"
+/>
+`,
+        };
+
+        function getWrappedCandy(color) {
+            return `<g transform="translate(100, 50)">
+                <path d="M-25,0 L-15,-10 L-15,10 Z" fill="${color}" stroke="white" stroke-width="1.5" />
+                <path d="M25,0 L15,-10 L15,10 Z" fill="${color}" stroke="white" stroke-width="1.5" />
+                <circle cx="0" cy="0" r="14" fill="${color}" stroke="white" stroke-width="2"/>
+                <path d="M-6,-4 Q0,-8 6,-4" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round"/>
+            </g>`;
+        }
+
+        function getSmileyWorm(color) {
+            return `<g transform="translate(100, 55)">
+                <circle cx="-16" cy="0" r="8" fill="${color}" stroke="white" stroke-width="1"/>
+                <circle cx="-6" cy="-4" r="8" fill="${color}" stroke="white" stroke-width="1"/>
+                <circle cx="4" cy="0" r="8" fill="${color}" stroke="white" stroke-width="1"/>
+                <circle cx="14" cy="-8" r="10" fill="${color}" stroke="white" stroke-width="1"/>
+                <circle cx="17" cy="-10" r="1.5" fill="black"/>
+                <circle cx="11" cy="-10" r="1.5" fill="black"/>
+                <path d="M11,-6 Q14,-3 17,-6" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round"/>
+            </g>`;
+        }
+
+        function initLevel() {
+            const config = levelConfigs[currentLevel];
+            document.getElementById('game-title').textContent = config.title;
+            document.getElementById('spinner-subtitle').textContent = config.subtitle;
+            document.getElementById('level-indicator').textContent = currentLevel;
+            
+            const wheel = document.getElementById('spinner');
+            wheel.innerHTML = '';
+            let currentAngle = 0;
+            const totalWeight = config.options.reduce((sum, opt) => sum + opt.weight, 0);
+
+            config.options.forEach((opt) => {
+                const angle = (opt.weight / totalWeight) * 360;
+                const largeArc = angle > 180 ? 1 : 0;
+                
+                const x1 = 100 + 100 * Math.cos((currentAngle - 90) * Math.PI / 180);
+                const y1 = 100 + 100 * Math.sin((currentAngle - 90) * Math.PI / 180);
+                const x2 = 100 + 100 * Math.cos((currentAngle + angle - 90) * Math.PI / 180);
+                const y2 = 100 + 100 * Math.sin((currentAngle + angle - 90) * Math.PI / 180);
+
+                const pathData = `M 100 100 L ${x1} ${y1} A 100 100 0 ${largeArc} 1 ${x2} ${y2} Z`;
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                path.setAttribute("d", pathData);
+                path.setAttribute("fill", opt.color);
+                path.setAttribute("stroke", opt.stroke);
+                path.setAttribute("stroke-width", "1");
+                wheel.appendChild(path);
+
+                const iconGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                const rotation = currentAngle + (angle / 2);
+                iconGroup.setAttribute("transform", `rotate(${rotation}, 100, 100)`);
+                
+                let asset = '';
+                if (currentLevel === 1) asset = animalAssets[opt.id];
+                else if (currentLevel === 2) asset = getWrappedCandy(opt.primaryColor);
+                else asset = getSmileyWorm(opt.primaryColor);
+                iconGroup.innerHTML = asset;
+                wheel.appendChild(iconGroup);
+                currentAngle += angle;
+            });
+
+            const container = document.getElementById('tally-rows-container');
+            container.innerHTML = '';
+            currentCounts = {};
+            
+            config.options.forEach(opt => {
+                currentCounts[opt.id] = 0;
+                const row = document.createElement('div');
+                row.id = `row-${opt.id}`;
+                row.className = "flex items-center gap-3 p-3 rounded-xl border-2 border-transparent transition-all bg-gray-50";
+                let iconHtml = '';
+                if (currentLevel === 1) iconHtml = `<span class="text-2xl">${opt.emoji}</span>`;
+                else if (currentLevel === 2) {
+                    iconHtml = `<div class="icon-box"><svg viewBox="0 0 50 30" class="w-full h-full"><path d="M0,15 L10,5 L10,25 Z" fill="${opt.primaryColor}"/><path d="M50,15 L40,5 L40,25 Z" fill="${opt.primaryColor}"/><circle cx="25" cy="15" r="10" fill="${opt.primaryColor}" stroke="white" stroke-width="1"/></svg></div>`;
+                } else {
+                    iconHtml = `<div class="icon-box"><svg viewBox="0 0 40 40" class="w-full h-full"><circle cx="10" cy="20" r="6" fill="${opt.primaryColor}"/><circle cx="20" cy="20" r="6" fill="${opt.primaryColor}"/><circle cx="30" cy="20" r="7" fill="${opt.primaryColor}"/><circle cx="32" cy="18" r="1" fill="black"/><circle cx="28" cy="18" r="1" fill="black"/></svg></div>`;
+                }
+
+                row.innerHTML = `<div class="flex flex-col items-center w-12">${iconHtml}<span class="text-[8px] font-black text-gray-400 uppercase text-center mt-1">${opt.name.split(' ')[0]}</span></div><div class="flex-1 bg-white p-2 rounded-lg border border-gray-100 min-h-[44px] flex items-center overflow-hidden"><div id="tally-${opt.id}" class="flex flex-wrap gap-y-1 items-center"></div></div><div class="flex items-center gap-2"><span id="count-${opt.id}" class="font-black text-gray-300 text-xl w-6 text-center">0</span><button onclick="addTally('${opt.id}')" class="bg-gray-800 text-white w-8 h-8 rounded-lg font-bold text-xl shadow-sm">+</button></div>`;
+                container.appendChild(row);
+            });
+            const peg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            peg.setAttribute("cx", "100"); peg.setAttribute("cy", "100"); peg.setAttribute("r", "8"); peg.setAttribute("fill", "#1e293b");
+            wheel.appendChild(peg);
+        }
+
+        function showLevelUp(nextLevel) {
+            const overlay = document.getElementById('level-up-overlay');
+            const title = document.getElementById('overlay-title');
+            const desc = document.getElementById('overlay-desc');
+            const btn = document.getElementById('overlay-btn');
+            
+            if (nextLevel === 2) {
+                title.textContent = "LEVEL UP! 🍬";
+                desc.textContent = "Level 2: Candy Shop! Look closely—one candy is much easier to find than the others!";
+                btn.onclick = () => { currentLevel = 2; resetLevelState(); };
+            } else if (nextLevel === 3) {
+                title.textContent = "NEW CHALLENGE! 🪱";
+                desc.textContent = "Level 3: The Smiley Worms! Some are more common than others. Look out for the Purple ones!";
+                btn.onclick = () => { currentLevel = 3; resetLevelState(); };
+            }
+            overlay.style.display = 'flex';
+        }
+
+        function resetLevelState() {
+            spinCount = 0; document.getElementById('spin-counter').textContent = "0";
+            document.getElementById('level-up-overlay').style.display = 'none';
+            document.getElementById('result-text').textContent = "";
+            document.getElementById('spin-button').disabled = false;
+            document.getElementById('spin-button').classList.remove('opacity-50');
+            initLevel();
+        }
+
+        function spinWheel() {
+            if (isSpinning || waitingForTally) return;
+            isSpinning = true;
+            document.getElementById('tally-alert').classList.remove('show');
+            document.getElementById('spin-button').disabled = true;
+            document.getElementById('spin-button').classList.add('opacity-50');
+            document.getElementById('result-text').textContent = "Spinning...";
+
+            const totalRotation = (360 * 5) + Math.floor(Math.random() * 360);
+            currentRotation += totalRotation;
+            document.getElementById('spinner').style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false; waitingForTally = true;
+                spinCount++;
+                document.getElementById('spin-counter').textContent = spinCount;
+                const normalizedRotation = (360 - (currentRotation % 360)) % 360;
+                const config = levelConfigs[currentLevel];
+                const totalWeight = config.options.reduce((sum, opt) => sum + opt.weight, 0);
+                let accumulatedAngle = 0; let winningOption = config.options[0];
+
+                for (let opt of config.options) {
+                    const angle = (opt.weight / totalWeight) * 360;
+                    if (normalizedRotation >= accumulatedAngle && normalizedRotation < accumulatedAngle + angle) {
+                        winningOption = opt; break;
+                    }
+                    accumulatedAngle += angle;
+                }
+
+                const label = currentLevel === 1 ? winningOption.emoji : (currentLevel === 2 ? '🍬' : '🪱');
+                document.getElementById('result-text').innerHTML = `<span class="animate-win inline-block">Landed on: <span style="color: ${winningOption.primaryColor || 'inherit'}">${winningOption.name} ${label}</span></span>`;
+                document.getElementById(`row-${winningOption.id}`).classList.add('border-orange-400', 'bg-orange-50');
+                document.getElementById('tally-alert').classList.add('show');
+
+                if (spinCount >= 10) {
+                    if (currentLevel === 1) setTimeout(() => showLevelUp(2), 1500);
+                    else if (currentLevel === 2) setTimeout(() => showLevelUp(3), 1500);
+                }
+            }, 3000);
+        }
+
+        function addTally(id) {
+            currentCounts[id]++;
+            if (waitingForTally) {
+                waitingForTally = false;
+                if (spinCount < 10) {
+                    document.getElementById('spin-button').disabled = false;
+                    document.getElementById('spin-button').classList.remove('opacity-50');
+                }
+                document.getElementById('tally-alert').classList.remove('show');
+                levelConfigs[currentLevel].options.forEach(opt => {
+                    document.getElementById(`row-${opt.id}`).classList.remove('border-orange-400', 'bg-orange-50');
+                });
+            }
+            document.getElementById(`count-${id}`).textContent = currentCounts[id];
+            document.getElementById(`count-${id}`).classList.replace('text-gray-300', 'text-gray-900');
+            const container = document.getElementById(`tally-${id}`);
+            const groupIndex = Math.floor((currentCounts[id] - 1) / 5);
+            let group = document.getElementById(`group-${id}-${groupIndex}`);
+            if (!group) {
+                group = document.createElement('div'); group.className = 'tally-group'; group.id = `group-${id}-${groupIndex}`;
+                container.appendChild(group);
+            }
+            if (currentCounts[id] % 5 === 0) {
+                const slash = document.createElement('div'); slash.className = 'tally-slash'; group.appendChild(slash);
+            } else {
+                const mark = document.createElement('div'); mark.className = 'tally-mark'; group.appendChild(mark);
+            }
+        }
+
+        function resetData() { currentLevel = 1; resetLevelState(); }
+        window.onload = initLevel;
+    </script>
+</body>
+</html>
