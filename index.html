@@ -18,21 +18,20 @@
     .page {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 20px; /* Reduced page padding */
+      padding: 20px;
     }
 
-    /* --- HERO SECTION REDUCED BY 50% --- */
     .hero {
       background: #ffffff;
-      border: 4px solid #3b82f6; /* Thinner border */
-      border-radius: 20px; /* Smaller rounding */
-      padding: 15px 10px; /* Half the padding */
+      border: 4px solid #3b82f6;
+      border-radius: 20px;
+      padding: 15px 10px;
       text-align: center;
-      box-shadow: 0 8px 0 #1d4ed8; /* Smaller shadow */
+      box-shadow: 0 8px 0 #1d4ed8;
       margin-bottom: 25px;
       position: relative;
       overflow: hidden;
-      max-width: 500px; /* Constrained width to keep it small */
+      max-width: 500px;
       margin-left: auto;
       margin-right: auto;
     }
@@ -40,12 +39,11 @@
     .lab-container {
       position: relative;
       display: inline-block;
-      font-size: 35px; /* Reduced from 90px/60px */
+      font-size: 35px;
       margin-bottom: 5px;
       filter: drop-shadow(0 3px 5px rgba(0,0,0,0.1));
     }
 
-    /* Animated Bubbles */
     .bubble {
       position: absolute;
       background: rgba(34, 197, 94, 0.6);
@@ -61,7 +59,7 @@
 
     .hero h1 {
       font-family: 'Fredoka One', cursive;
-      font-size: 32px; /* Reduced by 50% from original large size */
+      font-size: 32px;
       color: #2563eb;
       margin: 0;
       text-shadow: 2px 2px 0px #dbeafe;
@@ -69,7 +67,7 @@
     }
 
     .hero p {
-      font-size: 14px; /* Half the size */
+      font-size: 14px;
       font-weight: bold;
       color: #059669;
       margin-top: 3px;
@@ -78,7 +76,6 @@
       padding: 3px 12px;
       border-radius: 10px;
     }
-    /* --- END HERO SECTION --- */
 
     .menu-title {
       font-family: 'Fredoka One', cursive;
@@ -102,6 +99,9 @@
       box-shadow: 0 8px 0 #e5e7eb;
       transition: 0.2s;
       border: 3px solid #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .game-card:hover {
@@ -195,43 +195,56 @@
     <section class="games-grid">
 
       <div class="game-card">
-        <div class="game-icon">🔍</div>
-        <span class="tag">Shapes</span>
-        <h3>Shape Hunter</h3>
-        <p>Can you find all the hidden shapes?</p>
+        <div>
+          <div class="game-icon">🔍</div>
+          <span class="tag">Shapes</span>
+          <h3>Shape Hunter</h3>
+          <p>Can you find all the hidden shapes?</p>
+        </div>
         <a class="play-btn" href="shapeselection.html">GO! 🚀</a>
       </div>
 
       <div class="game-card">
-        <div class="game-icon">🧩</div>
-        <span class="tag">Words</span>
-        <h3>Word Maker</h3>
-        <p>Smash two words together to make a new one!</p>
+        <div>
+          <div class="game-icon">🧩</div>
+          <span class="tag">Words</span>
+          <h3>Word Maker</h3>
+          <p>Smash two words together to make a new one!</p>
+        </div>
         <a class="play-btn" href="compound.html">GO! 🚀</a>
       </div>
 
       <div class="game-card">
-        <div class="game-icon">🎾</div>
-        <span class="tag">3D Objects</span>
-        <h3>Roll or Stack?</h3>
-        <p>Will it roll? Will it stack? Let's find out!</p>
+        <div>
+          <div class="game-icon">🎾</div>
+          <span class="tag">3D Objects</span>
+          <h3>Roll or Stack?</h3>
+          <p>Will it roll? Will it stack? Let's find out!</p>
+        </div>
         <a class="play-btn" href="rollstack.html">GO! 🚀</a>
       </div>
 
       <div class="game-card">
-        <div class="game-icon">🧪</div>
-        <span class="tag">Safety</span>
-        <h3>Safety Hero</h3>
-        <p>Keep the lab safe with your super brain!</p>
+        <div>
+          <div class="game-icon">🎡</div>
+          <span class="tag">Math</span>
+          <h3>Spinner Adventure</h3>
+          <p>Spin the wheel and track the data with tallies!</p>
+        </div>
+        <a class="play-btn" href="probability.html">GO! 🚀</a>
+      </div>
+
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🧪</div>
+          <span class="tag">Safety</span>
+          <h3>Safety Hero</h3>
+          <p>Keep the lab safe with your super brain!</p>
+        </div>
         <span class="coming-soon">Coming Soon</span>
       </div>
 
     </section>
 
     <div class="footer">
-      🌈 Learn • Play • Grow 🌈
-    </div>
-
-  </div>
-</body>
-</html>
+      🌈 Learn •
