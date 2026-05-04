@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basic Shapes for Kids - ShabzLabs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #a5f3fc, #fde68a);
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    .page {
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 25px 20px 50px;
+    }
+
+    .hero {
+      background: #ffffff;
+      border: 4px solid #3b82f6;
+      border-radius: 25px;
+      padding: 25px 20px;
+      text-align: center;
+      box-shadow: 0 8px 0 #1d4ed8;
+      margin-bottom: 30px;
+    }
+
+    .hero-icon {
+      font-size: 55px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      color: #2563eb;
+      font-size: 36px;
+      margin: 0;
+      text-shadow: 2px 2px 0 #dbeafe;
+    }
+
+    .subtitle {
+      display: inline-block;
+      background: #ecfdf5;
+      color: #059669;
+      font-weight: bold;
+      margin-top: 10px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 2px solid #86efac;
+    }
+
+    .content-card {
+      background: white;
+      border-radius: 22px;
+      padding: 25px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 0 #e5e7eb;
+      border: 3px solid #f3f4f6;
+    }
+
+    h2 {
+      font-family: 'Fredoka One', cursive;
+      color: #1d4ed8;
+      font-size: 26px;
+      margin-top: 0;
+    }
+
+    h3 {
+      color: #166534;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .shape-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .shape-box {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      border: 3px solid #dbeafe;
+      box-shadow: 0 5px 0 #bfdbfe;
+    }
+
+    .shape-icon {
+      font-size: 55px;
+      margin-bottom: 10px;
+    }
+
+    .shape-box h3 {
+      margin: 5px 0;
+      color: #1d4ed8;
+      font-family: 'Fredoka One', cursive;
+    }
+
+    .comparison {
+      background: #fef3c7;
+      border: 3px solid #facc15;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 15px;
+    }
+
+    .tip {
+      background: #dcfce7;
+      border: 3px solid #86efac;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #166534;
+    }
+
+    .button-row {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .play-btn {
+      display: inline-block;
+      background: #f59e0b;
+      color: white;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 5px 0 #b45309;
+      margin: 8px;
+    }
+
+    .home-btn {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 5px 0 #1e40af;
+      margin: 8px;
+    }
+
+    .play-btn:active,
+    .home-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #92400e;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    footer a {
+      color: #1d4ed8;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <header class="hero">
+      <div style="font-size: 50px;">📐✨🎨</div>
+      <h1>The World of Shapes</h1>
+      <p class="subtitle">A ShabzLabs Science Mission</p>
+    </header>
+
+    <section class="content-card">
+      <h2>What Are Shapes?</h2>
+      <p>
+        Shapes are all around us. We can see shapes in classrooms, homes, playgrounds, signs, toys, books, and even food. Learning about shapes helps students describe objects, compare things, and understand early geometry.
+      </p>
+      <p>
+        A shape can be identified by looking carefully at its sides, corners, and overall form. Some shapes have straight sides, some have curved edges, and some have more corners than others. When students learn to notice these features, they become stronger problem-solvers in math.
+      </p>
+    </section>
+
+    <section class="content-card">
+      
+      <h2>Meet the 2D Shapes</h2>
+      <p>Shapes are flat patterns made of lines and curves. Let's look at the most common ones!</p>
+      
+      <div class="shape-grid">
+        
+        <!-- Triangle -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="gradTri" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#f87171" />
+                <stop offset="100%" style="stop-color:#dc2626" />
+              </linearGradient>
+            </defs>
+            <polygon points="50,10 90,85 10,85" fill="url(#gradTri)" stroke="#991b1b" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M50,25 L80,80 L20,80 Z" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Triangle</h3>
+          <p><strong>3 Sides</strong> and 3 Corners.</p>
+        </div>
+
+        <!-- Square -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <rect x="15" y="15" width="70" height="70" fill="#3b82f6" stroke="#1e40af" stroke-width="4" rx="4" />
+            <rect x="25" y="25" width="50" height="50" fill="white" opacity="0.2" rx="2" />
+          </svg>
+          <h3>Square</h3>
+          <p><strong>4 Equal Sides</strong> and 4 Corners.</p>
+        </div>
+
+        <!-- Rectangle -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <rect x="10" y="30" width="80" height="40" fill="#10b981" stroke="#065f46" stroke-width="4" rx="4" />
+            <rect x="20" y="40" width="60" height="20" fill="white" opacity="0.2" rx="2" />
+          </svg>
+          <h3>Rectangle</h3>
+          <p><strong>4 Sides</strong> with equal opposite sides.</p>
+        </div>
+
+        <!-- Rhombus -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="50,10 85,50 50,90 15,50" fill="#a855f7" stroke="#6b21a8" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="50,25 70,50 50,75 30,50" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Rhombus</h3>
+          <p><strong>4 Equal Sides</strong>. Like a diamond!</p>
+        </div>
+
+        <!-- Trapezoid -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="25,20 75,20 95,80 5,80" fill="#f59e0b" stroke="#92400e" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="35,35 65,35 75,65 25,65" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Trapezoid</h3>
+          <p><strong>4 Sides</strong> with one pair of parallel lines.</p>
+        </div>
+
+        <!-- Pentagon -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="50,10 95,45 80,90 20,90 5,45" fill="#ec4899" stroke="#9d174d" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="50,25 75,45 65,75 35,75 25,45" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Pentagon</h3>
+          <p><strong>5 Sides</strong>. Like a house shape!</p>
+        </div>
+
+        <!-- Hexagon -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="25,15 75,15 95,50 75,85 25,85 5,50" fill="#06b6d4" stroke="#164e63" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="35,25 65,25 80,50 65,75 35,75 20,50" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Hexagon</h3>
+          <p><strong>6 Sides</strong>. Think of a honeycomb.</p>
+        </div>
+
+        <!-- Octagon -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="30,15 70,15 90,35 90,65 70,85 30,85 10,65 10,35" fill="#ef4444" stroke="#7f1d1d" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="38,25 62,25 78,35 78,65 62,75 38,75 22,65 22,35" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Octagon</h3>
+          <p><strong>8 Sides</strong>. Just like a stop sign!</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="content-card">
+      <h2>How Can We Tell Shapes Apart?</h2>
+      <p>
+        One of the best ways to tell shapes apart is by counting the number of sides and corners. A triangle has 3 sides, a square and rectangle both have 4 sides, a pentagon has 5 sides, and a hexagon has 6 sides.
+      </p>
+
+      <div class="comparison">
+        <h3>Square vs. Rectangle</h3>
+        <p>
+          A square and a rectangle both have 4 sides and 4 corners. The difference is that a square has all sides the same length. A rectangle has opposite sides that are equal, but one pair of sides is usually longer than the other.
+        </p>
+      </div>
+
+      <div class="comparison">
+        <h3>Triangles Can Look Different</h3>
+        <p>
+          Some students think a triangle only looks like a perfect point at the top. But triangles can be tall, short, skinny, wide, sideways, or upside down. As long as the shape has 3 straight sides and 3 corners, it is a triangle.
+        </p>
+      </div>
+    </section>
+
+    <section class="content-card">
+      <h2>Shapes in Real Life</h2>
+      <p>
+        Shapes are not only found in math books. We see them in the real world every day. A window may look like a rectangle, a floor tile may look like a square, a yield sign may look like a triangle, and a honeycomb may show hexagons.
+      </p>
+      <p>
+        When students connect shapes to real objects, they begin to understand that math is part of everyday life. This helps make learning more meaningful and easier to remember.
+      </p>
+
+      <div class="tip">
+        Learning tip: Look around the room and try to find one triangle, one square, one rectangle, one pentagon, and one hexagon.
+      </div>
+    </section>
+
+    <section class="content-card">
+      <h2>Practice With Shape Hunter</h2>
+      <p>
+        After learning about shapes, students can practise with the Shape Hunter game. In the game, students look carefully at a group of shapes and choose the correct ones. This helps students build confidence with shape recognition.
+      </p>
+
+      <div class="button-row">
+        <a class="play-btn" href="shapeselection.html">Play Shape Hunter 🚀</a>
+        <a class="home-btn" href="index.html">← Back to Home</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 ShabzLabs</p>
+      <a href="about.html">About</a> |
+      <a href="privacy.html">Privacy Policy</a> |
+      <a href="contact.html">Contact</a>
+    </footer>
+
+  </div>
+</body>
+</html>
