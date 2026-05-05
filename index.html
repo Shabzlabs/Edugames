@@ -3,266 +3,239 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShabzLabs</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500&display=swap" rel="stylesheet">
-  
+  <title>3D Shapes for Kids - ShabzLabs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
       font-family: 'Quicksand', sans-serif;
       background: linear-gradient(135deg, #a5f3fc, #fde68a);
-      min-height: 100vh;
       color: #1f2937;
     }
 
     .page {
-      max-width: 1100px;
+      max-width: 950px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 25px 20px 50px;
     }
 
     .hero {
-      background: #ffffff;
+      background: white;
       border: 4px solid #3b82f6;
-      border-radius: 20px;
-      padding: 15px 10px;
+      border-radius: 25px;
+      padding: 25px;
       text-align: center;
       box-shadow: 0 8px 0 #1d4ed8;
-      margin-bottom: 25px;
-      position: relative;
-      overflow: hidden;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-bottom: 30px;
     }
 
-    .lab-container {
-      position: relative;
-      display: inline-block;
-      font-size: 35px;
-      margin-bottom: 5px;
-      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.1));
+    .hero-icon {
+      font-size: 55px;
+      margin-bottom: 8px;
     }
 
-    .bubble {
-      position: absolute;
-      background: rgba(34, 197, 94, 0.6);
-      border-radius: 50%;
-      animation: floatUp 2s infinite ease-in;
-      bottom: 15px;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(0.3); opacity: 1; }
-      100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
-    }
-
-    .hero h1 {
+    h1 {
       font-family: 'Fredoka One', cursive;
-      font-size: 32px;
       color: #2563eb;
       margin: 0;
-      text-shadow: 2px 2px 0px #dbeafe;
-      letter-spacing: 1px;
     }
 
-    .hero p {
-      font-size: 14px;
-      font-weight: bold;
-      color: #059669;
-      margin-top: 3px;
+    .subtitle {
       background: #ecfdf5;
+      color: #059669;
+      padding: 6px 14px;
+      border-radius: 999px;
       display: inline-block;
-      padding: 3px 12px;
-      border-radius: 10px;
+      margin-top: 10px;
+      font-weight: bold;
     }
 
-    .menu-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 28px;
-      color: #1e40af;
-      margin: 20px 0 15px;
-      text-align: center;
-    }
-
-    .games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-    }
-
-    .game-card {
+    .card {
       background: white;
-      border-radius: 25px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 8px 0 #e5e7eb;
-      transition: 0.2s;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 0 #e5e7eb;
       border: 3px solid #f3f4f6;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
     }
 
-    .game-card:hover {
-      transform: translateY(-8px) rotate(2deg);
-      border-color: #facc15;
-      box-shadow: 0 12px 0 #fde047;
-    }
-
-    .game-icon {
-      font-size: 55px;
-      margin-bottom: 10px;
-    }
-
-    .game-card h3 {
+    h2 {
       font-family: 'Fredoka One', cursive;
-      font-size: 22px;
-      margin: 5px 0;
       color: #1d4ed8;
     }
 
-    .tag {
-      display: inline-block;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .box {
+      background: #f9fafb;
+      border: 3px solid #dbeafe;
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 45px;
+      margin-bottom: 8px;
+    }
+
+    .highlight {
+      background: #fef3c7;
+      border: 3px solid #facc15;
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 15px;
+    }
+
+    .tip {
       background: #dcfce7;
-      color: #166534;
-      padding: 4px 12px;
-      border-radius: 999px;
+      border: 3px solid #86efac;
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 15px;
       font-weight: bold;
-      font-size: 12px;
-      margin-bottom: 10px;
-      border: 2px solid #86efac;
     }
 
-    .play-btn {
+    .buttons {
+      text-align: center;
+      margin-top: 25px;
+    }
+
+    .btn {
       display: inline-block;
-      margin-top: 10px;
-      background: #f59e0b;
-      color: white;
+      padding: 12px 25px;
+      border-radius: 999px;
+      font-weight: bold;
       text-decoration: none;
-      padding: 12px 25px;
-      border-radius: 999px;
-      font-weight: bold;
-      font-size: 18px;
+      color: white;
+      margin: 5px;
+    }
+
+    .play {
+      background: #f59e0b;
       box-shadow: 0 5px 0 #b45309;
-      transition: 0.1s;
     }
 
-    .play-btn:active {
-      transform: translateY(3px);
-      box-shadow: 0 2px 0 #b45309;
+    .home {
+      background: #2563eb;
+      box-shadow: 0 5px 0 #1e40af;
     }
 
-    .coming-soon {
-      display: inline-block;
-      margin-top: 10px;
-      background: #f3f4f6;
-      color: #9ca3af;
-      padding: 12px 25px;
-      border-radius: 999px;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    .footer {
+    footer {
       text-align: center;
       margin-top: 40px;
-      padding-bottom: 20px;
-      color: #1e40af;
-      font-family: 'Fredoka One', cursive;
-      font-size: 18px;
+      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
+<div class="page">
 
-    <section class="hero">
-      <div class="lab-container">
-        <div class="bubble" style="left:20%; width:10px; height:10px; animation-delay: 0s;"></div>
-        <div class="bubble" style="left:50%; width:8px; height:8px; animation-delay: 0.5s;"></div>
-        <div class="bubble" style="left:80%; width:12px; height:12px; animation-delay: 1s;"></div>
-        🧪🧪🧪
-      </div>
-      
-      <h1>Shabz Labs</h1>
-      <p>Super Fun Science & Math!</p>
-    </section>
-
-    <h2 class="menu-title">✨ Pick a Mission ✨</h2>
-
-    <section class="games-grid">
-
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🎨</div>
-          <span class="tag">Lesson</span>
-          <h3>Learn About Shapes</h3>
-          <p>Explore the world of 2D shapes!</p>
-        </div>
-        <a class="play-btn" href="shapes.html">LEARN! 📖</a>
-      </div>
-
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🔍</div>
-          <span class="tag">Shapes</span>
-          <h3>Shape Hunter</h3>
-          <p>Can you find all the hidden shapes?</p>
-        </div>
-        <a class="play-btn" href="shapeselection.html">PLAY! 🚀</a>
-      </div>
-
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🧩</div>
-          <span class="tag">Words</span>
-          <h3>Word Maker</h3>
-          <p>Smash two words together to make a new one!</p>
-        </div>
-        <a class="play-btn" href="compound.html">PLAY! 🚀</a>
-      </div>
-
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🎾</div>
-          <span class="tag">3D Objects</span>
-          <h3>Roll or Stack?</h3>
-          <p>Will it roll? Will it stack? Let's find out!</p>
-        </div>
-        <a class="play-btn" href="rollstack.html">PLAY! 🚀</a>
-      </div>
-
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🎡</div>
-          <span class="tag">Math</span>
-          <h3>Spinner Adventure</h3>
-          <p>Spin the wheel and track the data with tallies!</p>
-        </div>
-        <a class="play-btn" href="probability.html">PLAY! 🚀</a>
-      </div>
-
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🧪</div>
-          <span class="tag">Safety</span>
-          <h3>Safety Hero</h3>
-          <p>Keep the lab safe with your super brain!</p>
-        </div>
-        <span class="coming-soon">Coming Soon</span>
-      </div>
-
-    </section>
-
-<footer style="margin-top:50px; text-align:center; font-size:14px; color:#555;">
-  <p>© 2026 ShabzLabs</p>
-  <a href="about.html">About</a> |
-  <a href="privacy.html">Privacy Policy</a> |
-  <a href="contact.html">Contact</a>
-</footer>
-
+  <div class="hero">
+    <div class="icon">
+        <img src="sphere.png" alt="Sphere" style="width:50px; height:50px;">
+    </div>
+    <h1>3D Shapes for Kids</h1>
+    <div class="subtitle">Learn before playing Roll or Stack!</div>
   </div>
+
+  <div class="card">
+    <h2>What Are 3D Shapes?</h2>
+    <p>
+      3D shapes are solid objects that take up space. Unlike flat shapes, 3D shapes have length, width, and height. You can hold them, stack them, or roll them.
+    </p>
+    <p>
+      You see 3D shapes every day, like balls, boxes, cans, and ice cream cones.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Common 3D Shapes</h2>
+
+    <div class="grid">
+
+      <div class="box">
+        <div class="icon">🧊</div>
+        <h3>Cube</h3>
+        <p>All sides are equal. Looks like a dice.</p>
+      </div>
+
+      <div class="box">
+        <div class="icon">📦</div>
+        <h3>Rectangular Prism</h3>
+        <p>A box shape. Like a cereal box.</p>
+      </div>
+
+      <div class="box">
+        <div class="icon">
+        <img src="sphere.png" alt="Sphere" style="width:85px; height:75px;">
+        </div>
+        <h3>Sphere</h3>
+        <p>Perfectly round. Like a ball.</p>
+      </div>
+
+      <div class="box">
+        <div class="icon">🥫</div>
+        <h3>Cylinder</h3>
+        <p>Has flat circles and can roll.</p>
+      </div>
+
+      <div class="box">
+        <div class="icon">🍦</div>
+        <h3>Cone</h3>
+        <p>Pointed top and round base.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Roll, Stack, or Both?</h2>
+
+    <div class="highlight">
+      <p><strong>Roll:</strong> Shapes with curved surfaces roll (sphere, cylinder, cone).</p>
+      <p><strong>Stack:</strong> Shapes with flat surfaces stack (cube, rectangular prism).</p>
+      <p><strong>Both:</strong> Some shapes can do both!</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Shapes in Real Life</h2>
+    <p>
+      Look around your home or classroom. You can find cubes in blocks, spheres in balls, cylinders in cans, and cones in ice cream cones.
+    </p>
+
+    <div class="tip">
+      Try this: Find one object that rolls and one that stacks!
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Try the Game</h2>
+    <p>
+      Now that you understand 3D shapes, try the Roll or Stack game to test your knowledge.
+    </p>
+
+    <div class="buttons">
+      <a class="btn play" href="rollstack.html">Play Game 🚀</a>
+      <a class="btn home" href="index.html">Back to Home</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 ShabzLabs</p>
+    <a href="about.html">About</a> |
+    <a href="privacy.html">Privacy Policy</a> |
+    <a href="contact.html">Contact</a>
+  </footer>
+
+</div>
 </body>
 </html>
