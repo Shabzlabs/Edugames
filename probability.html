@@ -443,7 +443,48 @@
                 wheel.appendChild(g);
                 currentAngle += angle;
             });
+            // Outer Border (Rim)
+            const rim = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            rim.setAttribute("cx", "100");
+            rim.setAttribute("cy", "100");
+            rim.setAttribute("r", "97");
+            rim.setAttribute("fill", "none");
+            rim.setAttribute("stroke", "#475569"); // Slate 600 - Metallic gray
+            rim.setAttribute("stroke-width", "6");
+            wheel.appendChild(rim);
 
+            // Inner Decorative Border
+            const innerRim = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            innerRim.setAttribute("cx", "100");
+            innerRim.setAttribute("cy", "100");
+            innerRim.setAttribute("r", "94");
+            innerRim.setAttribute("fill", "none");
+            innerRim.setAttribute("stroke", "#94a3b8"); // Slate 400 - Light highlight
+            innerRim.setAttribute("stroke-width", "1");
+            wheel.appendChild(innerRim);
+
+            // Center Pin (Hub)
+            const hub = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            hub.setAttribute("cx", "100");
+            hub.setAttribute("cy", "100");
+            hub.setAttribute("r", "8");
+            hub.setAttribute("fill", "white");
+            hub.setAttribute("stroke", "#475569");
+            hub.setAttribute("stroke-width", "3");
+            wheel.appendChild(hub);
+
+            // Decorative Pegs around the edge
+            for (let i = 0; i < 24; i++) {
+                const peg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                const rad = (i * 15 - 90) * Math.PI / 180;
+                const px = 100 + 97 * Math.cos(rad);
+                const py = 100 + 97 * Math.sin(rad);
+                peg.setAttribute("cx", px);
+                peg.setAttribute("cy", py);
+                peg.setAttribute("r", "2");
+                peg.setAttribute("fill", "white");
+                wheel.appendChild(peg);
+            }
             // Draw Tallies (Hidden)
             const tallyBox = document.getElementById('tally-rows-container');
             tallyBox.innerHTML = '';
