@@ -219,11 +219,10 @@
                 </div>
                 <svg id="spinner" viewBox="0 0 200 200" class="drop-shadow-2xl"></svg>
             </div>
-
-            <button id="spin-button" onclick="spinWheel()" class="bg-orange-500 hover:bg-orange-600 text-white text-2xl font-black py-4 px-12 rounded-2xl shadow-xl transform transition-all active:scale-95 border-b-8 border-orange-700 disabled:bg-gray-200 disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed">
+            <button id="spin-button" onclick="spinWheel()" disabled class="bg-orange-500 hover:bg-orange-600 text-white text-2xl font-black py-4 px-12 rounded-2xl shadow-xl transform transition-all active:scale-95 border-b-8 border-orange-700 disabled:bg-gray-200 disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none">
                 SPIN! 🚀
-            </button>
-            
+            </button>            
+
             <div id="result-text" class="mt-6 text-xl font-black text-gray-800 h-8 text-center w-full"></div>
         </div>
 
@@ -379,19 +378,19 @@
             document.getElementById('spinner-subtitle').textContent = config.subtitle;
             document.getElementById('level-indicator').textContent = currentLevel;
             
+            document.getElementById('spin-button').disabled = true;
+            
             predictionMost = null;
             predictionLeast = null;
             spinCount = 0;
             document.getElementById('spin-counter').textContent = "0";
             
-            // Show Prediction Overlay
             const overlay = document.getElementById('prediction-setup-overlay');
             overlay.classList.remove('hidden', 'fade-out');
             document.getElementById('step-most-likely').classList.remove('hidden');
             document.getElementById('step-least-likely').classList.add('hidden');
             document.getElementById('step-ready').classList.add('hidden');
             
-            // Populate Most Likely
             const mostContainer = document.getElementById('most-likely-options');
             const leastContainer = document.getElementById('least-likely-options');
             mostContainer.innerHTML = '';
@@ -546,7 +545,10 @@
             overlay.classList.add('fade-out');
             setTimeout(() => {
                 overlay.classList.add('hidden');
+                
+                // 3. THE UNLOCK: This line finally enables the button after "SPIN NOW!" is clicked
                 document.getElementById('spin-button').disabled = false;
+                
                 document.getElementById(`badges-${predictionMost}`).innerHTML = `<span class="prediction-badge badge-most">Most</span>`;
                 document.getElementById(`badges-${predictionLeast}`).innerHTML = `<span class="prediction-badge badge-least">Least</span>`;
                 document.querySelectorAll('#tally-rows-container > div').forEach((r, i) => {
