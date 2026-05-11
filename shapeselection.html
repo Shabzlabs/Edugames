@@ -135,24 +135,26 @@
   </style>
 </head>
 
-<body class="min-h-screen p-3 md:p-8 flex items-start justify-center">
+<body class="min-h-screen p-3 md:p-1 flex items-start justify-center">
 
   <a href="index.html" class="fixed top-3 right-3 z-[100] bg-white/90 backdrop-blur px-3 py-2 rounded-full border-2 border-blue-400 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition-all shadow-md flex items-center gap-1 text-sm">
     Shabzlabs
   </a>
 
-  <div class="hidden xl:flex fixed right-8 top-20 flex-col items-center z-10 drop-shadow-xl">
+  <div class="hidden lg:flex fixed right-8 top-20 flex-col items-center z-10 drop-shadow-xl">
     <svg width="200" height="280" viewBox="0 0 200 300">
       <path d="M40,60 L100,30 L160,60 L100,90 Z" fill="#1e293b" />
       <rect x="95" y="60" width="10" height="30" fill="#1e293b" />
       <path d="M160,60 L165,95" stroke="#facc15" stroke-width="3" fill="none" />
       <circle cx="165" cy="95" r="5" fill="#facc15" />
+
       <circle cx="100" cy="120" r="55" fill="#ffdbac" stroke="#eab308" stroke-width="2" />
 
       <g class="eye-blink">
         <circle cx="80" cy="115" r="12" fill="white" />
         <circle cx="80" cy="115" r="6" fill="#333" />
         <circle cx="77" cy="112" r="2" fill="white" />
+
         <circle cx="120" cy="115" r="12" fill="white" />
         <circle cx="120" cy="115" r="6" fill="#333" />
         <circle cx="117" cy="112" r="2" fill="white" />
@@ -177,7 +179,7 @@
     </div>
   </div>
 
-  <div class="mobile-card max-w-5xl w-full bg-white rounded-3xl shadow-xl p-4 md:p-10 relative mt-14 md:mt-10 mb-8">
+  <div class="mobile-card max-w-5xl w-full bg-white rounded-3xl shadow-xl p-4 md:p-10 relative mt-4 md:mt-4 mb-8">
 
     <header class="text-center mb-4 md:mb-8">
       <h1 class="mobile-title text-4xl font-bold text-blue-600 mb-2" id="game-title">Shape Hunter!</h1>
@@ -222,6 +224,7 @@
           <p class="text-xs uppercase font-bold opacity-70">Points</p>
           <p id="final-score" class="text-3xl md:text-4xl font-black">0</p>
         </div>
+
         <div>
           <p class="text-xs uppercase font-bold opacity-70">Clock</p>
           <p id="final-time" class="text-3xl md:text-4xl font-black">0.0s</p>
@@ -266,6 +269,7 @@
         order: ['triangle', 'square', 'trapezoid', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon'],
         pool: ['triangle', 'hexagon', 'rhombus', 'pentagon', 'square', 'rectangle', 'trapezoid', 'octagon']
       },
+
       2: {
         title: "Level 2: 3D Solids",
         gridSize: 8,
@@ -273,6 +277,7 @@
         order: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid'],
         pool: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
       },
+
       3: {
         title: "Level 3: Master Challenge",
         gridSize: 8,
@@ -280,6 +285,7 @@
         order: ['cone', 'octagon', 'sphere', 'rhombus', 'cylinder', 'pentagon', 'cube'],
         pool: ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
       },
+
       4: {
         title: "Level 4: Super Speed!",
         gridSize: 12,
@@ -300,7 +306,12 @@
       trapezoid: () => "25,25 75,25 90,75 10,75",
 
       sphere: (c) => `
-        <defs><radialGradient id="grad-sphere"><stop offset="10%" stop-color="white"/><stop offset="100%" stop-color="${c}"/></radialGradient></defs>
+        <defs>
+          <radialGradient id="grad-sphere">
+            <stop offset="10%" stop-color="white"/>
+            <stop offset="100%" stop-color="${c}"/>
+          </radialGradient>
+        </defs>
         <circle cx="50" cy="50" r="40" fill="url(#grad-sphere)" stroke="#333" stroke-width="2"/>`,
 
       cube: (c) => `
@@ -395,7 +406,9 @@
       let pool = data.pool.filter(s => s !== currentTarget);
       let items = [];
 
-      for (let i = 0; i < totalTargetsRequired; i++) items.push(currentTarget);
+      for (let i = 0; i < totalTargetsRequired; i++) {
+        items.push(currentTarget);
+      }
 
       while (items.length < data.gridSize) {
         items.push(pool[Math.floor(Math.random() * pool.length)]);
