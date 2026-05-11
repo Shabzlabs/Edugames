@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addition Jungle: Math Flip</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;800;900&display=swap');
+
+        body {
+            background-color: #064e3b;
+            /* Updated background to jungle.png */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('jungle.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Nunito', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .luckiest { font-family: 'Luckiest Guy', cursive; }
+
+        .perspective {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flipped {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        .flip-card-front {
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+            border: 6px solid #10b981;
+        }
+        .flip-card-back {
+            background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
+            color: white;
+            transform: rotateY(180deg);
+            border: 6px solid #fbbf24;
+        }
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+            animation: fly 1s ease-out forwards;
+        }
+        @keyframes fly {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tw-translate-x), var(--tw-translate-y)) scale(0); opacity: 0; }
+        }
+        .leaf {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.3;
+            z-index: 0;
+            pointer-events: none;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .numpad-btn {
+            background: #ffffff;
+            border: 3px solid #10b981;
+            box-shadow: 0 4px 0 #059669;
+            transition: all 0.1s;
+        }
+        .numpad-btn:active {
+            box-shadow: 0 0 0 #059669;
+            transform: translateY(4px);
+        }
+        .numpad-btn.wrong {
+            animation: shake 0.4s;
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Background Decoration -->
+    <div class="leaf top-10 left-10 rotate-12">🌿</div>
+    <div class="leaf bottom-20 left-20 -rotate-12">🍃</div>
+    <div class="leaf top-40 right-10 rotate-45">🌳</div>
+    <div class="leaf bottom-10 right-20">🌱</div>
+
+    <!-- Header Section -->
+    <div class="text-center mb-8 relative z-10">
+        <h1 class="luckiest text-5xl text-white mb-2 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] tracking-wide">
+            ADDITION <span class="text-yellow-400">JUNGLE</span>
+        </h1>
+        <div class="inline-flex items-center bg-black/50 backdrop-blur-md px-6 py-2 rounded-2xl border border-white/20">
+            <span class="text-xs font-black text-emerald-300 uppercase tracking-widest mr-3">Bananas:</span>
+            <span id="score" class="luckiest text-3xl text-yellow-400">0</span>
+            <span class="ml-2 text-2xl">🍌</span>
+        </div>
+    </div>
+
+    <!-- Main Game Layout -->
+    <div class="flex flex-row flex-wrap items-center justify-center gap-8 lg:gap-24 relative z-10 w-full max-w-6xl">
+        
+        <!-- LEFT SIDE: Question Card -->
+        <div class="flex flex-col items-center w-full max-w-[320px] sm:max-w-sm">
+            <div class="perspective w-full h-80 sm:h-96">
+                <div id="cardInner" class="flip-card-inner">
+                    <!-- Front -->
+                    <div class="flip-card-front">
+                        <span class="text-xs uppercase tracking-widest text-emerald-600 font-black mb-4">The Challenge</span>
+                        <div id="questionText" class="text-8xl luckiest text-emerald-900 tabular-nums">
+                            -- + --
+                        </div>
+                        <p class="mt-8 text-emerald-400 font-bold uppercase text-xs">Enter result on the right!</p>
+                    </div>
+                    <!-- Back -->
+                    <div class="flip-card-back">
+                        <span class="text-xs uppercase tracking-widest text-emerald-100 font-black mb-4">Correct!</span>
+                        <div id="answerText" class="text-9xl luckiest text-white tabular-nums drop-shadow-md">
+                            --
+                        </div>
+                        <div class="mt-8">
+                           <button onclick="nextQuestion()" class="bg-yellow-400 hover:bg-yellow-300 text-emerald-900 luckiest py-3 px-8 rounded-xl transition-all active:scale-95 shadow-[0_5px_0_0_#b45309]">
+                               NEXT!
+                           </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="nextQuestion(false)" class="mt-6 text-white/70 hover:text-white underline text-sm font-bold tracking-widest">
+                SKIP CHALLENGE
+            </button>
+        </div>
+
+        <!-- RIGHT SIDE: Number Pad -->
+        <div class="flex flex-col items-center w-full max-w-[320px]">
+            <div class="bg-black/30 backdrop-blur-md p-6 rounded-[2.5rem] border border-white/10 shadow-2xl w-full">
+                
+                <!-- Display Area Moved to Top -->
+                <div class="bg-white/10 rounded-2xl p-4 text-center border border-white/5 mb-4">
+                    <span class="text-white/40 text-[10px] uppercase font-black tracking-widest block mb-1">Your Answer</span>
+                    <span id="userInput" class="luckiest text-5xl text-white tracking-widest h-12 flex items-center justify-center"></span>
+                </div>
+
+                <!-- Number Pad Grid -->
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="checkAnswer(1)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">1</button>
+                    <button onclick="checkAnswer(2)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">2</button>
+                    <button onclick="checkAnswer(3)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">3</button>
+                    <button onclick="checkAnswer(4)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">4</button>
+                    <button onclick="checkAnswer(5)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">5</button>
+                    <button onclick="checkAnswer(6)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">6</button>
+                    <button onclick="checkAnswer(7)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">7</button>
+                    <button onclick="checkAnswer(8)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">8</button>
+                    <button onclick="checkAnswer(9)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">9</button>
+                    <button onclick="clearInput()" class="numpad-btn luckiest text-xl p-4 rounded-2xl text-orange-600 bg-orange-50 border-orange-400 shadow-[0_4px_0_#c2410c]">DEL</button>
+                    <button onclick="checkAnswer(0)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">0</button>
+                    <button onclick="submitTyped()" class="numpad-btn luckiest text-xl p-4 rounded-2xl text-white bg-emerald-500 border-emerald-600 shadow-[0_4px_0_#065f46]">GO!</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentAnswer = 0;
+        let score = 0;
+        let typedAnswer = "";
+        const cardInner = document.getElementById('cardInner');
+        const questionText = document.getElementById('questionText');
+        const answerText = document.getElementById('answerText');
+        const scoreDisplay = document.getElementById('score');
+        const userInputDisplay = document.getElementById('userInput');
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSuccessSound() {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine';
+            const now = audioCtx.currentTime;
+            oscillator.frequency.setValueAtTime(523.25, now); 
+            oscillator.frequency.exponentialRampToValueAtTime(659.25, now + 0.1); 
+            oscillator.frequency.exponentialRampToValueAtTime(783.99, now + 0.2); 
+            oscillator.frequency.exponentialRampToValueAtTime(1046.50, now + 0.3); 
+            gainNode.gain.setValueAtTime(0.3, now);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(now + 0.5);
+        }
+
+        function playErrorSound() {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sawtooth';
+            const now = audioCtx.currentTime;
+            oscillator.frequency.setValueAtTime(150, now);
+            oscillator.frequency.linearRampToValueAtTime(100, now + 0.2);
+            gainNode.gain.setValueAtTime(0.1, now);
+            gainNode.gain.linearRampToValueAtTime(0, now + 0.2);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(now + 0.2);
+        }
+
+        function generateProblem() {
+            const sum = Math.floor(Math.random() * 19) + 2; 
+            const a = Math.floor(Math.random() * (sum - 1)) + 1;
+            const b = sum - a;
+
+            currentAnswer = sum;
+            questionText.innerText = `${a} + ${b}`;
+            answerText.innerText = sum;
+            typedAnswer = "";
+            userInputDisplay.innerText = "";
+        }
+
+        function checkAnswer(num) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (cardInner.classList.contains('flipped')) return;
+            
+            typedAnswer += num.toString();
+            if (typedAnswer.length > 2) typedAnswer = typedAnswer.slice(-2);
+            userInputDisplay.innerText = typedAnswer;
+            
+            if (parseInt(typedAnswer) === currentAnswer) {
+                submitTyped();
+            }
+        }
+
+        function clearInput() {
+            typedAnswer = "";
+            userInputDisplay.innerText = "";
+        }
+
+        function submitTyped() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (cardInner.classList.contains('flipped')) return;
+
+            if (parseInt(typedAnswer) === currentAnswer) {
+                playSuccessSound();
+                score += 1;
+                scoreDisplay.innerText = score;
+                createParticles();
+                cardInner.classList.add('flipped');
+            } else if (typedAnswer !== "") {
+                playErrorSound();
+                userInputDisplay.classList.add('text-red-500');
+                setTimeout(() => {
+                    userInputDisplay.classList.remove('text-red-500');
+                    clearInput();
+                }, 500);
+            }
+        }
+
+        function nextQuestion() {
+            cardInner.classList.remove('flipped');
+            setTimeout(() => {
+                generateProblem();
+            }, 300);
+        }
+
+        function createParticles() {
+            const emojis = ['🍌', '🍃', '✨', '🐾'];
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'sparkle';
+                particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                particle.style.fontSize = '24px';
+                const tx = (Math.random() - 0.5) * 300;
+                const ty = (Math.random() - 0.5) * 300;
+                particle.style.setProperty('--tw-translate-x', `${tx}px`);
+                particle.style.setProperty('--tw-translate-y', `${ty}px`);
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        window.onload = generateProblem;
+    </script>
+</body>
+</html>
