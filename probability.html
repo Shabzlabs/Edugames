@@ -178,12 +178,27 @@
             70% { transform: scale(0.9); }
             100% { transform: scale(1); }
         }
-        .animate-bounce-in { animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        .animate-bounce-in {
+            animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
         @media (max-width: 768px) {
-            body { overflow: auto; height: auto; }
-            .game-container { flex-direction: column; height: auto; }
-            .panel { width: 100%; height: auto; margin-bottom: 20px; }
+            body {
+                overflow: auto;
+                height: auto;
+            }
+
+            .game-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .panel {
+                width: 100%;
+                height: auto;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
@@ -219,6 +234,7 @@
                 </div>
                 <svg id="spinner" viewBox="0 0 200 200" class="drop-shadow-2xl"></svg>
             </div>
+
             <button id="spin-button" onclick="spinWheel()" disabled class="bg-orange-500 hover:bg-orange-600 text-white text-2xl font-black py-4 px-12 rounded-2xl shadow-xl transform transition-all active:scale-95 border-b-8 border-orange-700 disabled:bg-gray-200 disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none">
                 SPIN! 🚀
             </button>            
@@ -251,6 +267,7 @@
                             <div id="summary-least" class="bg-white p-3 rounded-2xl shadow-sm border-2 border-red-200 w-28 flex flex-col items-center"></div>
                         </div>
                     </div>
+
                     <button onclick="confirmPredictions()" class="bg-orange-500 hover:bg-orange-600 text-white text-2xl font-black py-4 px-12 rounded-2xl shadow-xl transform transition-all active:scale-95 border-b-8 border-orange-700">
                         SPIN NOW! 🚀
                     </button>
@@ -263,6 +280,7 @@
             </div>
             
             <div id="tally-rows-container" class="w-full space-y-3"></div>
+
             <p class="mt-auto pt-6 text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center" id="status-message">Make a prediction to start!</p>
         </div>
     </main>
@@ -278,6 +296,8 @@
         let predictionLeast = null;
         let audioCtx = null;
         let particles = [];
+
+        const totalLevels = 4;
 
         const canvas = document.getElementById('celebration-canvas');
         const ctx = canvas.getContext('2d');
@@ -298,6 +318,7 @@
                     { id: 'bird', name: 'Bird', color: '#eff6ff', stroke: '#1d4ed8', weight: 1 }
                 ]
             },
+
             2: {
                 title: "Candy Shop Challenge! 🍬",
                 subtitle: "The Candy Spinner",
@@ -307,6 +328,7 @@
                     { id: 'green_candy', name: 'Green Candy', color: '#f0fdf4', stroke: '#4ade80', primaryColor: '#22c55e', weight: 1 } 
                 ]
             },
+
             3: {
                 title: "Wriggly Worm World! 🪱",
                 subtitle: "The Worm Spinner",
@@ -315,21 +337,45 @@
                     { id: 'purple_worm', name: 'Purple Worm', color: '#faf5ff', stroke: '#c084fc', primaryColor: '#a855f7', weight: 3 }, 
                     { id: 'green_worm', name: 'Green Worm', color: '#f0fdf4', stroke: '#4ade80', primaryColor: '#22c55e', weight: 2 }
                 ]
+            },
+
+            4: {
+                title: "Fish Pond Finale! 🐟",
+                subtitle: "The Fish Spinner",
+                options: [
+                    { id: 'green_fish', name: 'Green Fish', color: '#ecfdf5', stroke: '#22c55e', primaryColor: '#22c55e', weight: 2, image: 'greenfish.png' },
+                    { id: 'purple_fish', name: 'Purple Fish', color: '#faf5ff', stroke: '#a855f7', primaryColor: '#a855f7', weight: 3, image: 'purplefish.png' },
+                    { id: 'yellow_fish', name: 'Yellow Fish', color: '#fefce8', stroke: '#eab308', primaryColor: '#eab308', weight: 1, image: 'yellowfish.png' }
+                ],
+
+                segments: [
+                    { id: 'purple_fish', name: 'Purple Fish', color: '#faf5ff', stroke: '#a855f7', primaryColor: '#a855f7', weight: 1, image: 'purplefish.png' },
+                    { id: 'green_fish', name: 'Green Fish', color: '#ecfdf5', stroke: '#22c55e', primaryColor: '#22c55e', weight: 1, image: 'greenfish.png' },
+                    { id: 'purple_fish', name: 'Purple Fish', color: '#faf5ff', stroke: '#a855f7', primaryColor: '#a855f7', weight: 1, image: 'purplefish.png' },
+                    { id: 'yellow_fish', name: 'Yellow Fish', color: '#fefce8', stroke: '#eab308', primaryColor: '#eab308', weight: 1, image: 'yellowfish.png' },
+                    { id: 'green_fish', name: 'Green Fish', color: '#ecfdf5', stroke: '#22c55e', primaryColor: '#22c55e', weight: 1, image: 'greenfish.png' },
+                    { id: 'purple_fish', name: 'Purple Fish', color: '#faf5ff', stroke: '#a855f7', primaryColor: '#a855f7', weight: 1, image: 'purplefish.png' }
+                ]
             }
         };
 
         function playTick() {
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
+
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(1800, audioCtx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.08);
+
                 gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
+
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.08);
             } catch (e) {}
@@ -338,61 +384,116 @@
         function playDing() {
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
                 const osc1 = audioCtx.createOscillator();
                 const osc2 = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
+
                 osc1.type = 'sine';
                 osc1.frequency.setValueAtTime(880, audioCtx.currentTime);
+
                 osc2.type = 'sine';
                 osc2.frequency.setValueAtTime(1320, audioCtx.currentTime);
+
                 gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+
                 osc1.connect(gain);
                 osc2.connect(gain);
                 gain.connect(audioCtx.destination);
-                osc1.start(); osc2.start();
+
+                osc1.start();
+                osc2.start();
+
                 osc1.stop(audioCtx.currentTime + 0.8);
                 osc2.stop(audioCtx.currentTime + 0.8);
             } catch (e) {}
         }
 
+        function getFishImage(opt) {
+            if (opt.id === "purple_fish") return "purplefish.png";
+            if (opt.id === "yellow_fish") return "yellowfish.png";
+            if (opt.id === "green_fish") return "greenfish.png";
+            return "";
+        }
+
         function getIconHtml(opt, sizeClass = 'w-8 h-8', isPrediction = false) {
             if (currentLevel === 1) {
                 let asset = animalAssets[opt.id];
+
                 if (isPrediction) {
                     asset = asset.replace(/width=".*?" height=".*?"/, 'width="160" height="160"').replace(/x=".*?" y=".*?"/, 'x="20" y="20"');
                 } else {
                     asset = asset.replace(/width=".*?" height=".*?"/, 'width="150" height="150"').replace(/x=".*?" y=".*?"/, 'x="25" y="25"');
                 }
+
                 return `<svg viewBox="0 0 200 200" class="${sizeClass}">${asset}</svg>`;
             }
+
             if (currentLevel === 2) {
-                return `<div class="${sizeClass} flex items-center justify-center"><svg viewBox="0 0 50 30" class="w-full h-full"><path d="M0,15 L10,5 L10,25 Z" fill="${opt.primaryColor}"/><path d="M50,15 L40,5 L40,25 Z" fill="${opt.primaryColor}"/><circle cx="25" cy="15" r="10" fill="${opt.primaryColor}" stroke="white" stroke-width="1.5"/></svg></div>`;
+                return `
+                    <div class="${sizeClass} flex items-center justify-center">
+                        <svg viewBox="0 0 50 30" class="w-full h-full">
+                            <path d="M0,15 L10,5 L10,25 Z" fill="${opt.primaryColor}"/>
+                            <path d="M50,15 L40,5 L40,25 Z" fill="${opt.primaryColor}"/>
+                            <circle cx="25" cy="15" r="10" fill="${opt.primaryColor}" stroke="white" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                `;
             }
-            return `<div class="${sizeClass} flex items-center justify-center"><svg viewBox="0 0 40 40" class="w-full h-full"><circle cx="10" cy="20" r="7" fill="${opt.primaryColor}"/><circle cx="20" cy="20" r="7" fill="${opt.primaryColor}"/><circle cx="30" cy="20" r="8" fill="${opt.primaryColor}"/><circle cx="32" cy="18" r="1" fill="black"/><circle cx="28" cy="18" r="1" fill="black"/></svg></div>`;
+
+            if (currentLevel === 3) {
+                return `
+                    <div class="${sizeClass} flex items-center justify-center">
+                        <svg viewBox="0 0 40 40" class="w-full h-full">
+                            <circle cx="10" cy="20" r="7" fill="${opt.primaryColor}"/>
+                            <circle cx="20" cy="20" r="7" fill="${opt.primaryColor}"/>
+                            <circle cx="30" cy="20" r="8" fill="${opt.primaryColor}"/>
+                            <circle cx="32" cy="18" r="1" fill="black"/>
+                            <circle cx="28" cy="18" r="1" fill="black"/>
+                        </svg>
+                    </div>
+                `;
+            }
+
+            const fishImage = getFishImage(opt);
+
+            return `
+                <div class="${sizeClass} flex items-center justify-center">
+                    <img 
+                        src="${fishImage}" 
+                        alt="${opt.name}" 
+                        class="w-full h-full object-contain"
+                    >
+                </div>
+            `;
         }
 
         function initLevel() {
             const config = levelConfigs[currentLevel];
+
             document.getElementById('game-title').textContent = config.title;
             document.getElementById('spinner-subtitle').textContent = config.subtitle;
             document.getElementById('level-indicator').textContent = currentLevel;
-            
             document.getElementById('spin-button').disabled = true;
-            
+            document.getElementById('result-text').textContent = "";
+
             predictionMost = null;
             predictionLeast = null;
             spinCount = 0;
+
             document.getElementById('spin-counter').textContent = "0";
-            
+
             const overlay = document.getElementById('prediction-setup-overlay');
             overlay.classList.remove('hidden', 'fade-out');
+
             document.getElementById('step-most-likely').classList.remove('hidden');
             document.getElementById('step-least-likely').classList.add('hidden');
             document.getElementById('step-ready').classList.add('hidden');
-            
+
             const mostContainer = document.getElementById('most-likely-options');
             const leastContainer = document.getElementById('least-likely-options');
+
             mostContainer.innerHTML = '';
             leastContainer.innerHTML = '';
 
@@ -409,60 +510,97 @@
                 leastContainer.appendChild(createChoiceBtn(opt, () => setLeastLikely(opt.id)));
             });
 
-            // Draw Wheel
+            drawWheel(config);
+            drawTallies(config);
+        }
+
+        function drawWheel(config) {
             const wheel = document.getElementById('spinner');
             wheel.innerHTML = '';
-            let currentAngle = 0;
-            const totalWeight = config.options.reduce((s, o) => s + o.weight, 0);
 
-            config.options.forEach(opt => {
+            let currentAngle = 0;
+            const wheelRadius = 90;
+            const rimRadius = 90;
+            const innerRimRadius = 85;
+            const pegRadius = 90;
+
+            const wheelSegments = config.segments || config.options;
+            const totalWeight = wheelSegments.reduce((s, o) => s + o.weight, 0);
+
+            wheelSegments.forEach(opt => {
                 const angle = (opt.weight / totalWeight) * 360;
+
                 const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
                 const rad1 = (currentAngle - 90) * Math.PI / 180;
                 const rad2 = (currentAngle + angle - 90) * Math.PI / 180;
-                const x1 = 100 + 100 * Math.cos(rad1);
-                const y1 = 100 + 100 * Math.sin(rad1);
-                const x2 = 100 + 100 * Math.cos(rad2);
-                const y2 = 100 + 100 * Math.sin(rad2);
-                path.setAttribute("d", `M 100 100 L ${x1} ${y1} A 100 100 0 ${angle > 180 ? 1 : 0} 1 ${x2} ${y2} Z`);
+
+                const x1 = 100 + wheelRadius * Math.cos(rad1);
+                const y1 = 100 + wheelRadius * Math.sin(rad1);
+                const x2 = 100 + wheelRadius * Math.cos(rad2);
+                const y2 = 100 + wheelRadius * Math.sin(rad2);
+
+                path.setAttribute("d", `M 100 100 L ${x1} ${y1} A ${wheelRadius} ${wheelRadius} 0 ${angle > 180 ? 1 : 0} 1 ${x2} ${y2} Z`);
                 path.setAttribute("fill", opt.color);
                 path.setAttribute("stroke", opt.stroke);
+                path.setAttribute("stroke-width", "1.5");
+
                 wheel.appendChild(path);
 
                 const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                g.setAttribute("transform", `rotate(${currentAngle + angle/2}, 100, 100)`);
+                g.setAttribute("transform", `rotate(${currentAngle + angle / 2}, 100, 100)`);
+
                 if (currentLevel === 1) {
                     g.innerHTML = animalAssets[opt.id];
                 } else {
                     const fo = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
-                    fo.setAttribute("x", "85"); fo.setAttribute("y", "35"); fo.setAttribute("width", "30"); fo.setAttribute("height", "30");
-                    fo.innerHTML = `<div xmlns="http://www.w3.org/1999/xhtml" class="flex justify-center">${getIconHtml(opt, 'w-6 h-6')}</div>`;
+
+                    if (currentLevel === 4) {
+                        fo.setAttribute("x", "71");
+                        fo.setAttribute("y", "23");
+                        fo.setAttribute("width", "58");
+                        fo.setAttribute("height", "58");
+
+                        fo.innerHTML = `
+                            <div xmlns="http://www.w3.org/1999/xhtml" class="flex justify-center items-center w-full h-full">
+                                <img src="${getFishImage(opt)}" alt="${opt.name}" style="width: 58px; height: 58px; object-fit: contain;">
+                            </div>
+                        `;
+                    } else {
+                        fo.setAttribute("x", "76");
+                        fo.setAttribute("y", "28");
+                        fo.setAttribute("width", "48");
+                        fo.setAttribute("height", "48");
+
+                        fo.innerHTML = `<div xmlns="http://www.w3.org/1999/xhtml" class="flex justify-center">${getIconHtml(opt, 'w-8 h-8')}</div>`;
+                    }
+
                     g.appendChild(fo);
                 }
+
                 wheel.appendChild(g);
+
                 currentAngle += angle;
             });
-            // Outer Border (Rim)
+
             const rim = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             rim.setAttribute("cx", "100");
             rim.setAttribute("cy", "100");
-            rim.setAttribute("r", "97");
+            rim.setAttribute("r", rimRadius);
             rim.setAttribute("fill", "none");
-            rim.setAttribute("stroke", "#475569"); // Slate 600 - Metallic gray
-            rim.setAttribute("stroke-width", "6");
+            rim.setAttribute("stroke", "#475569");
+            rim.setAttribute("stroke-width", "10");
             wheel.appendChild(rim);
 
-            // Inner Decorative Border
             const innerRim = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             innerRim.setAttribute("cx", "100");
             innerRim.setAttribute("cy", "100");
-            innerRim.setAttribute("r", "94");
+            innerRim.setAttribute("r", innerRimRadius);
             innerRim.setAttribute("fill", "none");
-            innerRim.setAttribute("stroke", "#94a3b8"); // Slate 400 - Light highlight
+            innerRim.setAttribute("stroke", "#94a3b8");
             innerRim.setAttribute("stroke-width", "1");
             wheel.appendChild(innerRim);
 
-            // Center Pin (Hub)
             const hub = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             hub.setAttribute("cx", "100");
             hub.setAttribute("cy", "100");
@@ -472,40 +610,52 @@
             hub.setAttribute("stroke-width", "3");
             wheel.appendChild(hub);
 
-            // Decorative Pegs around the edge
             for (let i = 0; i < 24; i++) {
                 const peg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
                 const rad = (i * 15 - 90) * Math.PI / 180;
-                const px = 100 + 97 * Math.cos(rad);
-                const py = 100 + 97 * Math.sin(rad);
+                const px = 100 + pegRadius * Math.cos(rad);
+                const py = 100 + pegRadius * Math.sin(rad);
+
                 peg.setAttribute("cx", px);
                 peg.setAttribute("cy", py);
                 peg.setAttribute("r", "2");
                 peg.setAttribute("fill", "white");
+
                 wheel.appendChild(peg);
             }
-            // Draw Tallies (Hidden)
+        }
+
+        function drawTallies(config) {
             const tallyBox = document.getElementById('tally-rows-container');
             tallyBox.innerHTML = '';
             currentCounts = {};
+
             config.options.forEach(opt => {
                 currentCounts[opt.id] = 0;
+
                 const row = document.createElement('div');
                 row.id = `row-${opt.id}`;
                 row.className = "tally-row-hidden flex items-center gap-3 p-3 rounded-xl transition-all bg-gray-50 border-2 border-transparent";
-                const iconSize = currentLevel === 1 ? 'w-24 h-24' : 'w-10 h-10';
+
+                const iconSize = currentLevel === 1 ? 'w-24 h-24' : currentLevel === 4 ? 'w-16 h-16' : 'w-10 h-10';
+                const iconBoxSize = currentLevel === 1 ? 'w-24' : currentLevel === 4 ? 'w-20' : 'w-12';
+
                 row.innerHTML = `
-                    <div class="flex flex-col items-center ${currentLevel === 1 ? 'w-24' : 'w-12'}">
+                    <div class="flex flex-col items-center ${iconBoxSize}">
                         ${getIconHtml(opt, iconSize)}
                         <div id="badges-${opt.id}" class="mt-1"></div>
                     </div>
+
                     <div class="flex-1 bg-white p-2 rounded-lg border border-gray-100 min-h-[44px] flex items-center overflow-hidden">
                         <div id="tally-${opt.id}" class="flex flex-wrap gap-y-1 items-center"></div>
                     </div>
+
                     <div class="flex items-center gap-2">
                         <span id="count-${opt.id}" class="font-black text-gray-300 text-xl w-6 text-center">0</span>
                         <button onclick="addTally('${opt.id}')" class="bg-gray-800 text-white w-8 h-8 rounded-lg font-bold text-xl shadow-sm hover:scale-110 active:scale-95">+</button>
-                    </div>`;
+                    </div>
+                `;
+
                 tallyBox.appendChild(row);
             });
         }
@@ -513,44 +663,72 @@
         function createChoiceBtn(opt, cb) {
             const btn = document.createElement('button');
             const isLvl1 = currentLevel === 1;
+
             btn.className = `prediction-choice-btn flex flex-col items-center justify-center gap-4 ${isLvl1 ? 'p-6' : 'p-3'} rounded-[32px] bg-white shadow-lg border-2 border-gray-100`;
-            btn.innerHTML = `${getIconHtml(opt, isLvl1 ? 'w-44 h-44' : 'w-16 h-16', true)}<span class="font-black uppercase text-gray-600">${opt.name}</span>`;
+
+            btn.innerHTML = `
+                ${getIconHtml(opt, isLvl1 ? 'w-44 h-44' : 'w-16 h-16', true)}
+                <span class="font-black uppercase text-gray-600">${opt.name}</span>
+            `;
+
             btn.onclick = cb;
+
             return btn;
         }
 
         function setMostLikely(id) {
             predictionMost = id;
+
             document.getElementById('step-most-likely').classList.add('hidden');
             document.getElementById('step-least-likely').classList.remove('hidden');
+
             const leastBtns = document.getElementById('least-likely-options').children;
+
             levelConfigs[currentLevel].options.forEach((o, i) => {
-                if (o.id === id) { leastBtns[i].disabled = true; leastBtns[i].classList.add('opacity-25', 'grayscale'); }
+                leastBtns[i].disabled = false;
+                leastBtns[i].classList.remove('opacity-25', 'grayscale');
+
+                if (o.id === id) {
+                    leastBtns[i].disabled = true;
+                    leastBtns[i].classList.add('opacity-25', 'grayscale');
+                }
             });
         }
 
         function setLeastLikely(id) {
             predictionLeast = id;
+
             const config = levelConfigs[currentLevel];
             const most = config.options.find(o => o.id === predictionMost);
             const least = config.options.find(o => o.id === predictionLeast);
-            document.getElementById('summary-most').innerHTML = `<p class="text-[8px] font-black text-green-600 uppercase mb-1">MOST</p>${getIconHtml(most, 'w-12 h-12')}`;
-            document.getElementById('summary-least').innerHTML = `<p class="text-[8px] font-black text-red-600 uppercase mb-1">LEAST</p>${getIconHtml(least, 'w-12 h-12')}`;
+
+            document.getElementById('summary-most').innerHTML = `
+                <p class="text-[8px] font-black text-green-600 uppercase mb-1">MOST</p>
+                ${getIconHtml(most, 'w-12 h-12')}
+            `;
+
+            document.getElementById('summary-least').innerHTML = `
+                <p class="text-[8px] font-black text-red-600 uppercase mb-1">LEAST</p>
+                ${getIconHtml(least, 'w-12 h-12')}
+            `;
+
             document.getElementById('step-least-likely').classList.add('hidden');
             document.getElementById('step-ready').classList.remove('hidden');
         }
 
         function confirmPredictions() {
             const overlay = document.getElementById('prediction-setup-overlay');
+
             overlay.classList.add('fade-out');
+
             setTimeout(() => {
                 overlay.classList.add('hidden');
-                
-                // 3. THE UNLOCK: This line finally enables the button after "SPIN NOW!" is clicked
+
                 document.getElementById('spin-button').disabled = false;
-                
+
                 document.getElementById(`badges-${predictionMost}`).innerHTML = `<span class="prediction-badge badge-most">Most</span>`;
                 document.getElementById(`badges-${predictionLeast}`).innerHTML = `<span class="prediction-badge badge-least">Least</span>`;
+
                 document.querySelectorAll('#tally-rows-container > div').forEach((r, i) => {
                     setTimeout(() => r.classList.remove('tally-row-hidden'), i * 100);
                 });
@@ -559,44 +737,63 @@
 
         function spinWheel() {
             if (isSpinning || waitingForTally) return;
+
             isSpinning = true;
+
             document.getElementById('spin-button').disabled = true;
             document.getElementById('result-text').textContent = "Spinning...";
             document.getElementById('tally-alert').classList.remove('show');
 
             const extra = Math.floor(Math.random() * 360);
             const totalSpin = (360 * 5) + extra;
+
             currentRotation += totalSpin;
+
             document.getElementById('spinner').style.transform = `rotate(${currentRotation}deg)`;
 
-            const ticks = 24; 
+            const ticks = 24;
+
             for (let i = 0; i < ticks; i++) {
                 let t = i / ticks;
                 let delay = (1 - Math.pow(1 - t, 3)) * 3000;
-                setTimeout(() => { if (isSpinning) playTick(); }, delay);
+
+                setTimeout(() => {
+                    if (isSpinning) playTick();
+                }, delay);
             }
 
             setTimeout(() => {
                 isSpinning = false;
                 waitingForTally = true;
                 spinCount++;
+
                 document.getElementById('spin-counter').textContent = spinCount;
+
                 playDing();
                 createCelebration();
 
                 const norm = (360 - (currentRotation % 360)) % 360;
                 const config = levelConfigs[currentLevel];
-                let acc = 0;
-                let winner = config.options[0];
-                const total = config.options.reduce((s, o) => s + o.weight, 0);
+                const wheelSegments = config.segments || config.options;
 
-                for (let o of config.options) {
+                let acc = 0;
+                let winner = wheelSegments[0];
+
+                const total = wheelSegments.reduce((s, o) => s + o.weight, 0);
+
+                for (let o of wheelSegments) {
                     const a = (o.weight / total) * 360;
-                    if (norm >= acc && norm < acc + a) { winner = o; break; }
+
+                    if (norm >= acc && norm < acc + a) {
+                        winner = o;
+                        break;
+                    }
+
                     acc += a;
                 }
 
                 document.getElementById('result-text').innerHTML = `Landed on: <span class="text-orange-600">${winner.name}</span>`;
+
                 document.getElementById(`row-${winner.id}`).classList.add('ring-4', 'ring-orange-400');
                 document.getElementById('tally-alert').classList.add('show');
             }, 3000);
@@ -604,95 +801,183 @@
 
         function addTally(id) {
             currentCounts[id]++;
+
             document.getElementById(`count-${id}`).textContent = currentCounts[id];
             document.getElementById(`count-${id}`).classList.replace('text-gray-300', 'text-gray-900');
+
             const container = document.getElementById(`tally-${id}`);
             const idx = Math.floor((currentCounts[id] - 1) / 5);
+
             let group = document.getElementById(`group-${id}-${idx}`);
+
             if (!group) {
                 group = document.createElement('div');
                 group.className = 'tally-group';
                 group.id = `group-${id}-${idx}`;
                 container.appendChild(group);
             }
+
             const mark = document.createElement('div');
             mark.className = currentCounts[id] % 5 === 0 ? 'tally-slash' : 'tally-mark';
             group.appendChild(mark);
 
             if (waitingForTally) {
                 waitingForTally = false;
+
                 document.getElementById('tally-alert').classList.remove('show');
-                levelConfigs[currentLevel].options.forEach(o => document.getElementById(`row-${o.id}`).classList.remove('ring-4', 'ring-orange-400'));
-                if (spinCount < 10) document.getElementById('spin-button').disabled = false;
-                else evaluateResults();
+
+                levelConfigs[currentLevel].options.forEach(o => {
+                    document.getElementById(`row-${o.id}`).classList.remove('ring-4', 'ring-orange-400');
+                });
+
+                if (spinCount < 10) {
+                    document.getElementById('spin-button').disabled = false;
+                } else {
+                    evaluateResults();
+                }
             }
         }
 
         function evaluateResults() {
             const counts = Object.values(currentCounts);
+
             const winners = Object.keys(currentCounts).filter(id => currentCounts[id] === Math.max(...counts));
             const losers = Object.keys(currentCounts).filter(id => currentCounts[id] === Math.min(...counts));
+
             const feedback = document.getElementById('prediction-feedback');
             const resTxt = document.getElementById('prediction-result-text');
+
             feedback.classList.remove('hidden');
+
             if (winners.includes(predictionMost) && losers.includes(predictionLeast)) {
-                resTxt.textContent = "🎯 PERFECT PREDICTION!"; resTxt.className = "text-xl font-black text-green-400";
+                resTxt.textContent = "🎯 PERFECT PREDICTION!";
+                resTxt.className = "text-xl font-black text-green-400";
             } else if (winners.includes(predictionMost) || losers.includes(predictionLeast)) {
-                resTxt.textContent = "⚖️ PARTIAL MATCH!"; resTxt.className = "text-xl font-black text-orange-400";
+                resTxt.textContent = "⚖️ PARTIAL MATCH!";
+                resTxt.className = "text-xl font-black text-orange-400";
             } else {
-                resTxt.textContent = "📉 DATA SURPRISE!"; resTxt.className = "text-xl font-black text-red-400";
+                resTxt.textContent = "📉 DATA SURPRISE!";
+                resTxt.className = "text-xl font-black text-red-400";
             }
+
+            if (currentLevel < totalLevels) {
+                document.getElementById('overlay-title').textContent = "LEVEL UP! 🍬";
+                document.getElementById('overlay-desc').textContent = "Great job! Get ready for the next spinner challenge.";
+                document.getElementById('overlay-btn').textContent = "GO! 🚀";
+            } else {
+                document.getElementById('overlay-title').textContent = "GAME COMPLETE! 🏆";
+                document.getElementById('overlay-desc').textContent = "Amazing work! You finished all the spinner challenges.";
+                document.getElementById('overlay-btn').textContent = "PLAY AGAIN! 🔁";
+            }
+
             document.getElementById('level-up-overlay').style.display = 'flex';
         }
 
         class Particle {
             constructor(x, y, color) {
-                this.x = x; this.y = y; this.color = color;
+                this.x = x;
+                this.y = y;
+                this.color = color;
                 this.angle = Math.random() * Math.PI * 2;
                 this.velocity = Math.random() * 8 + 2;
                 this.alpha = 1;
             }
+
             draw() {
-                ctx.globalAlpha = this.alpha; ctx.beginPath(); ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = this.color; ctx.fill();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
             }
+
             update() {
                 this.x += Math.cos(this.angle) * this.velocity;
                 this.y += Math.sin(this.angle) * this.velocity + 0.15;
-                this.velocity *= 0.96; this.alpha -= 0.02;
+                this.velocity *= 0.96;
+                this.alpha -= 0.02;
             }
         }
 
         function createCelebration() {
             const rect = document.getElementById('spinner').getBoundingClientRect();
-            const cx = rect.left + rect.width / 2; const cy = rect.top + rect.height / 2;
-            const colors = ['#fb923c', '#3b82f6', '#22c55e', '#ef4444'];
-            for (let i = 0; i < 50; i++) particles.push(new Particle(cx, cy, colors[Math.floor(Math.random() * 4)]));
+
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+
+            const colors = ['#fb923c', '#3b82f6', '#22c55e', '#ef4444', '#a855f7', '#eab308'];
+
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle(cx, cy, colors[Math.floor(Math.random() * colors.length)]));
+            }
         }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             for (let i = particles.length - 1; i >= 0; i--) {
-                particles[i].update(); particles[i].draw();
-                if (particles[i].alpha <= 0) particles.splice(i, 1);
+                particles[i].update();
+                particles[i].draw();
+
+                if (particles[i].alpha <= 0) {
+                    particles.splice(i, 1);
+                }
             }
+
             requestAnimationFrame(animate);
         }
 
         function resetData() {
             currentLevel = 1;
+            currentRotation = 0;
+            waitingForTally = false;
+            isSpinning = false;
+
+            document.getElementById('spinner').style.transform = `rotate(0deg)`;
             document.getElementById('level-up-overlay').style.display = 'none';
+
             initLevel();
         }
 
         window.onload = function() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+
             document.getElementById('overlay-btn').onclick = () => {
-                if (currentLevel < 3) { currentLevel++; initLevel(); document.getElementById('level-up-overlay').style.display = 'none'; }
-                else resetData();
+                document.getElementById('level-up-overlay').style.display = 'none';
+                document.getElementById('prediction-feedback').classList.add('hidden');
+
+                if (currentLevel < totalLevels) {
+                    currentLevel++;
+                    initLevel();
+                } else {
+                    resetData();
+                }
             };
+
+            document.addEventListener('keydown', function(event) {
+                if (event.shiftKey && event.key.toLowerCase() === 'f') {
+                    currentLevel = 4;
+                    currentRotation = 0;
+                    waitingForTally = false;
+                    isSpinning = false;
+                    spinCount = 0;
+
+                    document.getElementById('spinner').style.transform = `rotate(0deg)`;
+                    document.getElementById('level-up-overlay').style.display = 'none';
+                    document.getElementById('prediction-feedback').classList.add('hidden');
+
+                    initLevel();
+
+                    console.log("Secret test shortcut: jumped to Fish Pond Finale.");
+                }
+            });
+
             initLevel();
             animate();
         };
