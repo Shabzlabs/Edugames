@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ShabzLabs - Compound Word Game</title>
+
   <style>
     body {
       margin: 0;
-      font-family: 'Arial', sans-serif;
+      font-family: Arial, sans-serif;
       background: linear-gradient(to bottom right, #dbeafe, #fef3c7);
       min-height: 100vh;
       display: flex;
@@ -20,11 +21,10 @@
       max-width: 750px;
       background: white;
       border-radius: 25px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
       padding: 30px;
       text-align: center;
       border: 5px solid #2563eb;
-      position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
 
     .back-btn {
@@ -42,30 +42,31 @@
       display: inline-block;
       background: #fef3c7;
       color: #92400e;
-      padding: 5px 15px;
+      padding: 6px 15px;
       border-radius: 20px;
+      border: 2px solid #f59e0b;
       font-weight: bold;
       margin-bottom: 10px;
-      border: 2px solid #f59e0b;
     }
 
     .title {
-      font-size: 2.3rem;
+      font-size: 2.4rem;
       color: #2563eb;
-      margin: 5px 0;
+      margin: 10px 0;
     }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 15px;
+      gap: 10px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
-    .score-box, .question-box {
+    .score-box,
+    .question-box {
       background: #eff6ff;
-      padding: 10px 18px;
+      padding: 12px 18px;
       border-radius: 14px;
       font-weight: bold;
       color: #1d4ed8;
@@ -77,7 +78,7 @@
       background: #e5e7eb;
       border-radius: 999px;
       overflow: hidden;
-      margin: 15px 0 25px;
+      margin-bottom: 25px;
     }
 
     .progress-bar {
@@ -89,45 +90,51 @@
 
     .word-card {
       background: #f9fafb;
+      border: 3px dashed #cbd5e1;
       border-radius: 22px;
       padding: 40px 20px;
       margin-bottom: 25px;
-      border: 3px dashed #cbd5e1;
     }
 
     .emoji-row {
-      font-size: 5.5rem;
-      margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 5rem;
+      margin-bottom: 20px;
+    }
+
+    .emoji-img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
     }
 
     .question {
       font-size: 1.3rem;
-      margin: 20px 0;
-      color: #374151;
       font-weight: bold;
+      color: #374151;
     }
 
     .button-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .choice-btn, .action-btn {
-      border: none;
-      border-radius: 18px;
-      padding: 18px 12px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
     }
 
     .choice-btn {
+      border: none;
+      border-radius: 18px;
+      padding: 18px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
       background: #dbeafe;
       color: #0f172a;
       box-shadow: 0 4px 0 #bfdbfe;
+      transition: 0.2s;
     }
 
     .choice-btn:hover {
@@ -135,201 +142,417 @@
       background: #bfdbfe;
     }
 
+    .feedback {
+      min-height: 40px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-top: 18px;
+    }
+
     .action-btn {
+      border: none;
+      border-radius: 18px;
+      padding: 16px 40px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
       background: #22c55e;
       color: white;
-      padding: 15px 40px;
       box-shadow: 0 5px 0 #16a34a;
       margin-top: 20px;
     }
 
     .action-btn:hover {
-        background: #1bb150;
+      background: #1bb150;
     }
 
-    .feedback {
-      min-height: 40px;
-      font-size: 1.4rem;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    /* Celebration Screen Overlay */
     #celebration-overlay {
-        display: none;
-        padding: 40px 10px;
+      display: none;
+      padding: 30px 10px;
     }
 
     #celebration-overlay h1 {
-        font-size: 3rem;
-        color: #2563eb;
-        margin-bottom: 10px;
+      font-size: 3rem;
+      color: #2563eb;
     }
 
     #celebration-overlay p {
-        font-size: 1.5rem;
-        color: #4b5563;
+      font-size: 1.5rem;
+      color: #4b5563;
+    }
+
+    @media (max-width: 600px) {
+      .emoji-img {
+        width: 70px;
+        height: 70px;
+      }
+
+      .emoji-row {
+        font-size: 3.8rem;
+      }
+
+      .title {
+        font-size: 2rem;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="game-container">
-    <a class="back-btn" href="index.html">🏠 Home</a>
-    
-    <div id="game-ui">
-      <div class="level-badge" id="levelBadge">Level 1: Explorer</div>
-      <h1 class="title">Compound Words</h1>
 
-      <div class="top-bar">
-        <div class="question-box" id="questionText">Question 1/3</div>
-        <div class="score-box" id="scoreText">Score: 0</div>
-      </div>
+<div class="game-container">
 
-      <div class="progress-wrapper">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
+  <a class="back-btn" href="index.html">🏠 Home</a>
 
-      <div class="word-card">
-        <div class="emoji-row" id="emojiRow">☀️ + 🌸</div>
-        <p class="question">What word do these make?</p>
-      </div>
+  <div id="game-ui">
 
-      <div class="button-grid" id="answerButtons"></div>
-      <div class="feedback" id="feedback"></div>
+    <div class="level-badge" id="levelBadge">
+      Level 1: Explorer 🌟
     </div>
 
-    <div id="celebration-overlay">
-        <div style="font-size: 80px;">🎉</div>
-        <h1 id="celeb-title">Great Job!</h1>
-        <p id="celeb-text">You reached the next level!</p>
-        <button class="action-btn" id="celebBtn" onclick="nextLevel()">Keep Going! 🚀</button>
+    <h1 class="title">Compound Words</h1>
+
+    <div class="top-bar">
+
+      <div class="question-box" id="questionText">
+        Question 1/3
+      </div>
+
+      <div class="score-box" id="scoreText">
+        Score: 0
+      </div>
+
     </div>
+
+    <div class="progress-wrapper">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="word-card">
+
+      <div class="emoji-row" id="emojiRow">
+        ☀️ + 🌸
+      </div>
+
+      <p class="question">
+        What word do these make?
+      </p>
+
+    </div>
+
+    <div class="button-grid" id="answerButtons"></div>
+
+    <div class="feedback" id="feedback"></div>
 
   </div>
 
-  <script>
-    const levels = [
+  <div id="celebration-overlay">
+
+    <div style="font-size:80px;">🎉</div>
+
+    <h1 id="celeb-title">Great Job!</h1>
+
+    <p id="celeb-text">
+      You reached the next level!
+    </p>
+
+    <button class="action-btn" id="celebBtn" onclick="nextLevel()">
+      Keep Going! 🚀
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+const levels = [
+
+  {
+    name: "Level 1: Explorer 🌟",
+
+    questions: [
+
       {
-        name: "Level 1: Explorer 🌟",
-        questions: [
-          { emojis: "☀️ + 🌸", options: ["sunflower", "flowerpot", "sunny"], answer: "sunflower" },
-          { emojis: "🌧️ + 🎀", options: ["raincoat", "rainbow", "rainy"], answer: "rainbow" },
-          { emojis: "🦷 + 🪥", options: ["toothpick", "toothbrush", "toothpaste"], answer: "toothbrush" }
-        ]
+        emojis: "☀️ + 🌸",
+        options: ["sunflower", "flowerpot", "sunny"],
+        answer: "sunflower"
       },
+
       {
-        name: "Level 2: Scientist 🧪",
-        questions: [
-          { emojis: "🧈 + 🪰", options: ["butterfly", "buttercup", "flypaper"], answer: "butterfly" },
-          { emojis: "🧺 + ⚽", options: ["football", "baseball", "basketball"], answer: "basketball" }, // Updated: Basket + Ball
-          { emojis: "❄️ + 👨", options: ["snowflake", "snowball", "snowman"], answer: "snowman" } // Updated: Snow + Man
-        ]
+        emojis: "🌧️ + 🎀",
+        options: ["raincoat", "rainbow", "rainy"],
+        answer: "rainbow"
       },
+
       {
-        name: "Level 3: Expert 🏆",
-        questions: [
-          { emojis: "💻 + 🔝", options: ["desktop", "laptop", "tabletop"], answer: "laptop" },
-          { emojis: "☕ + 🍰", options: ["pancake", "cupcake", "cheesecake"], answer: "cupcake" }, // Updated: Cup + Cake
-          { emojis: "⭐ + 🐟", options: ["starfish", "jellyfish", "goldfish"], answer: "starfish" }
-        ]
-      },
-      {
-        name: "Level 4: Genius 🧠",
-        questions: [
-          { emojis: "🌊 + 🍉", options: ["waterfall", "watermelon", "waterslide"], answer: "watermelon" },
-          { emojis: "🔥 + 🪰", options: ["fireman", "firefly", "fireworks"], answer: "firefly" },
-          { emojis: "📖 + 🎒", options: ["notebook", "bookbag", "bookshelf"], answer: "bookbag" }
-        ]
-      }
-    ];
-
-    let currentLevel = 0;
-    let currentQuestion = 0;
-    let score = 0;
-    let locked = false;
-
-    function loadQuestion() {
-      const level = levels[currentLevel];
-      const q = level.questions[currentQuestion];
-
-      document.getElementById("game-ui").style.display = "block";
-      document.getElementById("celebration-overlay").style.display = "none";
-
-      document.getElementById("levelBadge").textContent = level.name;
-      document.getElementById("emojiRow").textContent = q.emojis;
-      document.getElementById("scoreText").textContent = "Score: " + score;
-      document.getElementById("questionText").textContent = `Question ${currentQuestion + 1}/${level.questions.length}`;
-      
-      const totalQuestions = levels.reduce((acc, lvl) => acc + lvl.questions.length, 0);
-      const questionsDone = levels.slice(0, currentLevel).reduce((acc, lvl) => acc + lvl.questions.length, 0) + currentQuestion;
-      document.getElementById("progressBar").style.width = (questionsDone / totalQuestions) * 100 + "%";
-      
-      document.getElementById("feedback").textContent = "";
-      const btnContainer = document.getElementById("answerButtons");
-      btnContainer.innerHTML = "";
-
-      q.options.forEach(opt => {
-        const btn = document.createElement("button");
-        btn.className = "choice-btn";
-        btn.textContent = opt;
-        btn.onclick = () => checkAnswer(opt);
-        btnContainer.appendChild(btn);
-      });
-    }
-
-    function checkAnswer(choice) {
-      if (locked) return;
-      locked = true;
-
-      const q = levels[currentLevel].questions[currentQuestion];
-      const feedback = document.getElementById("feedback");
-
-      if (choice === q.answer) {
-        feedback.textContent = "✅ Correct! Amazing!";
-        feedback.style.color = "#16a34a";
-        score++;
-      } else {
-        feedback.textContent = "❌ So close! It was " + q.answer;
-        feedback.style.color = "#dc2626";
+        emojis: "🦷 + <img src='brush.png' class='emoji-img'>",
+        options: ["toothpick", "toothbrush", "toothpaste"],
+        answer: "toothbrush"
       }
 
-      setTimeout(() => {
-        currentQuestion++;
-        locked = false;
+    ]
+  },
 
-        if (currentQuestion >= levels[currentLevel].questions.length) {
-          showLevelUp();
-        } else {
-          loadQuestion();
-        }
-      }, 1500);
-    }
+  {
+    name: "Level 2: Scientist 🧪",
 
-    function showLevelUp() {
-      document.getElementById("game-ui").style.display = "none";
-      document.getElementById("celebration-overlay").style.display = "block";
-      
-      if (currentLevel < levels.length - 1) {
-          // Normal Level Up
-          document.getElementById("celeb-title").textContent = "GOOD JOB!";
-          document.getElementById("celeb-text").textContent = `You finished ${levels[currentLevel].name}!`;
-          document.getElementById("celebBtn").textContent = "Next Level! 🚀";
-      } else {
-          // Game Completed
-          document.getElementById("celeb-title").textContent = "YOU ARE A GENIUS!";
-          document.getElementById("celeb-text").textContent = `Final Score: ${score} / 12`;
-          document.getElementById("celebBtn").textContent = "Play Again! 🔄";
-          document.getElementById("celebBtn").onclick = () => location.reload();
+    questions: [
+
+      {
+        emojis: "🧈 + 🪰",
+        options: ["butterfly", "buttercup", "flypaper"],
+        answer: "butterfly"
+      },
+
+      {
+        emojis: "🧺 + ⚽",
+        options: ["football", "baseball", "basketball"],
+        answer: "basketball"
+      },
+
+      {
+        emojis: "❄️ + 👨",
+        options: ["snowflake", "snowball", "snowman"],
+        answer: "snowman"
+      },
+
+      {
+        emojis: "<img src='cow.png' class='emoji-img'> + <img src='boy.png' class='emoji-img'>",
+        options: ["cowboy", "cowbell", "cowgirl"],
+        answer: "cowboy"
       }
-    }
 
-    function nextLevel() {
-      currentLevel++;
-      currentQuestion = 0;
+    ]
+  },
+
+  {
+    name: "Level 3: Expert 🏆",
+
+    questions: [
+
+      {
+        emojis: "💻 + 🔝",
+        options: ["desktop", "laptop", "tabletop"],
+        answer: "laptop"
+      },
+
+      {
+        emojis: "☕ + 🍰",
+        options: ["pancake", "cupcake", "cheesecake"],
+        answer: "cupcake"
+      },
+
+      {
+        emojis: "⭐ + 🐟",
+        options: ["starfish", "jellyfish", "goldfish"],
+        answer: "starfish"
+      },
+
+      {
+        emojis: "<img src='lip.png' class='emoji-img'> + <img src='stick.png' class='emoji-img'>",
+        options: ["lipstick", "lipgloss", "stickman"],
+        answer: "lipstick"
+      }
+
+    ]
+  },
+
+  {
+    name: "Level 4: Genius 🧠",
+
+    questions: [
+
+      {
+        emojis: "🌊 + 🍉",
+        options: ["waterfall", "watermelon", "waterslide"],
+        answer: "watermelon"
+      },
+
+      {
+        emojis: "🔥 + 🪰",
+        options: ["fireman", "firefly", "fireworks"],
+        answer: "firefly"
+      },
+
+      {
+        emojis: "📖 + 🎒",
+        options: ["notebook", "bookbag", "bookshelf"],
+        answer: "bookbag"
+      },
+
+      {
+        emojis: "<img src='bed.png' class='emoji-img'> + <img src='clock.png' class='emoji-img'>",
+        options: ["bedroom", "bedtime", "clockwise"],
+        answer: "bedtime"
+      }
+
+    ]
+  }
+
+];
+
+let currentLevel = 0;
+let currentQuestion = 0;
+let score = 0;
+let locked = false;
+
+function loadQuestion() {
+
+  const level = levels[currentLevel];
+  const q = level.questions[currentQuestion];
+
+  document.getElementById("game-ui").style.display = "block";
+  document.getElementById("celebration-overlay").style.display = "none";
+
+  document.getElementById("levelBadge").textContent = level.name;
+
+  document.getElementById("emojiRow").innerHTML = q.emojis;
+
+  document.getElementById("scoreText").textContent =
+    "Score: " + score;
+
+  document.getElementById("questionText").textContent =
+    `Question ${currentQuestion + 1}/${level.questions.length}`;
+
+  const totalQuestions =
+    levels.reduce((acc, lvl) => acc + lvl.questions.length, 0);
+
+  const questionsDone =
+    levels
+      .slice(0, currentLevel)
+      .reduce((acc, lvl) => acc + lvl.questions.length, 0)
+      + currentQuestion;
+
+  document.getElementById("progressBar").style.width =
+    (questionsDone / totalQuestions) * 100 + "%";
+
+  document.getElementById("feedback").textContent = "";
+
+  const btnContainer =
+    document.getElementById("answerButtons");
+
+  btnContainer.innerHTML = "";
+
+  q.options.forEach(opt => {
+
+    const btn = document.createElement("button");
+
+    btn.className = "choice-btn";
+
+    btn.textContent = opt;
+
+    btn.onclick = () => checkAnswer(opt);
+
+    btnContainer.appendChild(btn);
+
+  });
+
+}
+
+function checkAnswer(choice) {
+
+  if (locked) return;
+
+  locked = true;
+
+  const q =
+    levels[currentLevel].questions[currentQuestion];
+
+  const feedback =
+    document.getElementById("feedback");
+
+  if (choice === q.answer) {
+
+    feedback.textContent = "✅ Correct! Amazing!";
+    feedback.style.color = "#16a34a";
+
+    score++;
+
+  } else {
+
+    feedback.textContent =
+      "❌ So close! It was " + q.answer;
+
+    feedback.style.color = "#dc2626";
+
+  }
+
+  setTimeout(() => {
+
+    currentQuestion++;
+
+    locked = false;
+
+    if (
+      currentQuestion >=
+      levels[currentLevel].questions.length
+    ) {
+
+      showLevelUp();
+
+    } else {
+
       loadQuestion();
+
     }
 
-    loadQuestion();
-  </script>
+  }, 1500);
+
+}
+
+function showLevelUp() {
+
+  document.getElementById("game-ui").style.display =
+    "none";
+
+  document.getElementById("celebration-overlay").style.display =
+    "block";
+
+  if (currentLevel < levels.length - 1) {
+
+    document.getElementById("celeb-title").textContent =
+      "GOOD JOB!";
+
+    document.getElementById("celeb-text").textContent =
+      `You finished ${levels[currentLevel].name}!`;
+
+    document.getElementById("celebBtn").textContent =
+      "Next Level! 🚀";
+
+    document.getElementById("celebBtn").onclick =
+      nextLevel;
+
+  } else {
+
+    document.getElementById("celeb-title").textContent =
+      "YOU ARE A GENIUS!";
+
+    document.getElementById("celeb-text").textContent =
+      `Final Score: ${score} / ${levels.reduce((acc, lvl) => acc + lvl.questions.length, 0)}`;
+
+    document.getElementById("celebBtn").textContent =
+      "Play Again! 🔄";
+
+    document.getElementById("celebBtn").onclick =
+      () => location.reload();
+
+  }
+
+}
+
+function nextLevel() {
+
+  currentLevel++;
+  currentQuestion = 0;
+
+  loadQuestion();
+
+}
+
+loadQuestion();
+
+</script>
+
 </body>
 </html>
