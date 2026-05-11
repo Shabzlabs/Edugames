@@ -1,366 +1,477 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shape Hunter - Master Edition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background-color: #f0f9ff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-            overflow-y: auto;
-            min-height: 100vh;
-        }
-        .shape-container {
-            transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
-            cursor: pointer;
-        }
-        .shape-container:hover {
-            transform: scale(1.05);
-        }
-        .correct {
-            border: 4px solid #22c55e !important;
-            border-radius: 1rem;
-            background-color: #dcfce7 !important;
-        }
-        .incorrect {
-            border: 4px solid #ef4444 !important;
-            border-radius: 1rem;
-            background-color: #fee2e2 !important;
-            opacity: 0.6;
-        }
-        @keyframes pop-in {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-pop-in {
-            animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .hidden {
-            display: none;
-        }
-        @keyframes wave {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(10deg); }
-        }
-        .wave-hand {
-            animation: wave 2s infinite ease-in-out;
-            transform-origin: bottom center;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shape Hunter - Master Edition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      background-color: #f0f9ff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .shape-container {
+      transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+
+    .shape-container:hover {
+      transform: scale(1.03);
+    }
+
+    .correct {
+      border: 4px solid #22c55e !important;
+      border-radius: 1rem;
+      background-color: #dcfce7 !important;
+    }
+
+    .incorrect {
+      border: 4px solid #ef4444 !important;
+      border-radius: 1rem;
+      background-color: #fee2e2 !important;
+      opacity: 0.6;
+    }
+
+    @keyframes pop-in {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .animate-pop-in {
+      animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: rotate(-5deg); }
+      50% { transform: rotate(15deg); }
+    }
+
+    .wave-hand {
+      animation: wave 1.5s infinite ease-in-out;
+      transform-origin: 30px 180px;
+    }
+
+    @keyframes blink {
+      0%, 90%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.1); }
+    }
+
+    .eye-blink {
+      animation: blink 4s infinite;
+      transform-origin: center;
+    }
+
+    @media (max-width: 640px) {
+      .mobile-card {
+        padding: 14px !important;
+        border-radius: 22px !important;
+      }
+
+      .mobile-title {
+        font-size: 1.75rem !important;
+        line-height: 2rem !important;
+      }
+
+      .mobile-instruction {
+        padding: 10px !important;
+      }
+
+      .mobile-instruction p {
+        font-size: 1rem !important;
+      }
+
+      .mobile-instruction span {
+        font-size: 1.15rem !important;
+      }
+
+      .mobile-stats {
+        padding: 10px !important;
+        gap: 8px !important;
+      }
+
+      .mobile-stats div {
+        font-size: 0.95rem !important;
+      }
+
+      #game-grid {
+        gap: 10px !important;
+        min-height: auto !important;
+      }
+
+      .shape-container {
+        padding: 8px !important;
+        border-radius: 18px !important;
+      }
+
+      .shape-container svg {
+        width: 72px !important;
+        height: 72px !important;
+      }
+
+      #start-overlay h2,
+      #victory-overlay h2 {
+        font-size: 2rem !important;
+      }
+
+      #start-overlay,
+      #victory-overlay {
+        padding: 18px !important;
+      }
+
+      #start-overlay button,
+      #next-lvl-btn {
+        padding: 14px 24px !important;
+        font-size: 1.1rem !important;
+      }
+    }
+  </style>
 </head>
-<body class="p-4 md:p-8 h-screen flex items-center justify-center">
-    
-    <a href="index.html" class="fixed top-6 right-6 z-[100] bg-white/80 backdrop-blur px-4 py-2 rounded-full border-2 border-blue-400 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition-all shadow-md flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Shabzlabs
-    </a>
 
-    <!-- Professor UI -->
-    <div class="hidden lg:flex fixed right-4 top-24 flex-col items-center z-10">
-        <svg width="180" height="260" viewBox="0 0 200 300">
-            <path d="M50,150 L150,150 L160,280 L40,280 Z" fill="#3b82f6" />
-            <circle cx="100" cy="100" r="55" fill="#ffdbac" />
-            <path d="M45,90 Q45,30 100,30 Q155,30 155,90" fill="#4b2c20" />
-            <g stroke="#333" stroke-width="3" fill="none">
-                <circle cx="80" cy="100" r="18" fill="white" fill-opacity="0.3" />
-                <circle cx="120" cy="100" r="18" fill="white" fill-opacity="0.3" />
-            </g>
-            <circle cx="80" cy="100" r="4" fill="#333" />
-            <circle cx="120" cy="100" r="4" fill="#333" />
-            <path d="M85,130 Q100,145 115,130" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round" />
-            <g class="wave-hand">
-                <path d="M40,180 Q10,160 15,140" stroke="#ffdbac" stroke-width="15" stroke-linecap="round" fill="none" />
-            </g>
-        </svg>
-        <div class="bg-white border-2 border-blue-400 p-2 rounded-xl shadow-md -mt-8 relative z-20">
-            <p id="prof-text" class="text-sm font-bold text-blue-600">Level 1: 2D Shapes!</p>
-        </div>
+<body class="min-h-screen p-3 md:p-8 flex items-start justify-center">
+
+  <a href="index.html" class="fixed top-3 right-3 z-[100] bg-white/90 backdrop-blur px-3 py-2 rounded-full border-2 border-blue-400 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition-all shadow-md flex items-center gap-1 text-sm">
+    Shabzlabs
+  </a>
+
+  <div class="hidden xl:flex fixed right-8 top-20 flex-col items-center z-10 drop-shadow-xl">
+    <svg width="200" height="280" viewBox="0 0 200 300">
+      <path d="M40,60 L100,30 L160,60 L100,90 Z" fill="#1e293b" />
+      <rect x="95" y="60" width="10" height="30" fill="#1e293b" />
+      <path d="M160,60 L165,95" stroke="#facc15" stroke-width="3" fill="none" />
+      <circle cx="165" cy="95" r="5" fill="#facc15" />
+      <circle cx="100" cy="120" r="55" fill="#ffdbac" stroke="#eab308" stroke-width="2" />
+
+      <g class="eye-blink">
+        <circle cx="80" cy="115" r="12" fill="white" />
+        <circle cx="80" cy="115" r="6" fill="#333" />
+        <circle cx="77" cy="112" r="2" fill="white" />
+        <circle cx="120" cy="115" r="12" fill="white" />
+        <circle cx="120" cy="115" r="6" fill="#333" />
+        <circle cx="117" cy="112" r="2" fill="white" />
+      </g>
+
+      <path d="M75,145 Q100,165 125,145" stroke="#991b1b" stroke-width="4" fill="none" stroke-linecap="round" />
+      <circle cx="70" cy="140" r="4" fill="#f87171" opacity="0.4" />
+      <circle cx="130" cy="140" r="4" fill="#f87171" opacity="0.4" />
+
+      <path d="M50,170 C50,170 30,280 40,290 L160,290 C170,280 150,170 150,170 Z" fill="#3b82f6" />
+      <path d="M100,170 L100,290" stroke="#2563eb" stroke-width="4" />
+
+      <g class="wave-hand">
+        <path d="M40,190 Q15,180 20,150" stroke="#ffdbac" stroke-width="14" stroke-linecap="round" fill="none" />
+        <circle cx="20" cy="145" r="10" fill="#ffdbac" />
+      </g>
+    </svg>
+
+    <div class="bg-white border-4 border-yellow-400 p-3 rounded-2xl shadow-lg -mt-10 relative z-20 max-w-[150px]">
+      <p id="prof-text" class="text-sm font-black text-blue-600 text-center uppercase tracking-tight">Let's Find Shapes!</p>
+      <div class="absolute left-1/2 -bottom-3 -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[15px] border-t-yellow-400"></div>
+    </div>
+  </div>
+
+  <div class="mobile-card max-w-5xl w-full bg-white rounded-3xl shadow-xl p-4 md:p-10 relative mt-14 md:mt-10 mb-8">
+
+    <header class="text-center mb-4 md:mb-8">
+      <h1 class="mobile-title text-4xl font-bold text-blue-600 mb-2" id="game-title">Shape Hunter!</h1>
+
+      <div id="instruction-area" class="mobile-instruction bg-yellow-100 border-2 border-yellow-400 rounded-2xl p-4 inline-block max-w-full">
+        <p class="text-xl text-gray-800">
+          Find the
+          <span id="target-count-display" class="font-bold text-2xl text-blue-800">3</span>
+          <span id="target-shape-name" class="font-black text-2xl text-blue-700 underline capitalize">Loading...</span>!
+        </p>
+      </div>
+    </header>
+
+    <div class="mobile-stats flex flex-wrap justify-between items-center mb-4 md:mb-6 bg-blue-50 p-4 rounded-2xl gap-3 border-b-4 border-blue-100">
+      <div class="flex flex-wrap gap-4 md:gap-8 items-center">
+        <div class="text-xl font-bold text-blue-800">Score: <span id="score">0</span></div>
+        <div class="text-xl font-bold text-indigo-600">Time: <span id="timer">0.0</span>s</div>
+      </div>
+
+      <div class="text-sm font-bold text-gray-400 uppercase tracking-widest">
+        Level: <span id="current-level-display" class="text-blue-500">1</span>
+      </div>
     </div>
 
-    <div class="max-w-5xl w-full bg-white rounded-3xl shadow-xl p-6 md:p-10 relative">
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-blue-600 mb-2" id="game-title">Shape Hunter! 🕵️‍♂️</h1>
-            <div id="instruction-area" class="bg-yellow-100 border-2 border-yellow-400 rounded-2xl p-4 inline-block">
-                <p class="text-xl text-gray-800">Find the <span id="target-count-display" class="font-bold text-2xl text-blue-800">3</span> <span id="target-shape-name" class="font-black text-2xl text-blue-700 underline capitalize">Loading...</span>!</p>
-            </div>
-        </header>
+    <div id="game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 min-h-[350px]"></div>
 
-        <div class="flex flex-wrap justify-between items-center mb-6 bg-blue-50 p-4 rounded-2xl gap-4">
-            <div class="flex gap-8 items-center">
-                <div class="text-xl font-bold text-blue-800">Score: <span id="score">0</span></div>
-                <div class="text-xl font-bold text-indigo-600">⏱️ Time: <span id="timer">0.0</span>s</div>
-            </div>
-            <div class="text-sm font-bold text-gray-500 uppercase tracking-wider">
-                Level: <span id="current-level-display">1</span>
-            </div>
-            <div id="feedback-message" class="font-bold text-lg transition-all duration-300 h-6 min-w-[100px] text-right"></div>
-        </div>
-
-        <div id="game-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 min-h-[350px]"></div>
-
-        <div id="start-overlay" class="absolute inset-0 bg-white/95 rounded-3xl flex flex-col items-center justify-center z-[60] p-6 text-center">
-            <h2 class="text-5xl font-black text-blue-600 mb-4">Shape Hunter!</h2>
-            <p class="text-xl text-gray-600 mb-8 max-w-md">Find the target shapes as fast as you can. Can you reach Level 4?</p>
-            <button onclick="startGame(1)" class="bg-blue-500 hover:bg-blue-600 text-white px-12 py-6 rounded-full font-bold transition-all shadow-xl text-2xl transform hover:scale-105">
-                Start Game ➔
-            </button>
-        </div>
-
-        <div id="victory-overlay" class="hidden absolute inset-0 bg-blue-600 rounded-3xl flex flex-col items-center justify-center z-[70] p-6 text-center text-white animate-pop-in">
-            <div class="text-8xl mb-4">🎉</div>
-            <h2 class="text-5xl font-black mb-2" id="victory-title">Level Complete!</h2>
-            <div class="bg-white/20 backdrop-blur-md rounded-2xl p-6 mb-8 w-full max-w-sm flex justify-around">
-                <div>
-                    <p class="text-xs uppercase font-bold opacity-70">Score</p>
-                    <p id="final-score" class="text-3xl font-black">0</p>
-                </div>
-                <div>
-                    <p class="text-xs uppercase font-bold opacity-70">Time</p>
-                    <p id="final-time" class="text-3xl font-black">0.0s</p>
-                </div>
-            </div>
-            <button id="next-lvl-btn" class="bg-yellow-400 hover:bg-yellow-500 text-blue-900 py-4 px-12 rounded-xl font-black transition-all shadow-xl text-xl transform hover:scale-105">
-                Next Level ➔
-            </button>
-        </div>
+    <div id="start-overlay" class="absolute inset-0 bg-white/95 rounded-3xl flex flex-col items-center justify-center z-[60] p-6 text-center">
+      <div class="text-6xl md:text-7xl mb-4">🎨</div>
+      <h2 class="text-5xl font-black text-blue-600 mb-4">Shape Hunter!</h2>
+      <p class="text-lg md:text-xl text-gray-600 mb-6 md:mb-8 max-w-md italic">Help the Professor find all the hidden shapes!</p>
+      <button onclick="startGame(1)" class="bg-yellow-400 hover:bg-yellow-500 text-blue-900 border-b-8 border-yellow-600 px-8 md:px-12 py-4 md:py-6 rounded-3xl font-black transition-all shadow-xl text-xl md:text-2xl transform active:translate-y-1 active:border-b-0">
+        START ADVENTURE
+      </button>
     </div>
 
-    <script>
-        const gameGrid = document.getElementById('game-grid');
-        const scoreDisplay = document.getElementById('score');
-        const timerDisplay = document.getElementById('timer');
-        const startOverlay = document.getElementById('start-overlay');
-        const victoryOverlay = document.getElementById('victory-overlay');
-        const targetText = document.getElementById('target-shape-name');
-        const targetCountText = document.getElementById('target-count-display');
-        const profText = document.getElementById('prof-text');
-        const levelDisplay = document.getElementById('current-level-display');
-        
-        let currentLevel = 1;
-        let score = 0;
-        let targetsFound = 0;
-        let totalTargetsRequired = 3;
-        let sequenceIndex = 0;
-        let startTime = 0;
-        let timerInterval = null;
-        let gameActive = false;
+    <div id="victory-overlay" class="hidden absolute inset-0 bg-blue-600 rounded-3xl flex flex-col items-center justify-center z-[70] p-6 text-center text-white animate-pop-in">
+      <div class="text-6xl md:text-8xl mb-4">🏆</div>
+      <h2 class="text-4xl md:text-5xl font-black mb-2" id="victory-title">Great Job!</h2>
 
-        const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981', '#8b5cf6'];
-        const hardColors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#64748b', '#a855f7'];
+      <div class="bg-white/20 backdrop-blur-md rounded-2xl p-4 md:p-6 mb-6 md:mb-8 w-full max-w-sm flex justify-around">
+        <div>
+          <p class="text-xs uppercase font-bold opacity-70">Points</p>
+          <p id="final-score" class="text-3xl md:text-4xl font-black">0</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase font-bold opacity-70">Clock</p>
+          <p id="final-time" class="text-3xl md:text-4xl font-black">0.0s</p>
+        </div>
+      </div>
 
-        const levelData = {
-            1: {
-                title: "Shape Hunter (2D)",
-                gridSize: 8,
-                targetCount: 3,
-                order: ['triangle', 'square', 'trapezoid', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon'],
-                pool: ['triangle', 'hexagon', 'rhombus', 'pentagon', 'square', 'rectangle', 'trapezoid', 'octagon']
-            },
-            2: {
-                title: "Solid Hunter (3D)",
-                gridSize: 8,
-                targetCount: 3,
-                order: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid'],
-                pool: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
-            },
-            3: {
-                title: "Master Hunter (2D & 3D)",
-                gridSize: 8,
-                targetCount: 3,
-                order: ['cone', 'octagon', 'sphere', 'rhombus', 'cylinder', 'pentagon', 'cube'],
-                pool: ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
-            },
-            4: {
-                title: "Impossible Hunter (Speed)",
-                gridSize: 12, // Bigger grid
-                targetCount: 4, // More items to find
-                order: ['trapezoid', 'rectangular prism', 'hexagon', 'square-based pyramid', 'rhombus', 'triangular prism', 'octagon', 'sphere'],
-                pool: ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
+      <button id="next-lvl-btn" class="bg-white text-blue-600 py-4 px-8 md:px-12 rounded-2xl font-black transition-all shadow-xl text-lg md:text-xl transform hover:scale-105">
+        Next Level
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const gameGrid = document.getElementById('game-grid');
+    const scoreDisplay = document.getElementById('score');
+    const timerDisplay = document.getElementById('timer');
+    const startOverlay = document.getElementById('start-overlay');
+    const victoryOverlay = document.getElementById('victory-overlay');
+    const targetText = document.getElementById('target-shape-name');
+    const targetCountText = document.getElementById('target-count-display');
+    const profText = document.getElementById('prof-text');
+    const levelDisplay = document.getElementById('current-level-display');
+
+    let currentLevel = 1;
+    let score = 0;
+    let targetsFound = 0;
+    let totalTargetsRequired = 3;
+    let sequenceIndex = 0;
+    let startTime = 0;
+    let timerInterval = null;
+    let gameActive = false;
+
+    const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981', '#8b5cf6'];
+    const hardColors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#64748b', '#a855f7'];
+
+    const levelData = {
+      1: {
+        title: "Level 1: Basic Shapes",
+        gridSize: 8,
+        targetCount: 3,
+        order: ['triangle', 'square', 'trapezoid', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon'],
+        pool: ['triangle', 'hexagon', 'rhombus', 'pentagon', 'square', 'rectangle', 'trapezoid', 'octagon']
+      },
+      2: {
+        title: "Level 2: 3D Solids",
+        gridSize: 8,
+        targetCount: 3,
+        order: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid'],
+        pool: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
+      },
+      3: {
+        title: "Level 3: Master Challenge",
+        gridSize: 8,
+        targetCount: 3,
+        order: ['cone', 'octagon', 'sphere', 'rhombus', 'cylinder', 'pentagon', 'cube'],
+        pool: ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
+      },
+      4: {
+        title: "Level 4: Super Speed!",
+        gridSize: 12,
+        targetCount: 4,
+        order: ['trapezoid', 'rectangular prism', 'hexagon', 'square-based pyramid', 'rhombus', 'triangular prism', 'octagon', 'sphere'],
+        pool: ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid']
+      }
+    };
+
+    const draw = {
+      triangle: () => "50,15 85,85 15,85",
+      square: () => "25,25 75,25 75,75 25,75",
+      rhombus: () => "35,20 90,20 65,80 10,80",
+      rectangle: () => "15,35 85,35 85,65 15,65",
+      pentagon: () => "50,10 90,40 75,90 25,90 10,40",
+      hexagon: () => "25,15 75,15 95,50 75,85 25,85 5,50",
+      octagon: () => "30,15 70,15 90,35 90,65 70,85 30,85 10,65 10,35",
+      trapezoid: () => "25,25 75,25 90,75 10,75",
+
+      sphere: (c) => `
+        <defs><radialGradient id="grad-sphere"><stop offset="10%" stop-color="white"/><stop offset="100%" stop-color="${c}"/></radialGradient></defs>
+        <circle cx="50" cy="50" r="40" fill="url(#grad-sphere)" stroke="#333" stroke-width="2"/>`,
+
+      cube: (c) => `
+        <path d="M25,75 L25,35 L65,35 L65,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+        <path d="M25,35 L40,20 L80,20 L65,35 Z" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
+        <path d="M65,35 L80,20 L80,60 L65,75 Z" fill="${c}" opacity="0.6" stroke="#333" stroke-width="2"/>`,
+
+      cylinder: (c) => `
+        <ellipse cx="50" cy="25" rx="30" ry="10" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
+        <rect x="20" y="25" width="60" height="50" fill="${c}" stroke="#333" stroke-width="0"/>
+        <line x1="20" y1="25" x2="20" y2="75" stroke="#333" stroke-width="2"/>
+        <line x1="80" y1="25" x2="80" y2="75" stroke="#333" stroke-width="2"/>
+        <ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" stroke="#333" stroke-width="2"/>`,
+
+      cone: (c) => `
+        <path d="M50,15 L20,75 L80,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+        <ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>`,
+
+      'rectangular prism': (c) => `
+        <path d="M15,45 L65,45 L65,75 L15,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+        <path d="M15,45 L35,25 L85,25 L65,45 Z" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
+        <path d="M65,45 L85,25 L85,55 L65,75 Z" fill="${c}" opacity="0.6" stroke="#333" stroke-width="2"/>`,
+
+      'triangular prism': (c) => `
+        <path d="M70,25 L25,15 L10,65 L55,75 Z" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>
+        <path d="M70,25 L55,75 L95,75 Z" fill="${c}" stroke="#333" stroke-width="2.5"/>
+        <path d="M70,25 L25,15" stroke="#333" stroke-width="2"/>
+        <path d="M55,75 L10,65" stroke="#333" stroke-width="2"/>`,
+
+      'square-based pyramid': (c) => `
+        <path d="M50,15 L15,70 L75,70 Z" fill="${c}" stroke="#333" stroke-width="2"/>
+        <path d="M50,15 L75,70 L95,55 L50,15" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>`
+    };
+
+    const shapes2D = ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'trapezoid'];
+
+    function getShapeSVG(type, color, rotation = 0) {
+      const rotateStr = rotation !== 0 ? `transform="rotate(${rotation} 50 50)"` : '';
+
+      if (shapes2D.includes(type)) {
+        const points = draw[type]();
+        return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto"><polygon points="${points}" fill="${color}" stroke="#333" stroke-width="2.5" ${rotateStr} /></svg>`;
+      } else {
+        return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto"><g ${rotateStr}>${draw[type](color)}</g></svg>`;
+      }
+    }
+
+    function startGame(lvl) {
+      currentLevel = lvl;
+      levelDisplay.textContent = lvl;
+      score = 0;
+      sequenceIndex = 0;
+      scoreDisplay.textContent = "0";
+      startTime = Date.now();
+
+      if (timerInterval) clearInterval(timerInterval);
+
+      timerInterval = setInterval(() => {
+        timerDisplay.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
+      }, 100);
+
+      startOverlay.classList.add('hidden');
+      victoryOverlay.classList.add('hidden');
+
+      document.getElementById('game-title').textContent = levelData[lvl].title;
+
+      const messages = ["You're doing great!", "Find those shapes!", "Keep going!", "Wow, you're fast!"];
+      if (profText) profText.textContent = messages[lvl - 1];
+
+      spawnLevel();
+    }
+
+    function spawnLevel() {
+      gameGrid.innerHTML = '';
+      targetsFound = 0;
+      gameActive = true;
+
+      const data = levelData[currentLevel];
+      const currentTarget = data.order[sequenceIndex];
+
+      totalTargetsRequired = data.targetCount;
+
+      targetText.textContent = currentTarget + (currentTarget.endsWith('us') ? 'es' : 's');
+      targetCountText.textContent = totalTargetsRequired;
+
+      if (data.gridSize > 8) {
+        gameGrid.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 min-h-[350px]";
+      } else {
+        gameGrid.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 min-h-[350px]";
+      }
+
+      let pool = data.pool.filter(s => s !== currentTarget);
+      let items = [];
+
+      for (let i = 0; i < totalTargetsRequired; i++) items.push(currentTarget);
+
+      while (items.length < data.gridSize) {
+        items.push(pool[Math.floor(Math.random() * pool.length)]);
+      }
+
+      items.sort(() => 0.5 - Math.random());
+
+      const colorSet = currentLevel === 4 ? hardColors : colors;
+
+      items.forEach((type) => {
+        const rotatableShapes = ['rhombus', 'triangle', 'pentagon', 'hexagon', 'octagon', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'trapezoid'];
+        let rotation = 0;
+
+        if (rotatableShapes.includes(type)) {
+          const angles = [0, 45, 90, 180, 270];
+          rotation = angles[Math.floor(Math.random() * angles.length)];
+        }
+
+        const card = document.createElement('div');
+        card.className = "shape-container bg-white p-4 rounded-3xl flex items-center justify-center border-4 border-blue-50 shadow-md hover:shadow-lg transition-all";
+        card.innerHTML = getShapeSVG(type, colorSet[Math.floor(Math.random() * colorSet.length)], rotation);
+
+        card.onclick = () => {
+          if (!gameActive || card.dataset.done) return;
+
+          if (type === currentTarget) {
+            card.dataset.done = "true";
+            card.classList.add('correct');
+            score += (10 * currentLevel);
+            targetsFound++;
+
+            if (targetsFound === totalTargetsRequired) {
+              gameActive = false;
+              setTimeout(nextSubLevel, 600);
             }
+          } else {
+            card.classList.add('incorrect');
+            score = Math.max(0, score - 5);
+          }
+
+          scoreDisplay.textContent = score;
         };
 
-        const draw = {
-            triangle: () => {
-                const types = [
-                    "50,15 85,85 15,85", // Equilateral
-                    "20,20 20,85 85,85", // Right
-                    "10,80 90,80 50,30"  // Isosceles
-                ];
-                return types[Math.floor(Math.random() * types.length)];
-            },
-            square: () => "25,25 75,25 75,75 25,75",
-            rhombus: () => "35,20 90,20 65,80 10,80",
-            rectangle: () => "15,35 85,35 85,65 15,65",
-            pentagon: () => "50,10 90,40 75,90 25,90 10,40",
-            hexagon: () => "25,15 75,15 95,50 75,85 25,85 5,50",
-            octagon: () => "30,15 70,15 90,35 90,65 70,85 30,85 10,65 10,35",
-            trapezoid: () => "25,25 75,25 90,75 10,75",
+        gameGrid.appendChild(card);
+      });
+    }
 
-            sphere: (c) => `
-                <defs><radialGradient id="grad-sphere"><stop offset="10%" stop-color="white"/><stop offset="100%" stop-color="${c}"/></radialGradient></defs>
-                <circle cx="50" cy="50" r="40" fill="url(#grad-sphere)" stroke="#333" stroke-width="2"/>
-                <ellipse cx="50" cy="50" rx="40" ry="12" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="2,2" opacity="0.3"/>`,
-            cube: (c) => `
-                <path d="M25,75 L25,35 L65,35 L65,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
-                <path d="M25,35 L40,20 L80,20 L65,35 Z" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
-                <path d="M65,35 L80,20 L80,60 L65,75 Z" fill="${c}" opacity="0.6" stroke="#333" stroke-width="2"/>`,
-            cylinder: (c) => `
-                <ellipse cx="50" cy="25" rx="30" ry="10" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
-                <rect x="20" y="25" width="60" height="50" fill="${c}" stroke="#333" stroke-width="0"/>
-                <line x1="20" y1="25" x2="20" y2="75" stroke="#333" stroke-width="2"/>
-                <line x1="80" y1="25" x2="80" y2="75" stroke="#333" stroke-width="2"/>
-                <ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" stroke="#333" stroke-width="2"/>`,
-            cone: (c) => `
-                <path d="M50,15 L20,75 L80,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
-                <ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>`,
-            'rectangular prism': (c) => `
-                <path d="M15,45 L65,45 L65,75 L15,75 Z" fill="${c}" stroke="#333" stroke-width="2"/>
-                <path d="M15,45 L35,25 L85,25 L65,45 Z" fill="${c}" opacity="0.8" stroke="#333" stroke-width="2"/>
-                <path d="M65,45 L85,25 L85,55 L65,75 Z" fill="${c}" opacity="0.6" stroke="#333" stroke-width="2"/>`,
-            'triangular prism': (c) => `
-                <path d="M25,15 L10,65 L55,65" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
-                <path d="M70,25 L25,15 L10,65 L55,75 Z" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>
-                <path d="M70,25 L55,75 L95,75 Z" fill="${c}" stroke="#333" stroke-width="2.5"/>
-                <path d="M70,25 L25,15" stroke="#333" stroke-width="2"/>
-                <path d="M55,75 L10,65" stroke="#333" stroke-width="2"/>`,
-            'square-based pyramid': (c) => `
-                <path d="M50,15 L15,70 L75,70 Z" fill="${c}" stroke="#333" stroke-width="2"/>
-                <path d="M50,15 L75,70 L95,55 L50,15" fill="${c}" opacity="0.7" stroke="#333" stroke-width="2"/>
-                <path d="M15,70 L35,55 L95,55" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.5"/>`
-        };
+    function nextSubLevel() {
+      sequenceIndex++;
 
-        const shapes2D = ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'trapezoid'];
+      if (sequenceIndex >= levelData[currentLevel].order.length) {
+        showVictory();
+      } else {
+        spawnLevel();
+      }
+    }
 
-        function getShapeSVG(type, color, rotation = 0) {
-            const rotateStr = rotation !== 0 ? `transform="rotate(${rotation} 50 50)"` : '';
-            if (shapes2D.includes(type)) {
-                const points = draw[type]();
-                return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto"><polygon points="${points}" fill="${color}" stroke="#333" stroke-width="2.5" ${rotateStr} /></svg>`;
-            } else {
-                return `<svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto"><g ${rotateStr}>${draw[type](color)}</g></svg>`;
-            }
-        }
+    function showVictory() {
+      clearInterval(timerInterval);
 
-        function startGame(lvl) {
-            currentLevel = lvl;
-            levelDisplay.textContent = lvl;
-            score = 0;
-            sequenceIndex = 0;
-            scoreDisplay.textContent = "0";
-            startTime = Date.now();
-            if (timerInterval) clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timerDisplay.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
-            }, 100);
-            startOverlay.classList.add('hidden');
-            victoryOverlay.classList.add('hidden');
-            document.getElementById('game-title').textContent = levelData[lvl].title;
-            
-            if (lvl === 1) profText.textContent = "Level 1: 2D Shapes!";
-            else if (lvl === 2) profText.textContent = "Level 2: 3D Solids!";
-            else if (lvl === 3) profText.textContent = "Level 3: Master Challenge!";
-            else profText.textContent = "Level 4: IMPOSSIBLE MODE!";
-            
-            spawnLevel();
-        }
+      victoryOverlay.classList.remove('hidden');
 
-        function spawnLevel() {
-            gameGrid.innerHTML = '';
-            targetsFound = 0;
-            gameActive = true;
-            
-            const data = levelData[currentLevel];
-            const currentTarget = data.order[sequenceIndex];
-            totalTargetsRequired = data.targetCount;
-            
-            targetText.textContent = currentTarget + (currentTarget.endsWith('us') ? 'es' : 's');
-            targetCountText.textContent = totalTargetsRequired;
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('final-time').textContent = timerDisplay.textContent + "s";
 
-            // Handle grid layout for Level 4
-            if (data.gridSize > 8) {
-                gameGrid.classList.remove('md:grid-cols-4');
-                gameGrid.classList.add('md:grid-cols-6');
-            } else {
-                gameGrid.classList.remove('md:grid-cols-6');
-                gameGrid.classList.add('md:grid-cols-4');
-            }
-            
-            let pool = data.pool.filter(s => s !== currentTarget);
-            let items = [];
-            
-            // Add targets
-            for (let i = 0; i < totalTargetsRequired; i++) items.push(currentTarget);
-            
-            // Fill rest with noise
-            while (items.length < data.gridSize) {
-                items.push(pool[Math.floor(Math.random() * pool.length)]);
-            }
-            items.sort(() => 0.5 - Math.random());
+      const nextBtn = document.getElementById('next-lvl-btn');
 
-            const colorSet = currentLevel === 4 ? hardColors : colors;
+      if (currentLevel < 4) {
+        nextBtn.textContent = "Go to Next Level!";
+        nextBtn.onclick = () => startGame(currentLevel + 1);
+      } else {
+        nextBtn.textContent = "Play Again!";
+        nextBtn.onclick = () => startGame(1);
+      }
+    }
+  </script>
 
-            items.forEach((type) => {
-                const rotatableShapes = ['rhombus', 'triangle', 'pentagon', 'hexagon', 'octagon', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'trapezoid'];
-                let rotation = 0;
-                
-                if (rotatableShapes.includes(type)) {
-                    if (type === 'cylinder') rotation = Math.random() > 0.5 ? 90 : 0;
-                    else if (type === 'cone') rotation = Math.random() > 0.5 ? 180 : 0;
-                    else {
-                        const angles = [0, 45, 90, 135, 180, 225, 270, 315];
-                        rotation = angles[Math.floor(Math.random() * angles.length)];
-                    }
-                }
-
-                const card = document.createElement('div');
-                card.className = "shape-container bg-gray-50 p-4 rounded-2xl flex items-center justify-center border-4 border-transparent shadow-sm";
-                card.innerHTML = getShapeSVG(type, colorSet[Math.floor(Math.random() * colorSet.length)], rotation);
-                
-                card.onclick = () => {
-                    if (!gameActive || card.dataset.done) return;
-                    if (type === currentTarget) {
-                        card.dataset.done = "true";
-                        card.classList.add('correct');
-                        score += (10 * currentLevel); // Bonus score for higher levels
-                        targetsFound++;
-                        if (targetsFound === totalTargetsRequired) {
-                            gameActive = false;
-                            setTimeout(nextSubLevel, 600);
-                        }
-                    } else {
-                        card.classList.add('incorrect');
-                        score = Math.max(0, score - 5);
-                    }
-                    scoreDisplay.textContent = score;
-                };
-                gameGrid.appendChild(card);
-            });
-        }
-
-        function nextSubLevel() {
-            sequenceIndex++;
-            if (sequenceIndex >= levelData[currentLevel].order.length) showVictory();
-            else spawnLevel();
-        }
-
-        function showVictory() {
-            clearInterval(timerInterval);
-            victoryOverlay.classList.remove('hidden');
-            document.getElementById('final-score').textContent = score;
-            document.getElementById('final-time').textContent = timerDisplay.textContent + "s";
-            const nextBtn = document.getElementById('next-lvl-btn');
-            
-            if (currentLevel < 4) {
-                nextBtn.textContent = `Start Level ${currentLevel + 1} ➔`;
-                nextBtn.onclick = () => startGame(currentLevel + 1);
-            } else {
-                nextBtn.textContent = "Play Again ↻";
-                nextBtn.onclick = () => startGame(1);
-            }
-        }
-    </script>
 </body>
 </html>
