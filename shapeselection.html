@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shape Hunter - Pure Space</title>
+  <title>Shape Hunter - Space Adventure</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     body {
-      background-color: #020617; /* Deep space black */
+      background-color: #020617;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow-x: hidden;
       overflow-y: auto;
@@ -26,7 +26,6 @@
       pointer-events: none;
     }
 
-    /* Transparent cards for the shapes - no heavy backgrounds */
     .shape-container {
       transition: all 0.2s ease;
       cursor: pointer;
@@ -37,6 +36,22 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .level-small {
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .level-small .shape-container {
+      max-width: 173px;
+      width: 100%;
+      justify-self: center;
+    }
+
+    .level-small svg {
+      padding: 8px;
     }
 
     .shape-container:hover {
@@ -64,8 +79,15 @@
     }
 
     @keyframes pop-in {
-      0% { transform: scale(0.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+      0% { 
+        transform: scale(0.5); 
+        opacity: 0; 
+      }
+
+      100% { 
+        transform: scale(1); 
+        opacity: 1; 
+      }
     }
 
     .animate-pop-in {
@@ -81,8 +103,44 @@
     }
 
     @media (max-width: 640px) {
-      .mobile-title { font-size: 1.75rem !important; }
-      #game-grid { gap: 10px !important; }
+      .mobile-title { 
+        font-size: 1.75rem !important; 
+      }
+
+      #game-grid { 
+        gap: 10px !important; 
+      }
+
+      .level-small .shape-container {
+        max-width: 143px;
+      }
+
+      .level-small {
+        max-width: 100%;
+      }
+
+      #instruction-area p {
+        font-size: 1rem !important;
+      }
+
+      #instruction-area span {
+        font-size: 1.3rem !important;
+      }
+
+      #start-overlay h2,
+      #victory-overlay h2 {
+        font-size: 2.5rem !important;
+      }
+
+      #start-overlay p {
+        font-size: 1rem !important;
+      }
+
+      #start-overlay button,
+      #next-lvl-btn {
+        font-size: 1.1rem !important;
+        padding: 14px 28px !important;
+      }
     }
   </style>
 </head>
@@ -91,74 +149,88 @@
 
   <canvas id="space-canvas"></canvas>
 
-  <!-- HUD Overlay -->
-  <div class="relative z-10 p-4 md:p-8 max-w-5xl mx-auto w-full">
+  <div id="hud" class="relative z-10 p-4 md:p-6 max-w-5xl mx-auto w-full transition-opacity duration-500">
     
-    <header class="text-center mb-6">
-      <h1 class="mobile-title text-5xl font-black text-white mb-4 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" id="game-title">Shape Hunter!</h1>
+    <header class="text-center mb-4">
+      <h1 class="mobile-title text-5xl font-black text-white mb-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" id="game-title">
+        Shape Hunter!
+      </h1>
 
-      <div id="instruction-area" class="glass-ui rounded-2xl p-4 inline-block max-w-full shadow-2xl">
+      <div id="instruction-area" class="glass-ui rounded-2xl p-3 inline-block max-w-full shadow-2xl">
         <p class="text-xl text-blue-100">
-          Locate the
+          Find the
           <span id="target-count-display" class="font-bold text-3xl text-yellow-400">3</span>
           <span id="target-shape-name" class="font-black text-3xl text-white underline capitalize">Loading...</span>
         </p>
       </div>
     </header>
 
-    <div class="flex flex-wrap justify-between items-center mb-8 glass-ui p-4 rounded-2xl gap-3">
+    <div class="flex flex-wrap justify-between items-center mb-5 glass-ui p-3 rounded-2xl gap-3">
       <div class="flex flex-wrap gap-8 items-center">
-        <div class="text-xl font-bold">Score: <span id="score" class="text-yellow-400">0</span></div>
-        <div class="text-xl font-bold text-blue-300">Time: <span id="timer">0.0</span>s</div>
+        <div class="text-xl font-bold">
+          Score: <span id="score" class="text-yellow-400">0</span>
+        </div>
+
+        <div class="text-xl font-bold text-blue-300">
+          Time: <span id="timer">0.0</span>s
+        </div>
       </div>
 
       <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">
-        Sector Protocol: <span id="current-level-display" class="text-indigo-400">1</span>
+        Mission Level: <span id="current-level-display" class="text-indigo-400">1</span>
       </div>
     </div>
 
-    <!-- The Grid now floats freely on the canvas -->
-    <div id="game-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 min-h-[400px]"></div>
+    <div id="game-grid" class="level-small grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
 
-    <!-- Start Overlay -->
     <div id="start-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-md flex flex-col items-center justify-center z-[60] p-6 text-center">
       <div class="text-7xl mb-6">🛰️</div>
-      <h2 class="text-6xl font-black text-white mb-4">Deep Space Scan</h2>
+
+      <h2 class="text-6xl font-black text-white mb-4">
+        Space Shape Mission
+      </h2>
+
       <p class="text-xl text-blue-200 mb-10 max-w-md">
-        The grid has dissolved into the stars. Track the requested geometry to advance.
+        Help the spaceship find the hidden shapes and travel through the warp zones!
       </p>
+
       <button onclick="startGame(1)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-12 py-5 rounded-full font-black transition-all shadow-[0_0_30px_rgba(79,70,229,0.6)] text-2xl transform hover:scale-110 active:scale-95">
-        INITIATE SCAN
+        START MISSION
       </button>
     </div>
 
-    <!-- Victory Overlay -->
     <div id="victory-overlay" class="hidden fixed inset-0 bg-indigo-900/40 backdrop-blur-xl flex flex-col items-center justify-center z-[70] p-6 text-center text-white animate-pop-in">
       <div class="text-8xl mb-6">🚀</div>
-      <h2 class="text-5xl font-black mb-4" id="victory-title">Sector Secured</h2>
+
+      <h2 class="text-5xl font-black mb-4" id="victory-title">
+        Mission Complete!
+      </h2>
+
       <div class="bg-black/50 border border-white/20 rounded-3xl p-8 mb-10 w-full max-w-md flex justify-around shadow-2xl">
         <div>
           <p class="text-xs uppercase font-bold opacity-70 mb-1">Score</p>
           <p id="final-score" class="text-5xl font-black text-yellow-400">0</p>
         </div>
+
         <div class="w-px bg-white/20"></div>
+
         <div>
           <p class="text-xs uppercase font-bold opacity-70 mb-1">Time</p>
           <p id="final-time" class="text-5xl font-black text-blue-400">0.0s</p>
         </div>
       </div>
+
       <button id="next-lvl-btn" class="bg-white text-indigo-900 py-5 px-14 rounded-full font-black transition-all shadow-2xl text-xl hover:bg-yellow-400 transform hover:scale-105">
-        Next Sector
+        Next Mission
       </button>
     </div>
 
   </div>
 
   <script>
-    // --- AUDIO SYSTEM (Web Audio API) ---
     const AudioEngine = {
       ctx: null,
-      
+
       init() {
         if (!this.ctx) {
           this.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -167,74 +239,107 @@
 
       playCorrect() {
         this.init();
+
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        
+
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
-        osc.frequency.exponentialRampToValueAtTime(1046.50, this.ctx.currentTime + 0.1); // C6
-        
+        osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1046.50, this.ctx.currentTime + 0.1);
+
         gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
-        
+
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        
+
         osc.start();
         osc.stop(this.ctx.currentTime + 0.2);
       },
 
       playIncorrect() {
         this.init();
+
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        
+
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(150, this.ctx.currentTime);
         osc.frequency.linearRampToValueAtTime(80, this.ctx.currentTime + 0.15);
-        
+
         gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
         gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
-        
+
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-        
+
         osc.start();
         osc.stop(this.ctx.currentTime + 0.15);
       },
 
       playLevelUp() {
         this.init();
-        const notes = [523.25, 659.25, 783.99, 1046.50];
-        notes.forEach((freq, i) => {
+
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
+
           osc.frequency.value = freq;
+
           gain.gain.setValueAtTime(0.1, this.ctx.currentTime + (i * 0.1));
           gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + (i * 0.1) + 0.3);
+
           osc.connect(gain);
           gain.connect(this.ctx.destination);
+
           osc.start(this.ctx.currentTime + (i * 0.1));
           osc.stop(this.ctx.currentTime + (i * 0.1) + 0.3);
         });
+      },
+
+      playWarp() {
+        this.init();
+
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(50, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(2000, this.ctx.currentTime + 2.5);
+
+        gain.gain.setValueAtTime(0, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.2, this.ctx.currentTime + 1);
+        gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 3);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start();
+        osc.stop(this.ctx.currentTime + 3);
       }
     };
 
-    // --- SPACE BACKGROUND ANIMATION ---
     const canvas = document.getElementById('space-canvas');
     const ctx = canvas.getContext('2d');
+
     let stars = [];
-    const STAR_COUNT = 400;
+    let isWarping = false;
+    let warpFactor = 1;
+
+    const STAR_COUNT = 450;
 
     function initSpace() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+
       stars = [];
+
       for (let i = 0; i < STAR_COUNT; i++) {
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 2 + 0.5,
+          z: Math.random() * canvas.width,
+          size: Math.random() * 1.5 + 0.5,
           speed: Math.random() * 0.5 + 0.1,
           color: `rgba(${180 + Math.random() * 75}, ${200 + Math.random() * 55}, 255, ${0.4 + Math.random() * 0.6})`
         });
@@ -242,111 +347,332 @@
     }
 
     function animateSpace() {
-      ctx.fillStyle = '#020617';
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+
+      ctx.fillStyle = isWarping ? 'rgba(2, 6, 23, 0.2)' : '#020617';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      stars.forEach(star => {
-        star.y += star.speed;
-        ctx.fillStyle = star.color;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        ctx.fill();
+      if (isWarping) {
+        warpFactor = Math.min(warpFactor + 0.6, 50);
+      } else {
+        warpFactor = Math.max(warpFactor - 0.4, 1);
+      }
 
-        if (star.y > canvas.height) {
-          star.y = 0;
-          star.x = Math.random() * canvas.width;
+      stars.forEach(star => {
+        if (!isWarping && warpFactor < 2) {
+          star.y += star.speed;
+
+          if (star.y > canvas.height) {
+            star.y = 0;
+          }
+
+          ctx.fillStyle = star.color;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          star.z -= warpFactor;
+
+          if (star.z <= 0) {
+            star.z = canvas.width;
+            star.x = Math.random() * canvas.width;
+            star.y = Math.random() * canvas.height;
+          }
+
+          const k = 128 / star.z;
+          const px = (star.x - cx) * k + cx;
+          const py = (star.y - cy) * k + cy;
+
+          if (px > 0 && px < canvas.width && py > 0 && py < canvas.height) {
+            const size = (1 - star.z / canvas.width) * 3;
+            const stretch = isWarping ? warpFactor * 0.7 : 1;
+
+            ctx.strokeStyle = star.color;
+            ctx.lineWidth = size;
+
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+
+            const tailX = (star.x - cx) * (128 / (star.z + stretch)) + cx;
+            const tailY = (star.y - cy) * (128 / (star.z + stretch)) + cy;
+
+            ctx.lineTo(tailX, tailY);
+            ctx.stroke();
+          }
         }
       });
+
       requestAnimationFrame(animateSpace);
     }
 
+    async function triggerWarpEffect() {
+      return new Promise((resolve) => {
+        isWarping = true;
+        AudioEngine.playWarp();
+
+        document.getElementById('hud').style.opacity = '0';
+
+        setTimeout(() => {
+          isWarping = false;
+
+          setTimeout(() => {
+            document.getElementById('hud').style.opacity = '1';
+            resolve();
+          }, 800);
+
+        }, 2500);
+      });
+    }
+
     window.addEventListener('resize', initSpace);
+
     initSpace();
     animateSpace();
 
-    // --- GAME LOGIC ---
     const gameGrid = document.getElementById('game-grid');
     const scoreDisplay = document.getElementById('score');
     const timerDisplay = document.getElementById('timer');
-    const startOverlay = document.getElementById('start-overlay');
-    const victoryOverlay = document.getElementById('victory-overlay');
     const targetText = document.getElementById('target-shape-name');
     const targetCountText = document.getElementById('target-count-display');
     const levelDisplay = document.getElementById('current-level-display');
+    const startOverlay = document.getElementById('start-overlay');
+    const victoryOverlay = document.getElementById('victory-overlay');
 
     let currentLevel = 1;
     let score = 0;
     let targetsFound = 0;
-    let totalTargetsRequired = 3;
     let sequenceIndex = 0;
     let startTime = 0;
     let timerInterval = null;
     let gameActive = false;
 
     const colors = ['#f87171', '#60a5fa', '#fbbf24', '#34d399', '#a78bfa'];
-    const hardColors = ['#f87171', '#60a5fa', '#fbbf24', '#34d399', '#a78bfa', '#f472b6', '#22d3ee', '#fb923c', '#94a3b8', '#c084fc'];
+
+    const hardColors = [
+      '#f87171',
+      '#60a5fa',
+      '#fbbf24',
+      '#34d399',
+      '#a78bfa',
+      '#f472b6',
+      '#22d3ee',
+      '#fb923c',
+      '#94a3b8',
+      '#c084fc'
+    ];
+
+    const pool2D = [
+      'triangle',
+      'square',
+      'rectangle',
+      'trapezoid',
+      'rhombus',
+      'pentagon',
+      'hexagon',
+      'octagon'
+    ];
+
+    const pool3D = [
+      'sphere',
+      'cube',
+      'cylinder',
+      'cone',
+      'rectangular prism',
+      'triangular prism',
+      'square-based pyramid'
+    ];
 
     const levelData = {
-      1: { title: "Sector 1: Origin", gridSize: 8, targetCount: 3, order: ['triangle', 'square', 'trapezoid', 'rhombus'], pool: ['triangle', 'hexagon', 'rhombus', 'square'] },
-      2: { title: "Sector 2: Solid State", gridSize: 8, targetCount: 3, order: ['sphere', 'cube', 'cylinder', 'cone'], pool: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism'] },
-      3: { title: "Sector 3: Nebula", gridSize: 12, targetCount: 4, order: ['octagon', 'sphere', 'rhombus', 'cylinder'], pool: ['triangle', 'square', 'rhombus', 'pentagon', 'hexagon', 'octagon', 'sphere', 'cube', 'cylinder'] },
-      4: { title: "Sector 4: Event Horizon", gridSize: 16, targetCount: 5, order: ['trapezoid', 'rectangular prism', 'hexagon', 'triangular prism'], pool: ['triangle', 'square', 'rhombus', 'pentagon', 'hexagon', 'octagon', 'sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism'] }
+      1: { 
+        title: "Level 1: Basic Shapes", 
+        gridSize: 8, 
+        targetCount: 3, 
+        order: [
+          'triangle',
+          'square',
+          'rectangle',
+          'trapezoid',
+          'rhombus',
+          'pentagon',
+          'hexagon',
+          'octagon'
+        ], 
+        pool: pool2D 
+      },
+
+      2: { 
+        title: "Level 2: 3D Solids", 
+        gridSize: 8, 
+        targetCount: 3, 
+        order: [
+          'sphere',
+          'cube',
+          'cylinder',
+          'cone',
+          'rectangular prism',
+          'triangular prism',
+          'square-based pyramid'
+        ], 
+        pool: pool3D 
+      },
+
+      3: { 
+        title: "Level 3: Master Challenge", 
+        gridSize: 12, 
+        targetCount: 4, 
+        order: [
+          'octagon',
+          'sphere',
+          'rhombus',
+          'cylinder',
+          'trapezoid',
+          'triangular prism',
+          'square-based pyramid'
+        ], 
+        pool: [...pool2D, ...pool3D] 
+      },
+
+      4: { 
+        title: "Level 4: Super Speed!", 
+        gridSize: 16, 
+        targetCount: 5, 
+        order: [
+          'hexagon',
+          'cone',
+          'rhombus',
+          'cube',
+          'octagon',
+          'rectangular prism',
+          'square-based pyramid'
+        ], 
+        pool: [...pool2D, ...pool3D] 
+      }
     };
 
     const draw = {
       triangle: () => "50,15 85,85 15,85",
-      square: () => "25,25 75,25 75,75 25,75",
-      rhombus: () => "35,20 90,20 65,80 10,80",
-      rectangle: () => "15,35 85,35 85,65 15,65",
+
+      square: () => "20,20 80,20 80,80 20,80",
+
+      rhombus: () => "50,10 80,50 50,90 20,50",
+
+      rectangle: () => "15,30 85,30 85,70 15,70",
+
       pentagon: () => "50,10 90,40 75,90 25,90 10,40",
+
       hexagon: () => "25,15 75,15 95,50 75,85 25,85 5,50",
+
       octagon: () => "30,15 70,15 90,35 90,65 70,85 30,85 10,65 10,35",
-      trapezoid: () => "25,25 75,25 90,75 10,75",
+
+      trapezoid: () => "25,30 75,30 95,70 5,70",
+
       sphere: (c) => {
-        const id = "grad-" + Math.random().toString(36).substr(2, 9);
+        const id = "grad-" + Math.random().toString(36).substr(2, 5);
+
         return `
           <defs>
             <radialGradient id="${id}" cx="35%" cy="35%" r="50%" fx="35%" fy="35%">
               <stop offset="0%" stop-color="#fff" stop-opacity="0.9"/>
-              <stop offset="40%" stop-color="${c}" stop-opacity="1"/>
+              <stop offset="40%" stop-color="${c}"/>
               <stop offset="100%" stop-color="#000" stop-opacity="0.8"/>
             </radialGradient>
           </defs>
-          <circle cx="50" cy="50" r="42" fill="url(#${id})" stroke="rgba(255,255,255,0.3)" stroke-width="0.5"/>
-          <ellipse cx="38" cy="38" rx="12" ry="8" fill="#fff" fill-opacity="0.3" transform="rotate(-45 38 38)"/>
+
+          <circle cx="50" cy="50" r="40" fill="url(#${id})" stroke="rgba(255,255,255,0.2)"/>
         `;
       },
-      cube: (c) => `<path d="M25,75 L25,35 L65,35 L65,75 Z" fill="${c}" stroke="#fff" stroke-width="1.5"/><path d="M25,35 L40,20 L80,20 L65,35 Z" fill="${c}" opacity="0.8" stroke="#fff" stroke-width="1.5"/><path d="M65,35 L80,20 L80,60 L65,75 Z" fill="${c}" opacity="0.6" stroke="#fff" stroke-width="1.5"/>`,
-      cylinder: (c) => `<ellipse cx="50" cy="25" rx="30" ry="10" fill="${c}" opacity="0.8" stroke="#fff" stroke-width="1.5"/><rect x="20" y="25" width="60" height="50" fill="${c}" stroke="none"/><line x1="20" y1="25" x2="20" y2="75" stroke="#fff" stroke-width="1.5"/><line x1="80" y1="25" x2="80" y2="75" stroke="#fff" stroke-width="1.5"/><ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" stroke="#fff" stroke-width="1.5"/>`,
-      cone: (c) => `<path d="M50,15 L20,75 L80,75 Z" fill="${c}" stroke="#fff" stroke-width="1.5"/><ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" opacity="0.7" stroke="#fff" stroke-width="1.5"/>`,
-      'rectangular prism': (c) => `<path d="M15,45 L65,45 L65,75 L15,75 Z" fill="${c}" stroke="#fff" stroke-width="1.5"/><path d="M15,45 L35,25 L85,25 L65,45 Z" fill="${c}" opacity="0.8" stroke="#fff" stroke-width="1.5"/><path d="M65,45 L85,25 L85,55 L65,75 Z" fill="${c}" opacity="0.6" stroke="#fff" stroke-width="1.5"/>`,
-      'triangular prism': (c) => `<path d="M70,25 L55,75 L95,75 Z" fill="${c}" stroke="#fff" stroke-width="2"/><path d="M70,25 L25,15 L10,65 L55,75 Z" fill="${c}" opacity="0.7" stroke="#fff" stroke-width="1.5"/><path d="M70,25 L25,15" stroke="#fff" stroke-width="1.5"/><path d="M55,75 L10,65" stroke="#fff" stroke-width="1.5"/>`
-    };
 
-    const shapes2D = ['triangle', 'square', 'rhombus', 'rectangle', 'pentagon', 'hexagon', 'octagon', 'trapezoid'];
+      cube: (c) => `
+        <path d="M25,70 L25,30 L65,30 L65,70 Z" fill="${c}" stroke="#fff" stroke-width="1.5"/>
+        <path d="M25,30 L40,15 L80,15 L65,30 Z" fill="${c}" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+        <path d="M65,30 L80,15 L80,55 L65,70 Z" fill="${c}" opacity="0.6" stroke="#fff" stroke-width="1.5"/>
+      `,
+
+      cylinder: (c) => `
+        <ellipse cx="50" cy="25" rx="30" ry="10" fill="${c}" opacity="0.8" stroke="#fff" stroke-width="1.5"/>
+        <rect x="20" y="25" width="60" height="50" fill="${c}"/>
+        <line x1="20" y1="25" x2="20" y2="75" stroke="#fff"/>
+        <line x1="80" y1="25" x2="80" y2="75" stroke="#fff"/>
+        <ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" stroke="#fff" stroke-width="1.5"/>
+      `,
+
+      cone: (c) => `
+        <path d="M50,15 L20,75 L80,75 Z" fill="${c}" stroke="#fff"/>
+        <ellipse cx="50" cy="75" rx="30" ry="10" fill="${c}" opacity="0.7" stroke="#fff"/>
+      `,
+
+      'rectangular prism': (c) => `
+        <path d="M15,45 L65,45 L65,75 L15,75 Z" fill="${c}" stroke="#fff"/>
+        <path d="M15,45 L35,25 L85,25 L65,45 Z" fill="${c}" opacity="0.8" stroke="#fff"/>
+        <path d="M65,45 L85,25 L85,55 L65,75 Z" fill="${c}" opacity="0.6" stroke="#fff"/>
+      `,
+
+      'triangular prism': (c) => `
+        <path d="M70,25 L55,75 L95,75 Z" fill="${c}" stroke="#fff" stroke-width="2"/>
+        <path d="M70,25 L25,15 L10,65 L55,75 Z" fill="${c}" opacity="0.7" stroke="#fff" stroke-width="1.5"/>
+        <path d="M70,25 L25,15" stroke="#fff"/>
+        <path d="M55,75 L10,65" stroke="#fff"/>
+      `,
+
+      'square-based pyramid': (c) => `
+        <path d="M50,15 L15,70 L75,70 Z" fill="${c}" stroke="#fff" stroke-width="1.5"/>
+        <path d="M50,15 L75,70 L95,55 Z" fill="${c}" opacity="0.7" stroke="#fff" stroke-width="1.5"/>
+        <path d="M15,70 L75,70 L95,55 L35,55 Z" fill="${c}" opacity="0.5" stroke="#fff" stroke-width="1.5"/>
+      `
+    };
 
     function getShapeSVG(type, color, rotation = 0) {
       const rotateStr = rotation !== 0 ? `transform="rotate(${rotation} 50 50)"` : '';
-      if (shapes2D.includes(type)) {
-        return `<svg viewBox="0 0 100 100" class="w-full h-full p-2"><polygon points="${draw[type]()}" fill="${color}" stroke="#fff" stroke-width="2" ${rotateStr} /></svg>`;
+
+      if (pool2D.includes(type)) {
+        return `
+          <svg viewBox="0 0 100 100" class="w-full h-full p-2">
+            <polygon points="${draw[type]()}" fill="${color}" stroke="#fff" stroke-width="2" ${rotateStr} />
+          </svg>
+        `;
       } else {
-        return `<svg viewBox="0 0 100 100" class="w-full h-full p-2"><g ${rotateStr}>${draw[type](color)}</g></svg>`;
+        return `
+          <svg viewBox="0 0 100 100" class="w-full h-full p-2">
+            <g ${rotateStr}>
+              ${draw[type](color)}
+            </g>
+          </svg>
+        `;
       }
     }
 
-    function startGame(lvl) {
+    async function startGame(lvl) {
       AudioEngine.init();
+
+      if (lvl > 1) {
+        victoryOverlay.classList.add('hidden');
+        await triggerWarpEffect();
+      }
+
       currentLevel = lvl;
       levelDisplay.textContent = lvl;
+
       score = (lvl === 1) ? 0 : score;
       sequenceIndex = 0;
+
       scoreDisplay.textContent = score;
+
       startTime = Date.now();
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(() => { timerDisplay.textContent = ((Date.now() - startTime) / 1000).toFixed(1); }, 100);
+
+      if (timerInterval) {
+        clearInterval(timerInterval);
+      }
+
+      timerInterval = setInterval(() => {
+        timerDisplay.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
+      }, 100);
+
       startOverlay.classList.add('hidden');
       victoryOverlay.classList.add('hidden');
+
       document.getElementById('game-title').textContent = levelData[lvl].title;
+
       spawnLevel();
     }
 
@@ -354,66 +680,106 @@
       gameGrid.innerHTML = '';
       targetsFound = 0;
       gameActive = true;
+
       const data = levelData[currentLevel];
       const currentTarget = data.order[sequenceIndex];
-      totalTargetsRequired = data.targetCount;
-      targetText.textContent = currentTarget + (currentTarget.endsWith('us') ? 'es' : 's');
-      targetCountText.textContent = totalTargetsRequired;
 
-      gameGrid.className = `grid grid-cols-2 sm:grid-cols-3 ${data.gridSize > 8 ? 'md:grid-cols-6' : 'md:grid-cols-4'} gap-4`;
+      targetText.textContent = currentTarget + (currentTarget.endsWith('us') ? 'es' : 's');
+      targetCountText.textContent = data.targetCount;
+
+      if (currentLevel <= 3) {
+        gameGrid.className = `level-small grid grid-cols-2 sm:grid-cols-3 ${data.gridSize > 8 ? 'md:grid-cols-6' : 'md:grid-cols-4'} gap-3`;
+      } else {
+        gameGrid.className = `grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4`;
+      }
 
       let pool = data.pool.filter(s => s !== currentTarget);
       let items = [];
-      for (let i = 0; i < totalTargetsRequired; i++) items.push(currentTarget);
-      while (items.length < data.gridSize) items.push(pool[Math.floor(Math.random() * pool.length)]);
+
+      for (let i = 0; i < data.targetCount; i++) {
+        items.push(currentTarget);
+      }
+
+      while (items.length < data.gridSize) {
+        items.push(pool[Math.floor(Math.random() * pool.length)]);
+      }
+
       items.sort(() => 0.5 - Math.random());
 
-      const colorSet = currentLevel === 4 ? hardColors : colors;
+      const colorSet = currentLevel >= 3 ? hardColors : colors;
+
       items.forEach((type) => {
         const card = document.createElement('div');
+
         card.className = "shape-container rounded-3xl animate-pop-in";
-        card.innerHTML = getShapeSVG(type, colorSet[Math.floor(Math.random() * colorSet.length)], Math.random() > 0.8 ? 45 : 0);
+
+        const rotation = (currentLevel === 4 && Math.random() > 0.5) ? 45 : 0;
+
+        card.innerHTML = getShapeSVG(
+          type,
+          colorSet[Math.floor(Math.random() * colorSet.length)],
+          rotation
+        );
+        
         card.onclick = () => {
           if (!gameActive || card.dataset.done) return;
+
           if (type === currentTarget) {
             AudioEngine.playCorrect();
+
             card.dataset.done = "true";
             card.classList.add('correct');
+
             score += (10 * currentLevel);
             targetsFound++;
-            if (targetsFound === totalTargetsRequired) {
+
+            if (targetsFound >= data.targetCount) {
               gameActive = false;
-              setTimeout(nextSubLevel, 500);
+
+              setTimeout(() => {
+                sequenceIndex++;
+
+                if (sequenceIndex >= data.order.length) {
+                  showVictory();
+                } else {
+                  spawnLevel();
+                }
+
+              }, 400);
             }
+
           } else {
             AudioEngine.playIncorrect();
+
             card.classList.add('incorrect');
+
             score = Math.max(0, score - 5);
           }
+
           scoreDisplay.textContent = score;
         };
+
         gameGrid.appendChild(card);
       });
     }
 
-    function nextSubLevel() {
-      sequenceIndex++;
-      if (sequenceIndex >= levelData[currentLevel].order.length) showVictory();
-      else spawnLevel();
-    }
-
     function showVictory() {
       AudioEngine.playLevelUp();
+
       clearInterval(timerInterval);
+
       victoryOverlay.classList.remove('hidden');
+
       document.getElementById('final-score').textContent = score;
       document.getElementById('final-time').textContent = timerDisplay.textContent + "s";
+
       const nextBtn = document.getElementById('next-lvl-btn');
+
       if (currentLevel < 4) {
-        nextBtn.textContent = "Voyage to Next Sector";
+        nextBtn.textContent = "Enter Warp Zone";
         nextBtn.onclick = () => startGame(currentLevel + 1);
       } else {
-        nextBtn.textContent = "Restart Journey";
+        nextBtn.textContent = "Restart Mission";
         nextBtn.onclick = () => startGame(1);
       }
     }
