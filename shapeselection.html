@@ -618,6 +618,7 @@
       4: {
         title: "Level 4: Super Speed!",
         gridSize: 18,
+        mobileGridSize: 16,
         targetCount: 5,
         order: ['hexagon', 'cone', 'rhombus', 'cube', 'octagon', 'rectangular prism', 'square-based pyramid'],
         pool: [...pool2D, ...pool3D]
@@ -747,7 +748,15 @@
       const data = levelData[currentLevel];
       const currentTarget = data.order[sequenceIndex];
 
-      const displayGridSize = (isMobileScreen() && currentLevel <= 2) ? 9 : data.gridSize;
+      let displayGridSize = data.gridSize;
+
+      if (isMobileScreen() && currentLevel <= 2) {
+        displayGridSize = 9;
+      }
+
+      if (isMobileScreen() && currentLevel === 4) {
+        displayGridSize = data.mobileGridSize;
+      }
 
       targetText.textContent = currentTarget + (currentTarget.endsWith('us') ? 'es' : 's');
       targetCountText.textContent = data.targetCount;
