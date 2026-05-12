@@ -169,7 +169,7 @@
         flex: 1;
         min-height: 0 !important;
         width: 100%;
-        max-width: 330px;
+        max-width: 360px;
         margin-left: auto;
         margin-right: auto;
         display: grid !important;
@@ -180,10 +180,16 @@
       }
 
       .level-small {
-        max-width: 330px !important;
+        max-width: 360px !important;
       }
 
-      .level-small .shape-container,
+      .level-small .shape-container {
+        max-width: 86px !important;
+        width: 100% !important;
+        border-radius: 12px !important;
+        justify-self: center;
+      }
+
       .shape-container {
         max-width: 72px !important;
         width: 100% !important;
