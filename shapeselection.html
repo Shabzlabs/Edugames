@@ -7,11 +7,16 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
     body {
       background-color: #020617;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      overflow-x: hidden;
-      overflow-y: auto;
       margin: 0;
       color: white;
     }
@@ -20,8 +25,8 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       z-index: -1;
       pointer-events: none;
     }
@@ -104,67 +109,143 @@
 
     @media (max-width: 640px) {
       #hud {
-        padding: 10px !important;
-      }
-
-      .mobile-title { 
-        font-size: 1.6rem !important; 
-        margin-bottom: 8px !important;
+        height: 100svh;
+        max-height: 100svh;
+        padding: 6px !important;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
       }
 
       header {
-        margin-bottom: 10px !important;
+        margin-bottom: 6px !important;
+        flex-shrink: 0;
       }
 
-      #game-grid { 
-        gap: 8px !important; 
-      }
-
-      .level-small .shape-container {
-        max-width: 105px;
-      }
-
-      .level-small {
-        max-width: 100%;
+      .mobile-title { 
+        font-size: 1.25rem !important; 
+        line-height: 1.4rem !important;
+        margin-bottom: 5px !important;
       }
 
       #instruction-area {
-        padding: 8px !important;
+        padding: 6px 8px !important;
+        border-radius: 12px !important;
       }
 
       #instruction-area p {
-        font-size: 0.95rem !important;
+        font-size: 0.8rem !important;
+        line-height: 1rem !important;
       }
 
       #instruction-area span {
-        font-size: 1.15rem !important;
-      }
-
-      .glass-ui {
-        padding: 8px !important;
-      }
-
-      .glass-ui .text-xl {
         font-size: 0.95rem !important;
       }
 
+      .glass-ui {
+        padding: 6px 8px !important;
+      }
+
+      #hud > .glass-ui {
+        margin-bottom: 6px !important;
+        border-radius: 12px !important;
+        flex-shrink: 0;
+      }
+
+      .glass-ui .text-xl {
+        font-size: 0.78rem !important;
+        line-height: 1rem !important;
+      }
+
       .glass-ui .gap-8 {
-        gap: 14px !important;
+        gap: 10px !important;
+      }
+
+      .glass-ui .text-xs {
+        font-size: 0.62rem !important;
+      }
+
+      #game-grid {
+        flex: 1;
+        min-height: 0 !important;
+        width: 100%;
+        max-width: 330px;
+        margin-left: auto;
+        margin-right: auto;
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+        align-content: start;
+        justify-content: center;
+      }
+
+      .level-small {
+        max-width: 330px !important;
+      }
+
+      .level-small .shape-container,
+      .shape-container {
+        max-width: 72px !important;
+        width: 100% !important;
+        border-radius: 12px !important;
+        justify-self: center;
+      }
+
+      .shape-container svg {
+        padding: 4px !important;
+      }
+
+      .correct {
+        border: 2px solid #22c55e !important;
+      }
+
+      .incorrect {
+        border: 2px solid #ef4444 !important;
+      }
+
+      #start-overlay {
+        padding: 14px !important;
+      }
+
+      #start-overlay .text-7xl {
+        font-size: 3.2rem !important;
+        margin-bottom: 12px !important;
       }
 
       #start-overlay h2,
       #victory-overlay h2 {
-        font-size: 2.3rem !important;
+        font-size: 2rem !important;
+        line-height: 2.2rem !important;
       }
 
       #start-overlay p {
-        font-size: 1rem !important;
+        font-size: 0.95rem !important;
+        margin-bottom: 20px !important;
       }
 
       #start-overlay button,
       #next-lvl-btn {
-        font-size: 1.1rem !important;
-        padding: 14px 28px !important;
+        font-size: 1rem !important;
+        padding: 12px 24px !important;
+      }
+
+      #victory-overlay {
+        padding: 14px !important;
+      }
+
+      #victory-overlay .text-8xl {
+        font-size: 4rem !important;
+        margin-bottom: 12px !important;
+      }
+
+      #victory-overlay .bg-black\/50 {
+        padding: 18px !important;
+        margin-bottom: 20px !important;
+      }
+
+      #final-score,
+      #final-time {
+        font-size: 2.3rem !important;
       }
     }
   </style>
