@@ -908,6 +908,35 @@
         nextBtn.onclick = () => startGame(1);
       }
     }
+    // Secret cheat codes for testing
+// Shift + 1 = Level 1
+// Shift + 2 = Level 2
+// Shift + 3 = Level 3
+// Shift + 4 = Level 4
+
+document.addEventListener("keydown", function(event) {
+  if (!event.shiftKey) return;
+
+  if (event.code === "Digit1") {
+    score = 0;
+    startGame(1);
+  }
+
+  if (event.code === "Digit2") {
+    score = 0;
+    startGame(2);
+  }
+
+  if (event.code === "Digit3") {
+    score = 0;
+    startGame(3);
+  }
+
+  if (event.code === "Digit4") {
+    score = 0;
+    startGame(4);
+  }
+});
   </script>
 </body>
 </html>
