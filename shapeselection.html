@@ -2,22 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Shape Hunter - Space Adventure</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     html,
     body {
       width: 100%;
       height: 100%;
       overflow: hidden;
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
     }
 
     body {
       background-color: #020617;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
       color: white;
     }
 
@@ -84,14 +90,14 @@
     }
 
     @keyframes pop-in {
-      0% { 
-        transform: scale(0.5); 
-        opacity: 0; 
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
       }
 
-      100% { 
-        transform: scale(1); 
-        opacity: 1; 
+      100% {
+        transform: scale(1);
+        opacity: 1;
       }
     }
 
@@ -108,89 +114,104 @@
     }
 
     @media (max-width: 640px) {
+      body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
       #hud {
-        height: 100svh;
-        max-height: 100svh;
-        padding: 6px !important;
+        height: 100dvh;
+        max-height: 100dvh;
+        min-height: 100dvh;
+        padding-top: calc(env(safe-area-inset-top) + 8px) !important;
+        padding-bottom: calc(env(safe-area-inset-bottom) + 8px) !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
         display: flex;
         flex-direction: column;
         overflow: hidden;
       }
 
       header {
-        margin-bottom: 6px !important;
+        margin-bottom: 8px !important;
         flex-shrink: 0;
       }
 
-      .mobile-title { 
-        font-size: 1.25rem !important; 
-        line-height: 1.4rem !important;
-        margin-bottom: 5px !important;
+      .mobile-title {
+        font-size: 1.35rem !important;
+        line-height: 1.5rem !important;
+        margin-bottom: 6px !important;
       }
 
       #instruction-area {
-        padding: 6px 8px !important;
+        padding: 7px 10px !important;
         border-radius: 12px !important;
       }
 
       #instruction-area p {
-        font-size: 0.8rem !important;
+        font-size: 0.82rem !important;
         line-height: 1rem !important;
       }
 
       #instruction-area span {
-        font-size: 0.95rem !important;
+        font-size: 1rem !important;
       }
 
       .glass-ui {
-        padding: 6px 8px !important;
+        padding: 7px 10px !important;
       }
 
       #hud > .glass-ui {
-        margin-bottom: 6px !important;
+        margin-bottom: 8px !important;
         border-radius: 12px !important;
         flex-shrink: 0;
       }
 
       .glass-ui .text-xl {
-        font-size: 0.78rem !important;
+        font-size: 0.82rem !important;
         line-height: 1rem !important;
       }
 
       .glass-ui .gap-8 {
-        gap: 10px !important;
+        gap: 12px !important;
       }
 
       .glass-ui .text-xs {
-        font-size: 0.62rem !important;
+        font-size: 0.66rem !important;
       }
 
       #game-grid {
         flex: 1;
         min-height: 0 !important;
         width: 100%;
-        max-width: 360px;
         margin-left: auto;
         margin-right: auto;
         display: grid !important;
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 6px !important;
+        gap: 7px !important;
         align-content: start;
         justify-content: center;
       }
 
-      .level-small {
-        max-width: 360px !important;
+      /* Levels 1-3 */
+      #game-grid.level-small {
+        max-width: 320px !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
       }
 
       .level-small .shape-container {
-        max-width: 86px !important;
+        max-width: 96px !important;
         width: 100% !important;
-        border-radius: 12px !important;
+        border-radius: 14px !important;
         justify-self: center;
       }
 
-      .shape-container {
+      /* Level 4 */
+      #game-grid:not(.level-small) {
+        max-width: 320px !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+      }
+
+      #game-grid:not(.level-small) .shape-container {
         max-width: 72px !important;
         width: 100% !important;
         border-radius: 12px !important;
@@ -210,7 +231,7 @@
       }
 
       #start-overlay {
-        padding: 14px !important;
+        padding: 16px !important;
       }
 
       #start-overlay .text-7xl {
@@ -258,11 +279,9 @@
 </head>
 
 <body class="min-h-screen">
-
   <canvas id="space-canvas"></canvas>
 
   <div id="hud" class="relative z-10 p-4 md:p-6 max-w-5xl mx-auto w-full transition-opacity duration-500">
-    
     <header class="text-center mb-4">
       <h1 class="mobile-title text-5xl font-black text-white mb-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" id="game-title">
         Shape Hunter!
@@ -336,7 +355,6 @@
         Next Mission
       </button>
     </div>
-
   </div>
 
   <script>
@@ -351,7 +369,6 @@
 
       playCorrect() {
         this.init();
-
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
 
@@ -364,14 +381,12 @@
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-
         osc.start();
         osc.stop(this.ctx.currentTime + 0.2);
       },
 
       playIncorrect() {
         this.init();
-
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
 
@@ -384,26 +399,22 @@
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-
         osc.start();
         osc.stop(this.ctx.currentTime + 0.15);
       },
 
       playLevelUp() {
         this.init();
-
         [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
 
           osc.frequency.value = freq;
-
           gain.gain.setValueAtTime(0.1, this.ctx.currentTime + (i * 0.1));
           gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + (i * 0.1) + 0.3);
 
           osc.connect(gain);
           gain.connect(this.ctx.destination);
-
           osc.start(this.ctx.currentTime + (i * 0.1));
           osc.stop(this.ctx.currentTime + (i * 0.1) + 0.3);
         });
@@ -411,7 +422,6 @@
 
       playWarp() {
         this.init();
-
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
 
@@ -425,7 +435,6 @@
 
         osc.connect(gain);
         gain.connect(this.ctx.destination);
-
         osc.start();
         osc.stop(this.ctx.currentTime + 3);
       }
@@ -443,7 +452,6 @@
     function initSpace() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-
       stars = [];
 
       for (let i = 0; i < STAR_COUNT; i++) {
@@ -475,9 +483,7 @@
         if (!isWarping && warpFactor < 2) {
           star.y += star.speed;
 
-          if (star.y > canvas.height) {
-            star.y = 0;
-          }
+          if (star.y > canvas.height) star.y = 0;
 
           ctx.fillStyle = star.color;
           ctx.beginPath();
@@ -522,7 +528,6 @@
       return new Promise((resolve) => {
         isWarping = true;
         AudioEngine.playWarp();
-
         document.getElementById('hud').style.opacity = '0';
 
         setTimeout(() => {
@@ -532,13 +537,11 @@
             document.getElementById('hud').style.opacity = '1';
             resolve();
           }, 800);
-
         }, 2500);
       });
     }
 
     window.addEventListener('resize', initSpace);
-
     initSpace();
     animateSpace();
 
@@ -560,19 +563,7 @@
     let gameActive = false;
 
     const colors = ['#f87171', '#60a5fa', '#fbbf24', '#34d399', '#a78bfa'];
-
-    const hardColors = [
-      '#f87171',
-      '#60a5fa',
-      '#fbbf24',
-      '#34d399',
-      '#a78bfa',
-      '#f472b6',
-      '#22d3ee',
-      '#fb923c',
-      '#94a3b8',
-      '#c084fc'
-    ];
+    const hardColors = ['#f87171', '#60a5fa', '#fbbf24', '#34d399', '#a78bfa', '#f472b6', '#22d3ee', '#fb923c', '#94a3b8', '#c084fc'];
 
     const pool2D = [
       'triangle',
@@ -596,92 +587,51 @@
     ];
 
     const levelData = {
-      1: { 
-        title: "Level 1: Basic Shapes", 
-        gridSize: 8, 
-        targetCount: 3, 
-        order: [
-          'triangle',
-          'square',
-          'rectangle',
-          'trapezoid',
-          'rhombus',
-          'pentagon',
-          'hexagon',
-          'octagon'
-        ], 
-        pool: pool2D 
+      1: {
+        title: "Level 1: Basic Shapes",
+        gridSize: 8,
+        targetCount: 3,
+        order: ['triangle', 'square', 'rectangle', 'trapezoid', 'rhombus', 'pentagon', 'hexagon', 'octagon'],
+        pool: pool2D
       },
 
-      2: { 
-        title: "Level 2: 3D Solids", 
-        gridSize: 8, 
-        targetCount: 3, 
-        order: [
-          'sphere',
-          'cube',
-          'cylinder',
-          'cone',
-          'rectangular prism',
-          'triangular prism',
-          'square-based pyramid'
-        ], 
-        pool: pool3D 
+      2: {
+        title: "Level 2: 3D Solids",
+        gridSize: 8,
+        targetCount: 3,
+        order: ['sphere', 'cube', 'cylinder', 'cone', 'rectangular prism', 'triangular prism', 'square-based pyramid'],
+        pool: pool3D
       },
 
-      3: { 
-        title: "Level 3: Master Challenge", 
-        gridSize: 12, 
-        targetCount: 4, 
-        order: [
-          'octagon',
-          'sphere',
-          'rhombus',
-          'cylinder',
-          'trapezoid',
-          'triangular prism',
-          'square-based pyramid'
-        ], 
-        pool: [...pool2D, ...pool3D] 
+      3: {
+        title: "Level 3: Master Challenge",
+        gridSize: 12,
+        targetCount: 4,
+        order: ['octagon', 'sphere', 'rhombus', 'cylinder', 'trapezoid', 'triangular prism', 'square-based pyramid'],
+        pool: [...pool2D, ...pool3D]
       },
 
-      4: { 
-        title: "Level 4: Super Speed!", 
-        gridSize: 16, 
-        targetCount: 5, 
-        order: [
-          'hexagon',
-          'cone',
-          'rhombus',
-          'cube',
-          'octagon',
-          'rectangular prism',
-          'square-based pyramid'
-        ], 
-        pool: [...pool2D, ...pool3D] 
+      4: {
+        title: "Level 4: Super Speed!",
+        gridSize: 16,
+        targetCount: 5,
+        order: ['hexagon', 'cone', 'rhombus', 'cube', 'octagon', 'rectangular prism', 'square-based pyramid'],
+        pool: [...pool2D, ...pool3D]
       }
     };
 
     const draw = {
       triangle: () => "50,15 85,85 15,85",
-
       square: () => "20,20 80,20 80,80 20,80",
-
       rhombus: () => "50,10 80,50 50,90 20,50",
-
       rectangle: () => "15,30 85,30 85,70 15,70",
-
       pentagon: () => "50,10 90,40 75,90 25,90 10,40",
-
       hexagon: () => "25,15 75,15 95,50 75,85 25,85 5,50",
-
       octagon: () => "30,15 70,15 90,35 90,65 70,85 30,85 10,65 10,35",
-
       trapezoid: () => "25,30 75,30 95,70 5,70",
 
       sphere: (c) => {
         const id = "grad-" + Math.random().toString(36).substr(2, 5);
-
         return `
           <defs>
             <radialGradient id="${id}" cx="35%" cy="35%" r="50%" fx="35%" fy="35%">
@@ -690,7 +640,6 @@
               <stop offset="100%" stop-color="#000" stop-opacity="0.8"/>
             </radialGradient>
           </defs>
-
           <circle cx="50" cy="50" r="40" fill="url(#${id})" stroke="rgba(255,255,255,0.2)"/>
         `;
       },
@@ -764,17 +713,12 @@
 
       currentLevel = lvl;
       levelDisplay.textContent = lvl;
-
       score = (lvl === 1) ? 0 : score;
       sequenceIndex = 0;
-
       scoreDisplay.textContent = score;
-
       startTime = Date.now();
 
-      if (timerInterval) {
-        clearInterval(timerInterval);
-      }
+      if (timerInterval) clearInterval(timerInterval);
 
       timerInterval = setInterval(() => {
         timerDisplay.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
@@ -782,7 +726,6 @@
 
       startOverlay.classList.add('hidden');
       victoryOverlay.classList.add('hidden');
-
       document.getElementById('game-title').textContent = levelData[lvl].title;
 
       spawnLevel();
@@ -822,7 +765,6 @@
 
       items.forEach((type) => {
         const card = document.createElement('div');
-
         card.className = "shape-container rounded-3xl animate-pop-in";
 
         const rotation = (currentLevel === 4 && Math.random() > 0.5) ? 45 : 0;
@@ -832,13 +774,12 @@
           colorSet[Math.floor(Math.random() * colorSet.length)],
           rotation
         );
-        
+
         card.onclick = () => {
           if (!gameActive || card.dataset.done) return;
 
           if (type === currentTarget) {
             AudioEngine.playCorrect();
-
             card.dataset.done = "true";
             card.classList.add('correct');
 
@@ -856,15 +797,11 @@
                 } else {
                   spawnLevel();
                 }
-
               }, 400);
             }
-
           } else {
             AudioEngine.playIncorrect();
-
             card.classList.add('incorrect');
-
             score = Math.max(0, score - 5);
           }
 
@@ -877,9 +814,7 @@
 
     function showVictory() {
       AudioEngine.playLevelUp();
-
       clearInterval(timerInterval);
-
       victoryOverlay.classList.remove('hidden');
 
       document.getElementById('final-score').textContent = score;
