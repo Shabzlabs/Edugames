@@ -113,6 +113,60 @@
       filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
     }
 
+    /* Level 4 computer-only shrink fix */
+    @media (min-width: 641px) {
+      body.level-4-desktop #hud {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+      }
+
+      body.level-4-desktop header {
+        margin-bottom: 8px !important;
+      }
+
+      body.level-4-desktop .mobile-title {
+        font-size: 3.4rem !important;
+        line-height: 3.7rem !important;
+        margin-bottom: 8px !important;
+      }
+
+      body.level-4-desktop #instruction-area {
+        padding: 8px 18px !important;
+        border-radius: 18px !important;
+      }
+
+      body.level-4-desktop #instruction-area p {
+        font-size: 1.25rem !important;
+      }
+
+      body.level-4-desktop #instruction-area span {
+        font-size: 1.8rem !important;
+      }
+
+      body.level-4-desktop .stats-bar {
+        margin-bottom: 12px !important;
+        padding: 10px 16px !important;
+      }
+
+      body.level-4-desktop .stats-left div {
+        font-size: 1.2rem !important;
+      }
+
+      body.level-4-desktop .mission-level {
+        font-size: 0.7rem !important;
+      }
+
+      body.level-4-desktop #game-grid {
+        gap: 12px !important;
+      }
+
+      body.level-4-desktop #game-grid .shape-container {
+        max-width: 180px;
+        width: 100%;
+        justify-self: center;
+      }
+    }
+
     @media (max-width: 640px) {
       body {
         padding-top: 0;
@@ -744,6 +798,11 @@
       gameGrid.innerHTML = '';
       targetsFound = 0;
       gameActive = true;
+
+      document.body.classList.toggle(
+        'level-4-desktop',
+        currentLevel === 4 && !isMobileScreen()
+      );
 
       const data = levelData[currentLevel];
       const currentTarget = data.order[sequenceIndex];
