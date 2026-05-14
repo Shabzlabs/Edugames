@@ -4,37 +4,358 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ShabzLabs</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   
   <style>
+    :root {
+      --primary-blue: #3b82f6;
+      --dark-blue: #1d4ed8;
+      --accent-yellow: #facc15;
+      --soft-bg: linear-gradient(135deg, #a5f3fc, #fde68a);
+    }
+
     body {
       margin: 0;
       font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(135deg, #a5f3fc, #fde68a);
+      background: var(--soft-bg);
       min-height: 100vh;
       color: #1f2937;
+    }
+
+    .navbar {
+      background: white;
+      border-bottom: 4px solid var(--primary-blue);
+      padding: 10px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      text-decoration: none;
+    }
+
+    .nav-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 24px;
+      color: #2563eb;
+      margin: 0;
+      text-shadow: 1px 1px 0px #dbeafe;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-item {
+      text-decoration: none;
+      color: #1e40af;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background: #eff6ff;
+      color: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    .nav-item.active {
+      background: var(--primary-blue);
+      color: white;
+      box-shadow: 0 4px 0 var(--dark-blue);
+    }
+
+    .lab-container {
+      position: relative;
+      display: inline-block;
+      font-size: 28px;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
+    }
+
+    .bubble {
+      position: absolute;
+      background: rgba(34, 197, 94, 0.6);
+      border-radius: 50%;
+      animation: floatUp 2s infinite ease-in;
+      bottom: 5px;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.3); opacity: 1; }
+      100% { transform: translateY(-30px) scale(1.2); opacity: 0; }
     }
 
     .page {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 30px 20px;
     }
 
-    .hero {
-      background: #ffffff;
-      border: 4px solid #3b82f6;
-      border-radius: 20px;
-      padding: 15px 10px;
+    .menu-header {
       text-align: center;
-      box-shadow: 0 8px 0 #1d4ed8;
-      margin-bottom: 25px;
-      position: relative;
-      overflow: hidden;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-bottom: 40px;
     }
+
+    .menu-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 36px;
+      color: #1e40af;
+      margin-bottom: 10px;
+    }
+
+    .subtitle-tag {
+      font-size: 14px;
+      font-weight: bold;
+      color: #059669;
+      background: #ecfdf5;
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      border: 2px solid #10b981;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    .game-card {
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 8px 0 #e5e7eb;
+      transition: 0.2s;
+      border: 3px solid #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .game-card:hover {
+      transform: translateY(-8px) rotate(1deg);
+      border-color: var(--accent-yellow);
+      box-shadow: 0 12px 0 #fde047;
+    }
+
+    .game-icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+    }
+
+    .game-card h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 24px;
+      margin: 10px 0;
+      color: #1d4ed8;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 10px;
+      border: 2px solid #86efac;
+    }
+
+    .play-btn {
+      display: inline-block;
+      margin-top: 15px;
+      background: #f59e0b;
+      color: white;
+      text-decoration: none;
+      padding: 12px 25px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 5px 0 #b45309;
+      transition: 0.1s;
+    }
+
+    .play-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #b45309;
+    }
+
+    .coming-soon {
+      display: inline-block;
+      margin-top: 15px;
+      background: #f3f4f6;
+      color: #9ca3af;
+      padding: 12px 25px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .nav-item {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-left">
+      <div class="lab-container">
+        <div class="bubble" style="left:20%; width:8px; height:8px; animation-delay: 0s;"></div>
+        <div class="bubble" style="left:50%; width:6px; height:6px; animation-delay: 0.5s;"></div>
+        <div class="bubble" style="left:80%; width:10px; height:10px; animation-delay: 1s;"></div>
+        🧪
+      </div>
+      <h1 class="nav-title">Shabz Labs</h1>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="nav-item active">Home</a>
+      <a href="shapes.html" class="nav-item">Lessons</a>
+      <a href="shapeselection.html" class="nav-item">Games</a>
+      <a href="about.html" class="nav-item">About</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <header class="menu-header">
+      <h2 class="menu-title">✨ Pick a Mission ✨</h2>
+      <span class="subtitle-tag">Super Fun Science & Math!</span>
+    </header>
+
+    <section class="games-grid">
+      <!-- Lesson Card 1 -->
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🎨</div>
+          <span class="tag">Lesson</span>
+          <h3>Learn About Shapes</h3>
+          <p>Explore the wonderful world of 2D and 3D shapes!</p>
+        </div>
+        <a class="play-btn" href="shapes.html">READ 📘</a>
+      </div>
+
+      <!-- Lesson Card 2 -->
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🧊</div>
+          <span class="tag">Learn</span>
+          <h3>Learn 3D Shapes</h3>
+          <p>Understand cubes, spheres, cylinders, and more.</p>
+        </div>
+        <a class="play-btn" href="3dshapes.html">READ 📘</a>
+      </div>
+
+      <!-- Game Card 1 -->
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🔍</div>
+          <span class="tag">Shapes</span>
+          <h3>Shape Hunter</h3>
+          <p>Can you find all the hidden shapes in the lab?</p>
+        </div>
+        <a class="play-btn" href="shapeselection.html">PLAY! 🚀</a>
+      </div>
+
+      <!-- Game Card 2 -->
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🧩</div>
+          <span class="tag">Words</span>
+          <h3>Word Maker</h3>
+          <p>Smash two words together to make a new one!</p>
+        </div>
+        <a class="play-btn" href="compound.html">PLAY! 🚀</a>
+      </div>
+
+      <!-- Game Card 3 -->
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🎾</div>
+          <span class="tag">3D Objects</span>
+          <h3>Roll or Stack?</h3>
+          <p>Will it roll? Will it stack? Let's test it out!</p>
+        </div>
+        <a class="play-btn" href="rollstack.html">PLAY! 🚀</a>
+      </div>
+
+      <!-- Game Card 4 -->
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🎡</div>
+          <span class="tag">Math</span>
+          <h3>Spinner Adventure</h3>
+          <p>Spin the wheel and track the data with tallies!</p>
+        </div>
+        <a class="play-btn" href="probability.html">PLAY! 🚀</a>
+      </div>
+
+      <!-- Game Card 5 -->
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🌴</div>
+          <span class="tag">Addition</span>
+          <h3>Addition Jungle</h3>
+          <p>Solve fun addition problems deep in the jungle!</p>
+        </div>
+        <a class="play-btn" href="addition.html">PLAY! 🚀</a>
+      </div>
+
+      <!-- Coming Soon Card -->
+      <div class="game-card">
+        <div>
+          <div class="game-icon">🧪</div>
+          <span class="tag">Safety</span>
+          <h3>Safety Hero</h3>
+          <p>Keep the lab safe with your super brain!</p>
+        </div>
+        <span class="coming-soon">Coming Soon</span>
+      </div>
+    </section>
+
+    <footer class="mt-20 border-t-2 border-blue-200 pt-8 pb-10 text-center">
+      <p class="font-bold text-blue-800 mb-2">© 2026 ShabzLabs</p>
+      <div class="flex justify-center gap-4 text-blue-600 font-medium">
+        <a href="about.html" class="hover:underline">About</a>
+        <span>|</span>
+        <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+        <span>|</span>
+        <a href="contact.html" class="hover:underline">Contact</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>    }
 
     .lab-container {
       position: relative;
@@ -218,7 +539,7 @@
         <div>
           <div class="game-icon">🔍</div>
           <span class="tag">Shapes</span>
-          <h3>Shape Hunter</h3>
+          <h3>Shape Space</h3>
           <p>Can you find all the hidden shapes?</p>
         </div>
         <a class="play-btn" href="shapeselection.html">PLAY! 🚀</a>
