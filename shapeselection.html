@@ -113,6 +113,63 @@
       filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
     }
 
+    /* Level 4 computer-only shrink fix */
+    @media (min-width: 641px) {
+      body.level-4-desktop #hud {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+      }
+
+      body.level-4-desktop header {
+        margin-bottom: 4px !important;
+      }
+
+      body.level-4-desktop .mobile-title {
+        font-size: 3.4rem !important;
+        line-height: 3.7rem !important;
+        margin-bottom: 8px !important;
+      }
+
+      body.level-4-desktop #instruction-area {
+        padding: 3px 12px !important;
+        border-radius: 13px !important;
+        margin-bottom: 0 !important;
+      }
+
+      body.level-4-desktop #instruction-area p {
+        font-size: 0.95rem !important;
+        line-height: 1.05 !important;
+      }
+
+      body.level-4-desktop #instruction-area span {
+        font-size: 1.35rem !important;
+        line-height: 1.05 !important;
+      }
+
+      body.level-4-desktop .stats-bar {
+        margin-bottom: 12px !important;
+        padding: 10px 16px !important;
+      }
+
+      body.level-4-desktop .stats-left div {
+        font-size: 1.2rem !important;
+      }
+
+      body.level-4-desktop .mission-level {
+        font-size: 0.7rem !important;
+      }
+
+      body.level-4-desktop #game-grid {
+        gap: 12px !important;
+      }
+
+      body.level-4-desktop #game-grid .shape-container {
+        max-width: 180px;
+        width: 100%;
+        justify-self: center;
+      }
+    }
+
     @media (max-width: 640px) {
       body {
         padding-top: 0;
@@ -618,6 +675,7 @@
       4: {
         title: "Level 4: Super Speed!",
         gridSize: 18,
+        mobileGridSize: 16,
         targetCount: 5,
         order: ['hexagon', 'cone', 'rhombus', 'cube', 'octagon', 'rectangular prism', 'square-based pyramid'],
         pool: [...pool2D, ...pool3D]
@@ -714,9 +772,8 @@
     async function startGame(lvl) {
       AudioEngine.init();
 
-      startOverlay.classList.add('hidden');
       victoryOverlay.classList.add('hidden');
-
+      startOverlay.classList.add('hidden');
       await triggerWarpEffect();
 
       currentLevel = lvl;
@@ -732,6 +789,8 @@
         timerDisplay.textContent = ((Date.now() - startTime) / 1000).toFixed(1);
       }, 100);
 
+      startOverlay.classList.add('hidden');
+      victoryOverlay.classList.add('hidden');
       document.getElementById('game-title').textContent = levelData[lvl].title;
 
       spawnLevel();
@@ -742,10 +801,23 @@
       targetsFound = 0;
       gameActive = true;
 
+      document.body.classList.toggle(
+        'level-4-desktop',
+        currentLevel === 4 && !isMobileScreen()
+      );
+
       const data = levelData[currentLevel];
       const currentTarget = data.order[sequenceIndex];
 
-      const displayGridSize = (isMobileScreen() && currentLevel <= 2) ? 9 : data.gridSize;
+      let displayGridSize = data.gridSize;
+
+      if (isMobileScreen() && currentLevel <= 2) {
+        displayGridSize = 9;
+      }
+
+      if (isMobileScreen() && currentLevel === 4) {
+        displayGridSize = data.mobileGridSize;
+      }
 
       targetText.textContent = currentTarget + (currentTarget.endsWith('us') ? 'es' : 's');
       targetCountText.textContent = data.targetCount;
@@ -838,6 +910,35 @@
         nextBtn.onclick = () => startGame(1);
       }
     }
+
+    // Secret cheat codes for testing
+    // Shift + 1 = Level 1
+    // Shift + 2 = Level 2
+    // Shift + 3 = Level 3
+    // Shift + 4 = Level 4
+    document.addEventListener("keydown", function(event) {
+      if (!event.shiftKey) return;
+
+      if (event.code === "Digit1") {
+        score = 0;
+        startGame(1);
+      }
+
+      if (event.code === "Digit2") {
+        score = 0;
+        startGame(2);
+      }
+
+      if (event.code === "Digit3") {
+        score = 0;
+        startGame(3);
+      }
+
+      if (event.code === "Digit4") {
+        score = 0;
+        startGame(4);
+      }
+    });
   </script>
 </body>
 </html>
