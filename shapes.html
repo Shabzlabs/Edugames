@@ -7,6 +7,77 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
+    .navbar {
+  background: white;
+  border-bottom: 4px solid #3b82f6;
+  padding: 10px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-decoration: none;
+}
+
+.nav-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 24px;
+  color: #2563eb;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-item {
+  text-decoration: none;
+  color: #1e40af;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 12px;
+}
+
+.nav-item:hover {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.nav-item.active {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 4px 0 #1d4ed8;
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav-item {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+}
     body {
       margin: 0;
       font-family: 'Quicksand', sans-serif;
@@ -179,12 +250,26 @@
 </head>
 
 <body>
+  <nav class="navbar">
+  <a href="index.html" class="nav-left">
+    <div style="font-size: 28px;">🧪</div>
+    <h1 class="nav-title">Shabz Labs</h1>
+  </a>
+
+  <div class="nav-links">
+    <a href="index.html" class="nav-item">Home</a>
+    <a href="shapes.html" class="nav-item">Lessons</a>
+    <a href="shapeselection.html" class="nav-item active">Games</a>
+    <a href="about.html" class="nav-item">About</a>
+  </div>
+</nav>
+    
   <div class="page">
 
     <header class="hero">
       <div style="font-size: 50px;">📐✨🎨</div>
       <h1>The World of Shapes</h1>
-      <p class="subtitle"> </p>
+      <p class="subtitle">A ShabzLabs Science Mission</p>
     </header>
 
     <section class="content-card">
@@ -200,7 +285,7 @@
     <section class="content-card">
       
       <h2>Meet the 2D Shapes</h2>
-      <p>Shapes are flat figures made of lines and curves. Let's look at the most common ones!</p>
+      <p>Shapes are flat patterns made of lines and curves. Let's look at the most common ones!</p>
       
       <div class="shape-grid">
         
