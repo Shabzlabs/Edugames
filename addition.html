@@ -1,309 +1,437 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Addition Jungle: Math Flip</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;800;900&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basic Shapes for Kids - ShabzLabs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 
-        body {
-            background-color: #064e3b;
-            /* Updated background to jungle.png */
-            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('jungle.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            font-family: 'Nunito', sans-serif;
-            overflow-x: hidden;
-        }
+  <style>
+    .navbar {
+  background: white;
+  border-bottom: 4px solid #3b82f6;
+  padding: 10px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
 
-        .luckiest { font-family: 'Luckiest Guy', cursive; }
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  text-decoration: none;
+}
 
-        .perspective {
-            perspective: 1000px;
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-style: preserve-3d;
-        }
-        .flipped {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 2rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-        }
-        .flip-card-front {
-            background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
-            border: 6px solid #10b981;
-        }
-        .flip-card-back {
-            background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
-            color: white;
-            transform: rotateY(180deg);
-            border: 6px solid #fbbf24;
-        }
-        .sparkle {
-            position: absolute;
-            pointer-events: none;
-            z-index: 100;
-            animation: fly 1s ease-out forwards;
-        }
-        @keyframes fly {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--tw-translate-x), var(--tw-translate-y)) scale(0); opacity: 0; }
-        }
-        .leaf {
-            position: fixed;
-            font-size: 2rem;
-            opacity: 0.3;
-            z-index: 0;
-            pointer-events: none;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
+.nav-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 24px;
+  color: #2563eb;
+  margin: 0;
+}
 
-        .numpad-btn {
-            background: #ffffff;
-            border: 3px solid #10b981;
-            box-shadow: 0 4px 0 #059669;
-            transition: all 0.1s;
-        }
-        .numpad-btn:active {
-            box-shadow: 0 0 0 #059669;
-            transform: translateY(4px);
-        }
-        .numpad-btn.wrong {
-            animation: shake 0.4s;
-            border-color: #ef4444;
-            color: #ef4444;
-        }
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-    </style>
+.nav-item {
+  text-decoration: none;
+  color: #1e40af;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 12px;
+}
+
+.nav-item:hover {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.nav-item.active {
+  background: #3b82f6;
+  color: white;
+  box-shadow: 0 4px 0 #1d4ed8;
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav-item {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+}
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #a5f3fc, #fde68a);
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    .page {
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 25px 20px 50px;
+    }
+
+    .hero {
+      background: #ffffff;
+      border: 4px solid #3b82f6;
+      border-radius: 25px;
+      padding: 25px 20px;
+      text-align: center;
+      box-shadow: 0 8px 0 #1d4ed8;
+      margin-bottom: 30px;
+    }
+
+    .hero-icon {
+      font-size: 55px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      color: #2563eb;
+      font-size: 36px;
+      margin: 0;
+      text-shadow: 2px 2px 0 #dbeafe;
+    }
+
+    .subtitle {
+      display: inline-block;
+      background: #ecfdf5;
+      color: #059669;
+      font-weight: bold;
+      margin-top: 10px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 2px solid #86efac;
+    }
+
+    .content-card {
+      background: white;
+      border-radius: 22px;
+      padding: 25px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 0 #e5e7eb;
+      border: 3px solid #f3f4f6;
+    }
+
+    h2 {
+      font-family: 'Fredoka One', cursive;
+      color: #1d4ed8;
+      font-size: 26px;
+      margin-top: 0;
+    }
+
+    h3 {
+      color: #166534;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .shape-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
+
+    .shape-box {
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      border: 3px solid #dbeafe;
+      box-shadow: 0 5px 0 #bfdbfe;
+    }
+
+    .shape-icon {
+      font-size: 55px;
+      margin-bottom: 10px;
+    }
+
+    .shape-box h3 {
+      margin: 5px 0;
+      color: #1d4ed8;
+      font-family: 'Fredoka One', cursive;
+    }
+
+    .comparison {
+      background: #fef3c7;
+      border: 3px solid #facc15;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 15px;
+    }
+
+    .tip {
+      background: #dcfce7;
+      border: 3px solid #86efac;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #166534;
+    }
+
+    .button-row {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .play-btn {
+      display: inline-block;
+      background: #f59e0b;
+      color: white;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 5px 0 #b45309;
+      margin: 8px;
+    }
+
+    .home-btn {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 5px 0 #1e40af;
+      margin: 8px;
+    }
+
+    .play-btn:active,
+    .home-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #92400e;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    footer a {
+      color: #1d4ed8;
+      font-weight: bold;
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Background Decoration -->
-    <div class="leaf top-10 left-10 rotate-12">🌿</div>
-    <div class="leaf bottom-20 left-20 -rotate-12">🍃</div>
-    <div class="leaf top-40 right-10 rotate-45">🌳</div>
-    <div class="leaf bottom-10 right-20">🌱</div>
+<body>
+  <nav class="navbar">
+  <a href="index.html" class="nav-left">
+    <div style="font-size: 28px;">🧪</div>
+    <h1 class="nav-title">Shabz Labs</h1>
+  </a>
 
-    <!-- Header Section -->
-    <div class="text-center mb-8 relative z-10">
-        <h1 class="luckiest text-5xl text-white mb-2 drop-shadow-[0_4px_4px_rgba(0,0,0,0.8)] tracking-wide">
-            ADDITION <span class="text-yellow-400">JUNGLE</span>
-        </h1>
-        <div class="inline-flex items-center bg-black/50 backdrop-blur-md px-6 py-2 rounded-2xl border border-white/20">
-            <span class="text-xs font-black text-emerald-300 uppercase tracking-widest mr-3">Bananas:</span>
-            <span id="score" class="luckiest text-3xl text-yellow-400">0</span>
-            <span class="ml-2 text-2xl">🍌</span>
-        </div>
-    </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-item">Home</a>
+    <a href="shapes.html" class="nav-item">Lessons</a>
+    <a href="shapeselection.html" class="nav-item active">Games</a>
+    <a href="about.html" class="nav-item">About</a>
+  </div>
+</nav>
+    
+  <div class="page">
 
-    <!-- Main Game Layout -->
-    <div class="flex flex-row flex-wrap items-center justify-center gap-8 lg:gap-24 relative z-10 w-full max-w-6xl">
+    <header class="hero">
+      <div style="font-size: 50px;">📐✨🎨</div>
+      <h1>The World of Shapes</h1>
+      <p class="subtitle">A ShabzLabs Science Mission</p>
+    </header>
+
+    <section class="content-card">
+      <h2>What Are Shapes?</h2>
+      <p>
+        Shapes are all around us. We can see shapes in classrooms, homes, playgrounds, signs, toys, books, and even food. Learning about shapes helps students describe objects, compare things, and understand early geometry.
+      </p>
+      <p>
+        A shape can be identified by looking carefully at its sides, corners, and overall form. Some shapes have straight sides, some have curved edges, and some have more corners than others. When students learn to notice these features, they become stronger problem-solvers in math.
+      </p>
+    </section>
+
+    <section class="content-card">
+      
+      <h2>Meet the 2D Shapes</h2>
+      <p>Shapes are flat patterns made of lines and curves. Let's look at the most common ones!</p>
+      
+      <div class="shape-grid">
         
-        <!-- LEFT SIDE: Question Card -->
-        <div class="flex flex-col items-center w-full max-w-[320px] sm:max-w-sm">
-            <div class="perspective w-full h-80 sm:h-96">
-                <div id="cardInner" class="flip-card-inner">
-                    <!-- Front -->
-                    <div class="flip-card-front">
-                        <span class="text-xs uppercase tracking-widest text-emerald-600 font-black mb-4">The Challenge</span>
-                        <div id="questionText" class="text-8xl luckiest text-emerald-900 tabular-nums">
-                            -- + --
-                        </div>
-                        <p class="mt-8 text-emerald-400 font-bold uppercase text-xs">Enter result on the right!</p>
-                    </div>
-                    <!-- Back -->
-                    <div class="flip-card-back">
-                        <span class="text-xs uppercase tracking-widest text-emerald-100 font-black mb-4">Correct!</span>
-                        <div id="answerText" class="text-9xl luckiest text-white tabular-nums drop-shadow-md">
-                            --
-                        </div>
-                        <div class="mt-8">
-                           <button onclick="nextQuestion()" class="bg-yellow-400 hover:bg-yellow-300 text-emerald-900 luckiest py-3 px-8 rounded-xl transition-all active:scale-95 shadow-[0_5px_0_0_#b45309]">
-                               NEXT!
-                           </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button onclick="nextQuestion(false)" class="mt-6 text-white/70 hover:text-white underline text-sm font-bold tracking-widest">
-                SKIP CHALLENGE
-            </button>
+        <!-- Triangle -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="gradTri" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#f87171" />
+                <stop offset="100%" style="stop-color:#dc2626" />
+              </linearGradient>
+            </defs>
+            <polygon points="50,10 90,85 10,85" fill="url(#gradTri)" stroke="#991b1b" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M50,25 L80,80 L20,80 Z" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Triangle</h3>
+          <p><strong>3 Sides</strong> and 3 Corners.</p>
         </div>
 
-        <!-- RIGHT SIDE: Number Pad -->
-        <div class="flex flex-col items-center w-full max-w-[320px]">
-            <div class="bg-black/30 backdrop-blur-md p-6 rounded-[2.5rem] border border-white/10 shadow-2xl w-full">
-                
-                <!-- Display Area Moved to Top -->
-                <div class="bg-white/10 rounded-2xl p-4 text-center border border-white/5 mb-4">
-                    <span class="text-white/40 text-[10px] uppercase font-black tracking-widest block mb-1">Your Answer</span>
-                    <span id="userInput" class="luckiest text-5xl text-white tracking-widest h-12 flex items-center justify-center"></span>
-                </div>
-
-                <!-- Number Pad Grid -->
-                <div class="grid grid-cols-3 gap-3">
-                    <button onclick="checkAnswer(1)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">1</button>
-                    <button onclick="checkAnswer(2)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">2</button>
-                    <button onclick="checkAnswer(3)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">3</button>
-                    <button onclick="checkAnswer(4)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">4</button>
-                    <button onclick="checkAnswer(5)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">5</button>
-                    <button onclick="checkAnswer(6)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">6</button>
-                    <button onclick="checkAnswer(7)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">7</button>
-                    <button onclick="checkAnswer(8)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">8</button>
-                    <button onclick="checkAnswer(9)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">9</button>
-                    <button onclick="clearInput()" class="numpad-btn luckiest text-xl p-4 rounded-2xl text-orange-600 bg-orange-50 border-orange-400 shadow-[0_4px_0_#c2410c]">DEL</button>
-                    <button onclick="checkAnswer(0)" class="numpad-btn luckiest text-3xl p-4 rounded-2xl text-emerald-800">0</button>
-                    <button onclick="submitTyped()" class="numpad-btn luckiest text-xl p-4 rounded-2xl text-white bg-emerald-500 border-emerald-600 shadow-[0_4px_0_#065f46]">GO!</button>
-                </div>
-            </div>
+        <!-- Square -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <rect x="15" y="15" width="70" height="70" fill="#3b82f6" stroke="#1e40af" stroke-width="4" rx="4" />
+            <rect x="25" y="25" width="50" height="50" fill="white" opacity="0.2" rx="2" />
+          </svg>
+          <h3>Square</h3>
+          <p><strong>4 Equal Sides</strong> and 4 Corners.</p>
         </div>
 
-    </div>
+        <!-- Rectangle -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <rect x="10" y="30" width="80" height="40" fill="#10b981" stroke="#065f46" stroke-width="4" rx="4" />
+            <rect x="20" y="40" width="60" height="20" fill="white" opacity="0.2" rx="2" />
+          </svg>
+          <h3>Rectangle</h3>
+          <p><strong>4 Sides</strong> with equal opposite sides.</p>
+        </div>
 
-    <script>
-        let currentAnswer = 0;
-        let score = 0;
-        let typedAnswer = "";
-        const cardInner = document.getElementById('cardInner');
-        const questionText = document.getElementById('questionText');
-        const answerText = document.getElementById('answerText');
-        const scoreDisplay = document.getElementById('score');
-        const userInputDisplay = document.getElementById('userInput');
+        <!-- Rhombus -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="50,10 85,50 50,90 15,50" fill="#a855f7" stroke="#6b21a8" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="50,25 70,50 50,75 30,50" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Rhombus</h3>
+          <p><strong>4 Equal Sides</strong>. Like a diamond!</p>
+        </div>
 
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        <!-- Trapezoid -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="25,20 75,20 95,80 5,80" fill="#f59e0b" stroke="#92400e" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="35,35 65,35 75,65 25,65" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Trapezoid</h3>
+          <p><strong>4 Sides</strong> with one pair of parallel lines.</p>
+        </div>
 
-        function playSuccessSound() {
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.type = 'sine';
-            const now = audioCtx.currentTime;
-            oscillator.frequency.setValueAtTime(523.25, now); 
-            oscillator.frequency.exponentialRampToValueAtTime(659.25, now + 0.1); 
-            oscillator.frequency.exponentialRampToValueAtTime(783.99, now + 0.2); 
-            oscillator.frequency.exponentialRampToValueAtTime(1046.50, now + 0.3); 
-            gainNode.gain.setValueAtTime(0.3, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.start();
-            oscillator.stop(now + 0.5);
-        }
+        <!-- Pentagon -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="50,10 95,45 80,90 20,90 5,45" fill="#ec4899" stroke="#9d174d" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="50,25 75,45 65,75 35,75 25,45" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Pentagon</h3>
+          <p><strong>5 Sides</strong>. Like a house shape!</p>
+        </div>
 
-        function playErrorSound() {
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.type = 'sawtooth';
-            const now = audioCtx.currentTime;
-            oscillator.frequency.setValueAtTime(150, now);
-            oscillator.frequency.linearRampToValueAtTime(100, now + 0.2);
-            gainNode.gain.setValueAtTime(0.1, now);
-            gainNode.gain.linearRampToValueAtTime(0, now + 0.2);
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.start();
-            oscillator.stop(now + 0.2);
-        }
+        <!-- Hexagon -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="25,15 75,15 95,50 75,85 25,85 5,50" fill="#06b6d4" stroke="#164e63" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="35,25 65,25 80,50 65,75 35,75 20,50" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Hexagon</h3>
+          <p><strong>6 Sides</strong>. Think of a honeycomb.</p>
+        </div>
 
-        function generateProblem() {
-            const sum = Math.floor(Math.random() * 19) + 2; 
-            const a = Math.floor(Math.random() * (sum - 1)) + 1;
-            const b = sum - a;
+        <!-- Octagon -->
+        <div class="shape-card">
+          <svg class="shape-visual" viewBox="0 0 100 100">
+            <polygon points="30,15 70,15 90,35 90,65 70,85 30,85 10,65 10,35" fill="#ef4444" stroke="#7f1d1d" stroke-width="4" stroke-linejoin="round"/>
+            <polygon points="38,25 62,25 78,35 78,65 62,75 38,75 22,65 22,35" fill="white" opacity="0.2"/>
+          </svg>
+          <h3>Octagon</h3>
+          <p><strong>8 Sides</strong>. Just like a stop sign!</p>
+        </div>
 
-            currentAnswer = sum;
-            questionText.innerText = `${a} + ${b}`;
-            answerText.innerText = sum;
-            typedAnswer = "";
-            userInputDisplay.innerText = "";
-        }
+      </div>
+    </section>
 
-        function checkAnswer(num) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (cardInner.classList.contains('flipped')) return;
-            
-            typedAnswer += num.toString();
-            if (typedAnswer.length > 2) typedAnswer = typedAnswer.slice(-2);
-            userInputDisplay.innerText = typedAnswer;
-            
-            if (parseInt(typedAnswer) === currentAnswer) {
-                submitTyped();
-            }
-        }
+    <section class="content-card">
+      <h2>How Can We Tell Shapes Apart?</h2>
+      <p>
+        One of the best ways to tell shapes apart is by counting the number of sides and corners. A triangle has 3 sides, a square and rectangle both have 4 sides, a pentagon has 5 sides, and a hexagon has 6 sides.
+      </p>
 
-        function clearInput() {
-            typedAnswer = "";
-            userInputDisplay.innerText = "";
-        }
+      <div class="comparison">
+        <h3>Square vs. Rectangle</h3>
+        <p>
+          A square and a rectangle both have 4 sides and 4 corners. The difference is that a square has all sides the same length. A rectangle has opposite sides that are equal, but one pair of sides is usually longer than the other.
+        </p>
+      </div>
 
-        function submitTyped() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (cardInner.classList.contains('flipped')) return;
+      <div class="comparison">
+        <h3>Triangles Can Look Different</h3>
+        <p>
+          Some students think a triangle only looks like a perfect point at the top. But triangles can be tall, short, skinny, wide, sideways, or upside down. As long as the shape has 3 straight sides and 3 corners, it is a triangle.
+        </p>
+      </div>
+    </section>
 
-            if (parseInt(typedAnswer) === currentAnswer) {
-                playSuccessSound();
-                score += 1;
-                scoreDisplay.innerText = score;
-                createParticles();
-                cardInner.classList.add('flipped');
-            } else if (typedAnswer !== "") {
-                playErrorSound();
-                userInputDisplay.classList.add('text-red-500');
-                setTimeout(() => {
-                    userInputDisplay.classList.remove('text-red-500');
-                    clearInput();
-                }, 500);
-            }
-        }
+    <section class="content-card">
+      <h2>Shapes in Real Life</h2>
+      <p>
+        Shapes are not only found in math books. We see them in the real world every day. A window may look like a rectangle, a floor tile may look like a square, a yield sign may look like a triangle, and a honeycomb may show hexagons.
+      </p>
+      <p>
+        When students connect shapes to real objects, they begin to understand that math is part of everyday life. This helps make learning more meaningful and easier to remember.
+      </p>
 
-        function nextQuestion() {
-            cardInner.classList.remove('flipped');
-            setTimeout(() => {
-                generateProblem();
-            }, 300);
-        }
+      <div class="tip">
+        Learning tip: Look around the room and try to find one triangle, one square, one rectangle, one pentagon, and one hexagon.
+      </div>
+    </section>
 
-        function createParticles() {
-            const emojis = ['🍌', '🍃', '✨', '🐾'];
-            for (let i = 0; i < 12; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'sparkle';
-                particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                particle.style.fontSize = '24px';
-                const tx = (Math.random() - 0.5) * 300;
-                const ty = (Math.random() - 0.5) * 300;
-                particle.style.setProperty('--tw-translate-x', `${tx}px`);
-                particle.style.setProperty('--tw-translate-y', `${ty}px`);
-                particle.style.left = '50%';
-                particle.style.top = '50%';
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 1000);
-            }
-        }
+    <section class="content-card">
+      <h2>Practice With Shape Hunter</h2>
+      <p>
+        After learning about shapes, students can practise with the Shape Hunter game. In the game, students look carefully at a group of shapes and choose the correct ones. This helps students build confidence with shape recognition.
+      </p>
 
-        window.onload = generateProblem;
-    </script>
+      <div class="button-row">
+        <a class="play-btn" href="shapeselection.html">Play Shape Hunter 🚀</a>
+        <a class="home-btn" href="index.html">← Back to Home</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 ShabzLabs</p>
+      <a href="about.html">About</a> |
+      <a href="privacy.html">Privacy Policy</a> |
+      <a href="contact.html">Contact</a>
+    </footer>
+
+  </div>
 </body>
 </html>
