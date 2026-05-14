@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Games | ShabzLabs</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-blue: #3b82f6;
+      --dark-blue: #1d4ed8;
+      --accent-yellow: #f59e0b;
+      --soft-bg: linear-gradient(135deg, #a5f3fc, #d9f99d);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: var(--soft-bg);
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      background: white;
+      border-bottom: 4px solid var(--primary-blue);
+      padding: 10px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 24px;
+      color: #2563eb;
+      margin: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-item {
+      text-decoration: none;
+      color: #1e40af;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    .nav-item:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .nav-item.active {
+      background: var(--primary-blue);
+      color: white;
+      box-shadow: 0 4px 0 var(--dark-blue);
+    }
+
+    /* PAGE */
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .header h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 52px;
+      color: #1d4ed8;
+      margin-bottom: 15px;
+    }
+
+    .header p {
+      font-size: 20px;
+      color: #374151;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .game-card {
+      background: white;
+      border-radius: 28px;
+      padding: 30px;
+      text-align: center;
+      border: 3px solid #f3f4f6;
+      box-shadow: 0 8px 0 #e5e7eb;
+      transition: 0.2s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-8px);
+      border-color: #facc15;
+      box-shadow: 0 12px 0 #fbbf24;
+    }
+
+    .game-icon {
+      font-size: 70px;
+      margin-bottom: 15px;
+    }
+
+    .game-tag {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: bold;
+      border: 2px solid #86efac;
+      margin-bottom: 15px;
+    }
+
+    .game-card h2 {
+      font-family: 'Fredoka One', cursive;
+      color: #1d4ed8;
+      font-size: 30px;
+      margin-bottom: 15px;
+    }
+
+    .game-card p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #374151;
+      min-height: 80px;
+    }
+
+    .play-btn {
+      display: inline-block;
+      margin-top: 20px;
+      background: var(--accent-yellow);
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 14px 35px;
+      border-radius: 999px;
+      box-shadow: 0 5px 0 #b45309;
+      transition: 0.1s;
+    }
+
+    .play-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #b45309;
+    }
+
+    /* FOOTER */
+
+    footer {
+      text-align: center;
+      margin-top: 80px;
+      padding-top: 30px;
+      border-top: 2px solid #bfdbfe;
+    }
+
+    footer p {
+      color: #1e40af;
+      font-weight: bold;
+    }
+
+    .footer-links {
+      margin-top: 10px;
+    }
+
+    .footer-links a {
+      color: #2563eb;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: 600;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 768px) {
+
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .header h1 {
+        font-size: 40px;
+      }
+
+      .header p {
+        font-size: 17px;
+      }
+
+      .game-card h2 {
+        font-size: 26px;
+      }
+
+      .game-card p {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+
+  <nav class="navbar">
+
+    <a href="index.html" class="nav-left">
+      <div style="font-size: 30px;">🧪</div>
+      <h1 class="nav-title">Shabz Labs</h1>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="lessons.html" class="nav-item">Lessons</a>
+      <a href="games.html" class="nav-item active">Games</a>
+      <a href="about.html" class="nav-item">About</a>
+    </div>
+
+  </nav>
+
+  <!-- PAGE -->
+
+  <div class="page">
+
+    <div class="header">
+      <h1>Educational Games</h1>
+
+      <p>
+        Explore fun and interactive educational games designed to help students
+        build skills in math, literacy, shapes, probability, and more.
+      </p>
+    </div>
+
+    <!-- GAMES GRID -->
+
+    <div class="games-grid">
+
+      <!-- SHAPE HUNTER -->
+
+      <div class="game-card">
+        <div class="game-icon">🔍</div>
+
+        <div class="game-tag">Shapes</div>
+
+        <h2>Shape Hunter</h2>
+
+        <p>
+          Search the lab and discover hidden shapes in this exciting visual challenge!
+        </p>
+
+        <a href="shapeselection.html" class="play-btn">
+          PLAY 🚀
+        </a>
+      </div>
+
+      <!-- WORD MAKER -->
+
+      <div class="game-card">
+        <div class="game-icon">🧩</div>
+
+        <div class="game-tag">Words</div>
+
+        <h2>Word Maker</h2>
+
+        <p>
+          Combine words together to create compound words in this fun literacy game.
+        </p>
+
+        <a href="compound.html" class="play-btn">
+          PLAY 🚀
+        </a>
+      </div>
+
+      <!-- ROLL OR STACK -->
+
+      <div class="game-card">
+        <div class="game-icon">🎾</div>
+
+        <div class="game-tag">3D Shapes</div>
+
+        <h2>Roll or Stack?</h2>
+
+        <p>
+          Learn about 3D objects by predicting which objects roll and which can stack.
+        </p>
+
+        <a href="rollstack.html" class="play-btn">
+          PLAY 🚀
+        </a>
+      </div>
+
+      <!-- SPINNER -->
+
+      <div class="game-card">
+        <div class="game-icon">🎡</div>
+
+        <div class="game-tag">Probability</div>
+
+        <h2>Spinner Adventure</h2>
+
+        <p>
+          Spin the wheel, make predictions, and track data using tallies and graphs.
+        </p>
+
+        <a href="probability.html" class="play-btn">
+          PLAY 🚀
+        </a>
+      </div>
+
+      <!-- ADDITION -->
+
+      <div class="game-card">
+        <div class="game-icon">🌴</div>
+
+        <div class="game-tag">Math</div>
+
+        <h2>Addition Jungle</h2>
+
+        <p>
+          Practice addition skills while exploring the jungle and solving math challenges.
+        </p>
+
+        <a href="addition.html" class="play-btn">
+          PLAY 🚀
+        </a>
+      </div>
+
+      <!-- COMING SOON -->
+
+      <div class="game-card">
+        <div class="game-icon">🧪</div>
+
+        <div class="game-tag">Science</div>
+
+        <h2>Safety Hero</h2>
+
+        <p>
+          Learn about lab safety and become the ultimate classroom science hero!
+        </p>
+
+        <a href="#" class="play-btn">
+          COMING SOON
+        </a>
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <footer>
+
+      <p>© 2026 ShabzLabs</p>
+
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+    </footer>
+
+  </div>
+
+</body>
+</html>
