@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Resources | ShabzLabs</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --primary-blue: #3b82f6;
+      --dark-blue: #1d4ed8;
+      --accent-yellow: #facc15;
+      --soft-bg: linear-gradient(135deg, #a5f3fc, #fde68a);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: var(--soft-bg);
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    .navbar {
+      background: white;
+      border-bottom: 4px solid var(--primary-blue);
+      padding: 10px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      text-decoration: none;
+    }
+
+    .nav-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 24px;
+      color: #2563eb;
+      margin: 0;
+      text-shadow: 1px 1px 0px #dbeafe;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-item {
+      text-decoration: none;
+      color: #1e40af;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background: #eff6ff;
+      color: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    .nav-item.active {
+      background: var(--primary-blue);
+      color: white;
+      box-shadow: 0 4px 0 var(--dark-blue);
+    }
+
+    .lab-container {
+      position: relative;
+      display: inline-block;
+      font-size: 28px;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
+    }
+
+    .bubble {
+      position: absolute;
+      background: rgba(34, 197, 94, 0.6);
+      border-radius: 50%;
+      animation: floatUp 2s infinite ease-in;
+      bottom: 5px;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(0.3); opacity: 1; }
+      100% { transform: translateY(-30px) scale(1.2); opacity: 0; }
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .menu-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .menu-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 38px;
+      color: #1e40af;
+      margin-bottom: 10px;
+    }
+
+    .menu-description {
+      max-width: 720px;
+      margin: 0 auto 16px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    .subtitle-tag {
+      font-size: 14px;
+      font-weight: bold;
+      color: #059669;
+      background: #ecfdf5;
+      display: inline-block;
+      padding: 5px 15px;
+      border-radius: 20px;
+      border: 2px solid #10b981;
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .resource-card {
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 8px 0 #e5e7eb;
+      transition: 0.2s;
+      border: 3px solid #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .resource-card:hover {
+      transform: translateY(-8px) rotate(1deg);
+      border-color: var(--accent-yellow);
+      box-shadow: 0 12px 0 #fde047;
+    }
+
+    .resource-icon {
+      font-size: 60px;
+      margin-bottom: 15px;
+    }
+
+    .resource-card h3 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 24px;
+      margin: 10px 0;
+      color: #1d4ed8;
+    }
+
+    .resource-card p {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.5;
+      color: #4b5563;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 10px;
+      border: 2px solid #86efac;
+    }
+
+    .download-btn {
+      display: inline-block;
+      margin-top: 15px;
+      background: #f59e0b;
+      color: white;
+      text-decoration: none;
+      padding: 12px 25px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 5px 0 #b45309;
+      transition: 0.1s;
+    }
+
+    .download-btn:hover {
+      background: #f97316;
+      transform: translateY(-2px);
+    }
+
+    .download-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #b45309;
+    }
+
+    .coming-soon {
+      display: inline-block;
+      margin-top: 15px;
+      background: #f3f4f6;
+      color: #9ca3af;
+      padding: 12px 25px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .teacher-note {
+      margin-top: 35px;
+      background: white;
+      border: 3px dashed #60a5fa;
+      border-radius: 25px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 6px 0 #bfdbfe;
+    }
+
+    .teacher-note h3 {
+      font-family: 'Fredoka One', cursive;
+      color: #1d4ed8;
+      font-size: 22px;
+      margin-top: 0;
+    }
+
+    .teacher-note p {
+      font-weight: 700;
+      color: #374151;
+      margin-bottom: 0;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .nav-item {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+
+      .menu-title {
+        font-size: 30px;
+      }
+
+      .menu-description {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-left">
+      <div class="lab-container">
+        <div class="bubble" style="left:20%; width:8px; height:8px; animation-delay: 0s;"></div>
+        <div class="bubble" style="left:50%; width:6px; height:6px; animation-delay: 0.5s;"></div>
+        <div class="bubble" style="left:80%; width:10px; height:10px; animation-delay: 1s;"></div>
+        🧪
+      </div>
+      <h1 class="nav-title">Shabz Labs</h1>
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="teachers.html" class="nav-item active">Teachers</a>
+      <a href="games.html" class="nav-item">Games</a>
+      <a href="about.html" class="nav-item">About</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <header class="menu-header">
+      <h2 class="menu-title">Teacher Resources</h2>
+      <p class="menu-description">
+        Printable classroom worksheets, lesson supports, and activities that connect with ShabzLabs learning games.
+      </p>
+      <span class="subtitle-tag">Ready-to-use classroom materials</span>
+    </header>
+
+    <section class="resources-grid">
+      <!-- Probability Worksheet Card -->
+      <div class="resource-card">
+        <div>
+          <div class="resource-icon">🎡</div>
+          <span class="tag">Probability</span>
+          <h3>Spinner Graph Worksheets</h3>
+          <p>
+            Students can record spinner results, colour in bar graphs, use a 0–10 scale, and reflect on probability outcomes.
+          </p>
+        </div>
+
+        <a class="download-btn" href="spinner_probability_graph_worksheets.docx" download>
+          DOWNLOAD WORD FILE 📄
+        </a>
+      </div>
+
+      <!-- Coming Soon Card -->
+      <div class="resource-card">
+        <div>
+          <div class="resource-icon">🧩</div>
+          <span class="tag">Words</span>
+          <h3>Compound Word Worksheets</h3>
+          <p>
+            Printable worksheets for students to practise building and identifying compound words.
+          </p>
+        </div>
+
+        <span class="coming-soon">Coming Soon</span>
+      </div>
+
+      <!-- Coming Soon Card -->
+      <div class="resource-card">
+        <div>
+          <div class="resource-icon">🔷</div>
+          <span class="tag">Shapes</span>
+          <h3>Shape Worksheets</h3>
+          <p>
+            Teacher-ready worksheets for sorting, naming, and comparing 2D and 3D shapes.
+          </p>
+        </div>
+
+        <span class="coming-soon">Coming Soon</span>
+      </div>
+    </section>
+
+    <section class="teacher-note">
+      <h3>Teacher Tip</h3>
+      <p>
+        Use the Spinner Graph Worksheets after students play Spinner Adventure. Students can spin 10 times, record tallies, colour the graph, and compare which result happened most and least often.
+      </p>
+    </section>
+
+    <footer class="mt-20 border-t-2 border-blue-200 pt-8 pb-10 text-center">
+      <p class="font-bold text-blue-800 mb-2">© 2026 ShabzLabs</p>
+      <div class="flex justify-center gap-4 text-blue-600 font-medium">
+        <a href="about.html" class="hover:underline">About</a>
+        <span>|</span>
+        <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+        <span>|</span>
+        <a href="contact.html" class="hover:underline">Contact</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
