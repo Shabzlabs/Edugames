@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Count Studio - Professional Word Counter & Writing Analyzer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter & JetBrains Mono) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.08)',
+                        'premium-dark': '0 10px 30px -10px rgba(0, 0, 0, 0.5)',
+                        'glow': '0 0 15px -3px rgba(99, 102, 241, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom smooth scrollbar for text area and details */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .light ::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 9999px;
+        }
+        .light ::-webkit-scrollbar-thumb:hover {
+            background: #cbd5e1;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        /* Glassmorphism background blur */
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-full transition-colors duration-300 flex flex-col">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 glass-panel sticky top-0 z-40 transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-md shadow-indigo-200 dark:shadow-none">
+                    <i class="fa-solid fa-align-left text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg sm:text-xl bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-500 dark:from-indigo-400 dark:to-violet-400">Word Count Studio</h1>
+                    <p class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-medium">Professional Writing Analyzer</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 text-slate-600 dark:text-slate-300" title="Toggle Theme">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block"></i>
+                </button>
+
+                <!-- Help Button -->
+                <button id="help-btn" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 text-slate-600 dark:text-slate-300" title="Show shortcuts & guide">
+                    <i class="fa-solid fa-circle-info"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:grid lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Input/Writing Area (5 cols on large desktop, but adjusted for comfortable 6-6 split) -->
+        <section class="lg:col-span-6 xl:col-span-7 flex flex-col space-y-4">
+            <!-- Textarea Control Header Card -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-premium dark:shadow-premium-dark flex flex-wrap gap-2 items-center justify-between transition-colors duration-300">
+                <div class="flex items-center space-x-2">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300">
+                        Editor Mode
+                    </span>
+                    <span id="save-status" class="text-xs text-slate-400 dark:text-slate-500 italic flex items-center gap-1">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Auto-saved
+                    </span>
+                </div>
+                
+                <!-- Utilities -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="relative group">
+                        <button id="samples-btn" class="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-invoice"></i> Load Sample <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                        </button>
+                        <!-- Samples Dropdown Menu -->
+                        <div id="samples-menu" class="hidden absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-slate-800 shadow-xl border border-slate-200 dark:border-slate-700 py-1 z-50">
+                            <button onclick="loadSampleText('essay')" class="w-full text-left px-4 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-graduation-cap text-indigo-500"></i> Academic Essay</button>
+                            <button onclick="loadSampleText('blog')" class="w-full text-left px-4 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-blog text-emerald-500"></i> Blog Newsletter</button>
+                            <button onclick="loadSampleText('story')" class="w-full text-left px-4 py-2 text-xs hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"><i class="fa-solid fa-feather text-amber-500"></i> Creative Story</button>
+                        </div>
+                    </div>
+
+                    <button id="btn-clear" class="px-3 py-1.5 text-xs font-medium rounded-lg text-rose-600 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 dark:text-rose-400 dark:hover:bg-rose-950/50 transition-colors flex items-center gap-1.5" title="Clear text">
+                        <i class="fa-solid fa-trash-can"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Input Area Container -->
+            <div class="relative flex-grow flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-premium dark:shadow-premium-dark overflow-hidden transition-colors duration-300 min-h-[500px]">
+                
+                <!-- Quick Format Actions Row -->
+                <div class="flex items-center justify-between px-4 py-2 bg-slate-50/50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-800/80">
+                    <div class="flex items-center gap-1 flex-wrap">
+                        <button onclick="transformText('upper')" class="p-1.5 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400" title="UPPERCASE">
+                            <span class="font-mono font-bold">AA</span>
+                        </button>
+                        <button onclick="transformText('lower')" class="p-1.5 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400" title="lowercase">
+                            <span class="font-mono">aa</span>
+                        </button>
+                        <button onclick="transformText('title')" class="p-1.5 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400" title="Title Case">
+                            <span class="font-semibold">Aa</span>
+                        </button>
+                        <button onclick="transformText('sentence')" class="p-1.5 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400" title="Sentence case">
+                            <span>A.a</span>
+                        </button>
+                        <div class="h-4 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
+                        <button id="btn-remove-spaces" class="p-1.5 text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 flex items-center gap-1" title="Remove redundant spaces/newlines">
+                            <i class="fa-solid fa-compress"></i> Trim Spaces
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-1">
+                        <button id="btn-copy" class="px-2.5 py-1 text-xs font-semibold rounded bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-950/30 dark:text-indigo-400 dark:hover:bg-indigo-950/50 transition-colors flex items-center gap-1">
+                            <i class="fa-solid fa-copy"></i> Copy Text
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Textarea -->
+                <div class="relative flex-grow flex min-h-[450px] md:min-h-[500px]">
+                    <!-- Text Area with line heights matching font metrics -->
+                    <textarea 
+                        id="editor" 
+                        placeholder="Paste or start typing your text here..." 
+                        class="w-full h-full min-h-[450px] md:min-h-[500px] p-6 text-slate-800 dark:text-slate-200 bg-transparent resize-none border-0 focus:ring-0 focus:outline-none font-sans text-base leading-relaxed overflow-y-auto"
+                        spellcheck="true"
+                        rows="18"
+                    ></textarea>
+                </div>
+
+                <!-- Bottom Status Overlay inside Editor -->
+                <div class="px-6 py-3 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/30 dark:bg-slate-900/30 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                    <div class="flex items-center space-x-4">
+                        <span id="live-word-indicator" class="font-medium"><i class="fa-solid fa-calculator text-indigo-500 mr-1.5"></i><strong>0</strong> words</span>
+                        <span id="live-char-indicator" class="hidden sm:inline font-medium"><i class="fa-solid fa-keyboard text-slate-400 mr-1.5"></i><strong>0</strong> characters</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="flex h-2 w-2 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span>Interactive Analysis Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Writing Goal / Target Tracker -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark transition-colors duration-300">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-indigo-500 text-lg"></i>
+                        <div>
+                            <h3 class="font-semibold text-sm">Writing Goal Progress</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Track milestones for your document</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 self-start sm:self-auto">
+                        <label for="goal-count" class="text-xs font-medium text-slate-500 dark:text-slate-400">Target Word Count:</label>
+                        <input type="number" id="goal-count" value="500" min="10" step="50" class="w-20 px-2 py-1 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-center font-mono">
+                    </div>
+                </div>
+
+                <!-- Progress visual bars -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span id="goal-percentage" class="font-semibold text-indigo-600 dark:text-indigo-400">0% Achieved</span>
+                        <span id="goal-ratio" class="text-slate-500 dark:text-slate-400 font-mono">0 / 500 words</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div id="goal-progress-bar" class="h-full bg-gradient-to-r from-indigo-500 to-violet-500 w-0 transition-all duration-300 rounded-full"></div>
+                    </div>
+                    <p id="goal-motivational-msg" class="text-[11px] text-slate-400 italic">Enter some text to kickstart your progress!</p>
+                </div>
+            </div>
+
+            <!-- Search and Replace panel -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark transition-colors duration-300">
+                <button onclick="toggleSearchReplace()" class="w-full flex items-center justify-between font-semibold text-sm text-slate-700 dark:text-slate-300 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass-arrow-right text-indigo-500"></i> Search & Replace Utility
+                    </span>
+                    <i id="sr-chevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+                </button>
+                
+                <div id="search-replace-container" class="hidden mt-4 space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-medium text-slate-500 dark:text-slate-400">Search Text</label>
+                            <input type="text" id="search-input" placeholder="Term to look for..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[11px] font-medium text-slate-500 dark:text-slate-400">Replace With</label>
+                            <input type="text" id="replace-input" placeholder="New term..." class="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 flex-wrap pt-1">
+                        <div class="flex items-center gap-3">
+                            <label class="inline-flex items-center text-xs text-slate-500 dark:text-slate-400 select-none cursor-pointer">
+                                <input type="checkbox" id="sr-case-sensitive" class="rounded border-slate-300 dark:border-slate-700 text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5 mr-1.5"> Case sensitive
+                            </label>
+                            <span id="sr-matches-count" class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hidden">0 matches</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="performSearchReplace('count')" class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors">Find Matches</button>
+                            <button onclick="performSearchReplace('replace')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-colors">Replace All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Analysis Dashboard (6 cols on large desktop) -->
+        <section class="lg:col-span-6 xl:col-span-5 flex flex-col space-y-6">
+            
+            <!-- Grid of Key Counter Cards -->
+            <div class="grid grid-cols-2 gap-4">
+                
+                <!-- Words Card -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark flex items-start justify-between transition-colors duration-300 relative overflow-hidden group">
+                    <div class="space-y-2">
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Word Count</p>
+                        <h4 id="stat-words" class="text-3xl font-extrabold text-slate-950 dark:text-white font-sans">0</h4>
+                        <p id="stat-words-diff" class="text-[10px] text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-trend-up"></i> Dynamic live updates
+                        </p>
+                    </div>
+                    <div class="h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg shadow-sm transition-transform duration-300 group-hover:scale-110">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                </div>
+
+                <!-- Characters Card -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark flex items-start justify-between transition-colors duration-300 relative overflow-hidden group">
+                    <div class="space-y-2">
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Characters</p>
+                        <h4 id="stat-chars" class="text-3xl font-extrabold text-slate-950 dark:text-white font-sans">0</h4>
+                        <p id="stat-chars-detail" class="text-[10px] text-slate-400 dark:text-slate-500">
+                            0 (no spaces)
+                        </p>
+                    </div>
+                    <div class="h-10 w-10 rounded-xl bg-violet-50 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400 flex items-center justify-center text-lg shadow-sm transition-transform duration-300 group-hover:scale-110">
+                        <i class="fa-solid fa-keyboard"></i>
+                    </div>
+                </div>
+
+                <!-- Sentences Card -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark flex items-start justify-between transition-colors duration-300 relative overflow-hidden group">
+                    <div class="space-y-2">
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sentences</p>
+                        <h4 id="stat-sentences" class="text-3xl font-extrabold text-slate-950 dark:text-white font-sans">0</h4>
+                        <p id="stat-avg-sentence-length" class="text-[10px] text-slate-400 dark:text-slate-500">
+                            Avg: 0 words / sentence
+                        </p>
+                    </div>
+                    <div class="h-10 w-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg shadow-sm transition-transform duration-300 group-hover:scale-110">
+                        <i class="fa-solid fa-quote-left"></i>
+                    </div>
+                </div>
+
+                <!-- Paragraphs Card -->
+                <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark flex items-start justify-between transition-colors duration-300 relative overflow-hidden group">
+                    <div class="space-y-2">
+                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Paragraphs</p>
+                        <h4 id="stat-paragraphs" class="text-3xl font-extrabold text-slate-950 dark:text-white font-sans">0</h4>
+                        <p id="stat-avg-paragraph-length" class="text-[10px] text-slate-400 dark:text-slate-500">
+                            Avg: 0 sentences / para
+                        </p>
+                    </div>
+                    <div class="h-10 w-10 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg shadow-sm transition-transform duration-300 group-hover:scale-110">
+                        <i class="fa-solid fa-paragraph"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Estimated Speech & Reading Times -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-premium dark:shadow-premium-dark transition-colors duration-300">
+                <h3 class="font-bold text-sm mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-hourglass-half text-amber-500"></i> Estimated Medium Output times
+                </h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Reading Time -->
+                    <div class="p-4 rounded-xl bg-indigo-50/40 dark:bg-indigo-950/20 border border-indigo-100/50 dark:border-indigo-900/40 flex items-center space-x-3">
+                        <div class="text-2xl text-indigo-600 dark:text-indigo-400">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Reading Time</p>
+                            <h5 id="time-reading" class="text-lg font-bold font-mono">0m 0s</h5>
+                            <span class="text-[9px] text-slate-400 dark:text-slate-500">Avg: 225 wpm</span>
+                        </div>
+                    </div>
+
+                    <!-- Speaking Time -->
+                    <div class="p-4 rounded-xl bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-100/50 dark:border-emerald-900/40 flex items-center space-x-3">
+                        <div class="text-2xl text-emerald-600 dark:text-emerald-400">
+                            <i class="fa-solid fa-microphone"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Speaking Time</p>
+                            <h5 id="time-speaking" class="text-lg font-bold font-mono">0m 0s</h5>
+                            <span class="text-[9px] text-slate-400 dark:text-slate-500">Avg: 140 wpm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keyword Density Analysis -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-premium dark:shadow-premium-dark transition-colors duration-300">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3 gap-2">
+                    <h3 class="font-bold text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-emerald-500"></i> Keyword Density Explorer
+                    </h3>
+                    
+                    <!-- Toggle Stop Words -->
+                    <label class="inline-flex items-center text-xs text-slate-500 dark:text-slate-400 select-none cursor-pointer">
+                        <input type="checkbox" id="exclude-stop-words" checked class="rounded border-slate-300 dark:border-slate-700 text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5 mr-1.5">
+                        Filter Stop Words (common words)
+                    </label>
+                </div>
+
+                <div class="space-y-3">
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Discover high frequency keywords to optimize content flow and visual theme coverage:</p>
+                    
+                    <!-- Keywords Table / Visual Bars list -->
+                    <div id="keywords-list-container" class="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
+                        <!-- Populated by JavaScript -->
+                        <div class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs italic">
+                            No keyword density details found. Paste content to analyze.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Word Verification Panel -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-premium dark:shadow-premium-dark transition-colors duration-300">
+                <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
+                    <h3 class="font-bold text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-indigo-500 animate-pulse"></i> AI Word Verification
+                    </h3>
+                    <span class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/30 rounded">Powered by Gemini</span>
+                </div>
+
+                <div class="space-y-4">
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Identify gibberish, spelling mistakes, and unrecognized words using artificial intelligence.</p>
+                    
+                    <button id="btn-verify-words" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i> Verify Word Validity & Spelling
+                    </button>
+
+                    <!-- Scanning Results Container -->
+                    <div id="verification-results" class="space-y-3 max-h-[250px] overflow-y-auto pr-1 hidden">
+                        <!-- Dynamic Results Populated via JS -->
+                    </div>
+
+                    <!-- Placeholder Status -->
+                    <div id="verification-placeholder" class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs italic border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+                        Click verify above to scan for errors or made-up words.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Actions: Copy / Export -->
+            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark transition-colors duration-300 flex flex-wrap gap-2 justify-between items-center">
+                <span class="text-xs text-slate-500 dark:text-slate-400">Want to save your analysis elsewhere?</span>
+                <div class="flex items-center gap-2">
+                    <button onclick="exportData('json')" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5">
+                        <i class="fa-solid fa-code text-indigo-500"></i> Export JSON
+                    </button>
+                    <button onclick="exportData('txt')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition-colors flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-arrow-down"></i> Export Text
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Instruction / Shortcuts Modal Dialog -->
+    <div id="help-modal" class="fixed inset-0 bg-slate-950/60 dark:bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-lg rounded-2xl shadow-2xl p-6 transition-transform transform duration-300">
+            <div class="flex justify-between items-center pb-4 border-b border-slate-100 dark:border-slate-800">
+                <h3 class="font-extrabold text-lg text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-question"></i> LexiCount Help & Information
+                </h3>
+                <button id="close-help-btn" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="mt-4 space-y-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                <div>
+                    <h4 class="font-bold text-slate-800 dark:text-white mb-1 text-sm">How metrics are counted:</h4>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li><strong>Words:</strong> Separated by sequence characters and white spaces.</li>
+                        <li><strong>Sentences:</strong> Defined by punctuation marks like (<code class="font-mono">.</code>, <code class="font-mono">?</code>, <code class="font-mono">!</code>).</li>
+                        <li><strong>Paragraphs:</strong> Identified by continuous hard breaks or double line breaks.</li>
+                        <li><strong>Stop Words:</strong> Common auxiliary words filtered from densities so you identify key theme topics.</li>
+                    </ul>
+                </div>
+                <div class="bg-indigo-50 dark:bg-indigo-950/40 p-3 rounded-lg border border-indigo-100 dark:border-indigo-900/30 text-indigo-700 dark:text-indigo-300">
+                    <h4 class="font-bold mb-1 flex items-center gap-1.5"><i class="fa-solid fa-keyboard"></i> Useful Hotkeys</h4>
+                    <p>Press <kbd class="px-1 py-0.5 rounded border bg-white dark:bg-slate-800 shadow font-mono text-[10px]">Ctrl + C</kbd> or <kbd class="px-1 py-0.5 rounded border bg-white dark:bg-slate-800 shadow font-mono text-[10px]">⌘ + C</kbd> after clicking the Copy Text button to store your changes back to the OS clipboard seamlessly.</p>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button id="close-help-btn-ok" class="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">
+                    Understood
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white/40 dark:bg-slate-900/40 py-4 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors duration-300">
+        <p>© 2026 LexiCount Studio. Created dynamically for fast, private text evaluation.</p>
+    </footer>
+
+    <script>
+        // Stop words array for keyword filtering
+        const STOP_WORDS = new Set([
+            'a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', 'aren\'t', 'as', 'at', 
+            'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by', 'can', 'can\'t', 'cannot', 
+            'could', 'couldn\'t', 'did', 'didn\'t', 'do', 'does', 'doesn\'t', 'doing', 'don\'t', 'down', 'during', 'each', 
+            'few', 'for', 'from', 'further', 'had', 'hadn\'t', 'has', 'hasn\'t', 'have', 'haven\'t', 'having', 'he', 'he\'d', 
+            'he\'ll', 'he\'s', 'her', 'here', 'here\'s', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'how\'s', 'i', 
+            'i\'d', 'i\'ll', 'i\'m', 'i\'ve', 'if', 'in', 'into', 'is', 'isn\'t', 'it', 'it\'s', 'its', 'itself', 'let\'s', 
+            'me', 'more', 'most', 'mustn\'t', 'my', 'myself', 'no', 'nor', 'not', 'of', 'off', 'on', 'once', 'only', 'or', 
+            'other', 'ought', 'our', 'ours', 'ourselves', 'out', 'over', 'own', 'same', 'shan\'t', 'she', 'she\'d', 'she\'ll', 
+            'she\'s', 'should', 'shouldn\'t', 'so', 'some', 'such', 'than', 'that', 'that\'s', 'the', 'their', 'theirs', 
+            'them', 'themselves', 'then', 'there', 'there\'s', 'these', 'they', 'they\'d', 'they\'ll', 'they\'re', 'they\'ve', 
+            'this', 'those', 'through', 'to', 'too', 'under', 'until', 'up', 'very', 'was', 'wasn\'t', 'we', 'we\'d', 'we\'ll', 
+            'we\'re', 'we\'ve', 'were', 'weren\'t', 'what', 'what\'s', 'when', 'when\'s', 'where', 'where\'s', 'which', 'while', 
+            'who', 'who\'s', 'whom', 'why', 'why\'s', 'with', 'won\'t', 'would', 'wouldn\'t', 'you', 'you\'d', 'you\'ll', 
+            'you\'re', 'you\'ve', 'your', 'yours', 'yourself', 'yourselves', 'the', 'is', 'at', 'which', 'on', 'this', 'these', 'will'
+        ]);
+
+        const SAMPLES = {
+            essay: `Academic writing refers to a style of expression that researchers use to define the intellectual boundaries of their disciplines and their specific areas of expertise. Characters are generally objective, avoiding direct appeals to emotion or unsupported opinions. This specific sample text demonstrates standard academic analysis. It possesses complex structure, transitions, and dense vocabulary to verify how LexiCount behaves on elevated compositions.
+
+In terms of formatting, research papers should follow exact layout structures including abstract introductions, detailed methodologies, statistical data reviews, and conclusions. By tracking reading times and sentence structures, students can ensure their submissions retain correct balance. A typical paragraph has four or five sentences, keeping assertions well-argued. Use the keywords explorer below to review if this essay repeats expressions too frequently, highlighting structural redundancy.`,
+            
+            blog: `Hey fellow content creators! Are you looking for a simple, fast way to clean up your writing? Let's talk about word density and why keeping your copy snappy matters. Studies show that average readers spend less than two minutes on a typical blog article. If your sentences are way too long, readers will click away!
+
+Here are 3 quick tips to make your blogs pop:
+1. Write short sentences that have one clear point.
+2. Filter out passive voice. Go for active verbs!
+3. Check your reading time estimations so your audience is not overwhelmed.
+
+Whether you're crafting an email marketing campaign or a deep dive, checking your words-per-minute target is a super easy hack. Try pasting your draft in LexiCount today to instantly check density scores!`,
+            
+            story: `The grandfather clock in the study ticked slowly, cutting through the silence of the old cabin like a rhythmic heartbeat. Arthur adjusted his spectacles and peered through the dust-moted sunlight streaming in from the tall bay window. On his ancient mahogany table rested a weathered leather-bound volume, its pages golden with time. 
+
+What secret did this diary hold? He gently opened the cover. The crisp smell of centuries-old ink rose up, exciting his senses. For years, adventurers sought this specific blueprint. He noticed elegant cursive letters lining the page, whispering names of forgotten stars. "Tonight," Arthur whispered to himself as he tracked the coordinates with his finger. "Tonight, the journey begins anew."`
+        };
+
+        // Cache elements
+        const editor = document.getElementById('editor');
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const helpBtn = document.getElementById('help-btn');
+        const helpModal = document.getElementById('help-modal');
+        const closeHelpBtn = document.getElementById('close-help-btn');
+        const closeHelpBtnOk = document.getElementById('close-help-btn-ok');
+        const btnClear = document.getElementById('btn-clear');
+        const btnCopy = document.getElementById('btn-copy');
+        const samplesBtn = document.getElementById('samples-btn');
+        const samplesMenu = document.getElementById('samples-menu');
+        const btnRemoveSpaces = document.getElementById('btn-remove-spaces');
+        const excludeStopWordsCheckbox = document.getElementById('exclude-stop-words');
+        const saveStatus = document.getElementById('save-status');
+
+        // Stats Elements
+        const liveWordIndicator = document.getElementById('live-word-indicator');
+        const liveCharIndicator = document.getElementById('live-char-indicator');
+        const statWords = document.getElementById('stat-words');
+        const statChars = document.getElementById('stat-chars');
+        const statCharsDetail = document.getElementById('stat-chars-detail');
+        const statSentences = document.getElementById('stat-sentences');
+        const statAvgSentenceLength = document.getElementById('stat-avg-sentence-length');
+        const statParagraphs = document.getElementById('stat-paragraphs');
+        const statAvgParagraphLength = document.getElementById('stat-avg-paragraph-length');
+
+        // Timing Elements
+        const timeReading = document.getElementById('time-reading');
+        const timeSpeaking = document.getElementById('time-speaking');
+
+        // Goals
+        const goalCountInput = document.getElementById('goal-count');
+        const goalPercentage = document.getElementById('goal-percentage');
+        const goalRatio = document.getElementById('goal-ratio');
+        const goalProgressBar = document.getElementById('goal-progress-bar');
+        const goalMotivationalMsg = document.getElementById('goal-motivational-msg');
+
+        // Search Replace
+        const searchInput = document.getElementById('search-input');
+        const replaceInput = document.getElementById('replace-input');
+        const srCaseSensitive = document.getElementById('sr-case-sensitive');
+        const srMatchesCount = document.getElementById('sr-matches-count');
+
+        // State variables
+        let saveTimeout = null;
+        let flaggedWordsList = []; // Track flagged words to warn about readability accuracy
+
+        const btnVerifyWords = document.getElementById('btn-verify-words');
+        const verificationResults = document.getElementById('verification-results');
+        const verificationPlaceholder = document.getElementById('verification-placeholder');
+
+        btnVerifyWords.addEventListener('click', async () => {
+            const text = editor.value.trim();
+            if (!text) {
+                showToast("Please enter some text to verify!", "warning");
+                return;
+            }
+
+            // Set loading state
+            btnVerifyWords.disabled = true;
+            btnVerifyWords.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Scanning with AI...`;
+            verificationPlaceholder.classList.add('hidden');
+            verificationResults.classList.remove('hidden');
+            verificationResults.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-8 text-slate-500">
+                    <div class="h-8 w-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+                    <p class="text-xs">Analyzing words & spelling conventions...</p>
+                </div>
+            `;
+
+            try {
+                const unrecognized = await scanTextForRealWords(text);
+                renderVerificationResults(unrecognized);
+            } catch (error) {
+                console.error(error);
+                showToast("Failed to verify words. Please try again.", "error");
+                verificationResults.classList.add('hidden');
+                verificationPlaceholder.classList.remove('hidden');
+            } finally {
+                btnVerifyWords.disabled = false;
+                btnVerifyWords.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Verify Word Validity & Spelling`;
+            }
+        });
+
+        // Calls Gemini API to retrieve structured spellcheck and word verification information
+        async function scanTextForRealWords(textToScan, retries = 3, delay = 1000) {
+            const apiKey = ""; // Left empty so Canvas auto-injects key at runtime
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+            const systemPrompt = "You are an advanced spellchecker and copy-editor. Your goal is to scan the user's text and identify words that are misspelled, made-up, or pure keyboard-mash gibberish (like 'asdfgh' or 'qwerty'). Ignore standard proper nouns, names, and correct punctuation.";
+            const userQuery = `Analyze the following text and find misspelled or unrecognized/fake words: "${textToScan}"`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            unrecognizedWords: {
+                                type: "ARRAY",
+                                description: "List of flagged words that are misspelled, fake, or keyboard-smash gibberish",
+                                items: {
+                                    type: "OBJECT",
+                                    properties: {
+                                        word: { type: "STRING", description: "The incorrect or unrecognized word found in the text" },
+                                        suggestions: { 
+                                            type: "ARRAY", 
+                                            description: "Suggested real dictionary words that are spelling equivalents, or empty if it is pure gibberish",
+                                            items: { type: "STRING" }
+                                        },
+                                        reason: { type: "STRING", description: "Whether this is a typo, spelling mistake, or unrecognized/gibberish word" }
+                                    },
+                                    required: ["word", "suggestions", "reason"]
+                                }
+                            }
+                        },
+                        required: ["unrecognizedWords"]
+                    }
+                }
+            };
+
+            for (let attempt = 1; attempt <= retries; attempt++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const candidateText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (candidateText) {
+                        const parsed = JSON.parse(candidateText);
+                        return parsed.unrecognizedWords || [];
+                    }
+                    throw new Error("Unexpected empty response from model.");
+                } catch (error) {
+                    if (attempt === retries) throw error;
+                    // Exponential backoff
+                    await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, attempt)));
+                }
+            }
+        }
+
+        // Render identified words beautifully with interactive suggestions
+        function renderVerificationResults(results) {
+            // Track flagged words list so readability metric panel can show a live warning
+            flaggedWordsList = (results || []).map(item => item.word.toLowerCase());
+            
+            // Re-trigger analysis immediately to display warning if gibberish is present
+            analyzeText();
+
+            if (!results || results.length === 0) {
+                verificationResults.innerHTML = `
+                    <div class="flex flex-col items-center justify-center text-center py-6 border border-emerald-100 dark:border-emerald-950/30 bg-emerald-50/20 dark:bg-emerald-950/10 rounded-xl p-4">
+                        <i class="fa-solid fa-circle-check text-emerald-500 text-lg mb-2"></i>
+                        <h4 class="text-xs font-bold text-emerald-800 dark:text-emerald-300">All Words Verified!</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">No major typos, gibberish, or spelling anomalies detected.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `<div class="text-xs font-semibold text-slate-500 mb-2">${results.length} word(s) flagged:</div><div class="space-y-2.5">`;
+
+            results.forEach((item, index) => {
+                const badgeColor = item.reason.toLowerCase().includes("gibberish") ? "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300" : "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300";
+                
+                let suggestionsHtml = "";
+                if (item.suggestions && item.suggestions.length > 0) {
+                    suggestionsHtml = `<div class="flex flex-wrap gap-1 mt-1.5">`;
+                    item.suggestions.forEach(suggestion => {
+                        suggestionsHtml += `
+                            <button onclick="replaceFlaggedWord('${item.word.replace(/'/g, "\\'")}', '${suggestion.replace(/'/g, "\\'")}')" class="px-2 py-0.5 text-[10px] font-semibold bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 rounded border border-indigo-100 dark:border-indigo-900/30 transition-colors">
+                                ${suggestion}
+                            </button>
+                        `;
+                    });
+                    suggestionsHtml += `</div>`;
+                } else {
+                    suggestionsHtml = `<p class="text-[10px] text-slate-400 dark:text-slate-500 italic mt-1">No real-word matches suggested.</p>`;
+                }
+
+                html += `
+                    <div class="p-3 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-xs text-slate-800 dark:text-slate-200 line-through decoration-rose-500">${item.word}</span>
+                            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${badgeColor}">${item.reason}</span>
+                        </div>
+                        ${suggestionsHtml}
+                    </div>
+                `;
+            });
+
+            html += "</div>";
+            verificationResults.innerHTML = html;
+        }
+
+        // Action when a suggestion button is clicked: Replaces incorrect word inside textarea
+        window.replaceFlaggedWord = function(oldWord, newWord) {
+            const currentText = editor.value;
+            // Case insensitive replacement of the exact word
+            const regex = new RegExp('\\b' + oldWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\b', 'gi');
+            
+            if (regex.test(currentText)) {
+                editor.value = currentText.replace(regex, newWord);
+                
+                // Immediately filter out the resolved word from local verified lists
+                flaggedWordsList = flaggedWordsList.filter(w => w !== oldWord.toLowerCase());
+
+                analyzeText();
+                triggerAutoSave();
+                showToast(`Replaced "${oldWord}" with "${newWord}"!`, "success");
+                
+                // Re-scan remaining list in case they want a fresh state
+                const scanBtn = document.getElementById('btn-verify-words');
+                scanBtn.click();
+            } else {
+                showToast(`Word "${oldWord}" was not found in editor.`, "warning");
+            }
+        }
+
+        // Initialize Theme Mode
+        function initTheme() {
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Load cached data from localstorage on start
+        window.onload = function() {
+            initTheme();
+            const savedText = localStorage.getItem('lexi_saved_text');
+            if (savedText) {
+                editor.value = savedText;
+            } else {
+                // Pre-fill with a polite short welcoming phrase
+                editor.value = "Welcome to Word Count Studio. Start typing here to get instant insights or load one of the samples above to explore advanced analytics!";
+            }
+            const savedGoal = localStorage.getItem('lexi_saved_goal');
+            if (savedGoal) {
+                goalCountInput.value = savedGoal;
+            }
+            
+            // Execute initial calculation
+            analyzeText();
+        }
+
+        // Help Modal toggle
+        helpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
+        closeHelpBtn.addEventListener('click', () => helpModal.classList.add('hidden'));
+        closeHelpBtnOk.addEventListener('click', () => helpModal.classList.add('hidden'));
+        
+        // Hide drop menus if clicking outside
+        window.addEventListener('click', (e) => {
+            if (!samplesBtn.contains(e.target)) {
+                samplesMenu.classList.add('hidden');
+            }
+            if (e.target === helpModal) {
+                helpModal.classList.add('hidden');
+            }
+        });
+
+        // Samples Dropdown
+        samplesBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            samplesMenu.classList.toggle('hidden');
+        });
+
+        function loadSampleText(type) {
+            if (SAMPLES[type]) {
+                editor.value = SAMPLES[type];
+                flaggedWordsList = []; // Reset on load
+                analyzeText();
+                showToast(`Loaded ${type} sample!`, "success");
+            }
+            samplesMenu.classList.add('hidden');
+        }
+
+        // Real-time Event Listener for the editor
+        editor.addEventListener('input', () => {
+            // Filter out flagged words that are no longer present in the text
+            const currentText = editor.value.toLowerCase();
+            flaggedWordsList = flaggedWordsList.filter(word => {
+                const regex = new RegExp('\\b' + word.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\b', 'i');
+                return regex.test(currentText);
+            });
+
+            analyzeText();
+            triggerAutoSave();
+        });
+
+        goalCountInput.addEventListener('input', () => {
+            analyzeText();
+            localStorage.setItem('lexi_saved_goal', goalCountInput.value);
+        });
+
+        excludeStopWordsCheckbox.addEventListener('change', () => {
+            analyzeText();
+        });
+
+        // Auto save trigger
+        function triggerAutoSave() {
+            saveStatus.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Typing...';
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem('lexi_saved_text', editor.value);
+                saveStatus.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Auto-saved';
+            }, 1000);
+        }
+
+        // Core text parsing and analysis engine
+        function analyzeText() {
+            const text = editor.value;
+
+            // 1. Core measurements using precise regexes
+            const cleanText = text.trim();
+            const rawWords = cleanText ? cleanText.split(/\s+/) : [];
+            const wordCount = rawWords.filter(w => w.length > 0).length;
+
+            const charCount = text.length;
+            const charNoSpacesCount = text.replace(/\s/g, '').length;
+
+            // Sentences detection (accounting for common abbreviation periods safely)
+            const sentenceRegex = /[.!?]+(\s+|$)/g;
+            const matchesSentences = cleanText.match(sentenceRegex);
+            const sentenceCount = cleanText ? (matchesSentences ? matchesSentences.length : 1) : 0;
+
+            // Paragraphs detection
+            const paragraphs = cleanText ? cleanText.split(/\n\s*\n+/) : [];
+            const paragraphCount = cleanText ? paragraphs.filter(p => p.trim().length > 0).length : 0;
+
+            // Update UI Counters
+            liveWordIndicator.innerHTML = `<i class="fa-solid fa-calculator text-indigo-500 mr-1.5"></i><strong>${wordCount}</strong> words`;
+            liveCharIndicator.innerHTML = `<i class="fa-solid fa-keyboard text-slate-400 mr-1.5"></i><strong>${charCount}</strong> characters`;
+            
+            statWords.innerText = wordCount.toLocaleString();
+            statChars.innerText = charCount.toLocaleString();
+            statCharsDetail.innerText = `${charNoSpacesCount.toLocaleString()} (no spaces)`;
+            statSentences.innerText = sentenceCount.toLocaleString();
+            
+            const avgSentLen = sentenceCount > 0 ? Math.round(wordCount / sentenceCount) : 0;
+            statAvgSentenceLength.innerText = `Avg: ${avgSentLen} words / sentence`;
+
+            const avgParaLen = paragraphCount > 0 ? (sentenceCount / paragraphCount).toFixed(1) : '0';
+            statAvgParagraphLength.innerText = `Avg: ${avgParaLen} sentences / para`;
+
+            // 2. Reading and Speaking Speed calculations
+            // Normal silent reading is roughly 225 words per minute.
+            const readingWPM = 225;
+            const totalReadingSecs = wordCount > 0 ? Math.ceil((wordCount / readingWPM) * 60) : 0;
+            const readMins = Math.floor(totalReadingSecs / 60);
+            const readSecs = totalReadingSecs % 60;
+            timeReading.innerText = `${readMins}m ${readSecs}s`;
+
+            // Normal speech speaking speed is roughly 140 words per minute.
+            const speakingWPM = 140;
+            const totalSpeakingSecs = wordCount > 0 ? Math.ceil((wordCount / speakingWPM) * 60) : 0;
+            const speakMins = Math.floor(totalSpeakingSecs / 60);
+            const speakSecs = totalSpeakingSecs % 60;
+            timeSpeaking.innerText = `${speakMins}m ${speakSecs}s`;
+
+            // 3. Prepare words list
+            const wordsList = cleanText.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, "").split(/\s+/).filter(w => w.trim().length > 0);
+
+            // 4. Goal progress updates
+            const goalTarget = parseInt(goalCountInput.value) || 500;
+            const progressRatio = Math.min(1, wordCount / goalTarget);
+            const progressPercentageVal = Math.round(progressRatio * 100);
+            
+            goalPercentage.innerText = `${progressPercentageVal}% Achieved`;
+            goalRatio.innerText = `${wordCount.toLocaleString()} / ${goalTarget.toLocaleString()} words`;
+            goalProgressBar.style.width = `${progressPercentageVal}%`;
+
+            // Adjust motivational texts & colors based on goal achievements
+            if (wordCount === 0) {
+                goalMotivationalMsg.innerText = "Enter some text to kickstart your progress!";
+                goalMotivationalMsg.className = "text-[11px] text-slate-400 italic";
+                goalProgressBar.className = "h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-300";
+            } else if (progressPercentageVal < 50) {
+                goalMotivationalMsg.innerText = "Off to a wonderful start! Keep adding those paragraphs.";
+                goalMotivationalMsg.className = "text-[11px] text-indigo-500 font-medium";
+                goalProgressBar.className = "h-full bg-gradient-to-r from-indigo-500 to-violet-400 rounded-full transition-all duration-300";
+            } else if (progressPercentageVal < 100) {
+                goalMotivationalMsg.innerText = "More than halfway there! Your document is developing nicely.";
+                goalMotivationalMsg.className = "text-[11px] text-violet-500 font-medium";
+                goalProgressBar.className = "h-full bg-gradient-to-r from-violet-500 to-emerald-500 rounded-full transition-all duration-300";
+            } else {
+                goalMotivationalMsg.innerText = "Amazing! You achieved and surpassed your document target word count! 🎉";
+                goalMotivationalMsg.className = "text-[11px] text-emerald-600 dark:text-emerald-400 font-bold animate-pulse";
+                goalProgressBar.className = "h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-300";
+            }
+
+            // 5. Keyword density analysis table population
+            const excludeStop = excludeStopWordsCheckbox.checked;
+            const keywordFrequency = {};
+
+            wordsList.forEach(w => {
+                // Skip words under 2 characters (like 'I' or letters) to focus on meaningful keywords
+                if (w.length < 2) return;
+                
+                if (excludeStop && STOP_WORDS.has(w)) {
+                    return; // Skip stop word
+                }
+
+                keywordFrequency[w] = (keywordFrequency[w] || 0) + 1;
+            });
+
+            // Sort keywords descending
+            const sortedKeywords = Object.entries(keywordFrequency).sort((a, b) => b[1] - a[1]).slice(0, 7);
+
+            const keywordsContainer = document.getElementById('keywords-list-container');
+            if (sortedKeywords.length === 0) {
+                keywordsContainer.innerHTML = `
+                    <div class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs italic">
+                        No unique keyword trends identified. Keep typing!
+                    </div>
+                `;
+            } else {
+                const maxFrequency = sortedKeywords[0][1];
+                let htmlMarkup = "";
+
+                sortedKeywords.forEach(([word, count]) => {
+                    const relativePercent = Math.round((count / maxFrequency) * 100);
+                    const overallPercent = ((count / wordsList.length) * 100).toFixed(1);
+                    
+                    htmlMarkup += `
+                        <div class="space-y-1">
+                            <div class="flex justify-between items-center text-xs font-medium">
+                                <span class="text-slate-700 dark:text-slate-300 font-mono"><i class="fa-solid fa-tag text-indigo-400/70 mr-1.5 text-[10px]"></i>${word}</span>
+                                <span class="text-slate-500 dark:text-slate-400 font-mono text-[11px]">${count} matches <span class="text-[10px] text-slate-400 dark:text-slate-500">(${overallPercent}%)</span></span>
+                            </div>
+                            <div class="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full" style="width: ${relativePercent}%"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                keywordsContainer.innerHTML = htmlMarkup;
+            }
+        }
+
+        // Text Clear Helper
+        btnClear.addEventListener('click', () => {
+            if (editor.value.length === 0) return;
+            editor.value = "";
+            analyzeText();
+            triggerAutoSave();
+            showToast("Editor cleared!", "info");
+            editor.focus();
+        });
+
+        // Copy Back to Clipboard with fallback fallback
+        btnCopy.addEventListener('click', () => {
+            if (editor.value.length === 0) {
+                showToast("Editor is empty. Paste some text first!", "warning");
+                return;
+            }
+            editor.select();
+            try {
+                // Use fallback document.execCommand because iFrames restrict direct navigator.clipboard access
+                const success = document.execCommand('copy');
+                if (success) {
+                    showToast("Text copied to clipboard successfully!", "success");
+                } else {
+                    throw new Error("Copy command unsuccessful");
+                }
+            } catch (err) {
+                showToast("Could not copy directly. Select all and use Ctrl+C / ⌘+C", "error");
+            }
+        });
+
+        // Trim/Reduce consecutive spaces and clean up double blank lines
+        btnRemoveSpaces.addEventListener('click', () => {
+            const raw = editor.value;
+            if (raw.length === 0) return;
+            // replaces multiple spaces with single space, multiple new lines to single or double linebreaks
+            let cleaned = raw.replace(/[ \t]+/g, ' ');
+            cleaned = cleaned.replace(/\n\s*\n\s*\n+/g, '\n\n');
+            editor.value = cleaned.trim();
+            analyzeText();
+            triggerAutoSave();
+            showToast("Reduced spacing & trailing breaks!", "success");
+        });
+
+        // Letter/Case conversion helper
+        function transformText(mode) {
+            const val = editor.value;
+            if (!val) return;
+
+            let transformed = "";
+            if (mode === 'upper') {
+                transformed = val.toUpperCase();
+            } else if (mode === 'lower') {
+                transformed = val.toLowerCase();
+            } else if (mode === 'title') {
+                transformed = val.replace(/\w\S*/g, function(txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
+            } else if (mode === 'sentence') {
+                // Simple sentence case: split on period/exclamation/question followed by space, capitalize next letter
+                transformed = val.toLowerCase().replace(/(^\s*|[.!?]\s+)([a-z])/g, function(m) {
+                    return m.toUpperCase();
+                });
+            }
+
+            editor.value = transformed;
+            analyzeText();
+            triggerAutoSave();
+            showToast(`Converted case to ${mode}!`, "success");
+        }
+
+        // Search & Replace Panel Drawer Toggle
+        function toggleSearchReplace() {
+            const container = document.getElementById('search-replace-container');
+            const chevron = document.getElementById('sr-chevron');
+            container.classList.toggle('hidden');
+            if (container.classList.contains('hidden')) {
+                chevron.style.transform = "rotate(0deg)";
+            } else {
+                chevron.style.transform = "rotate(180deg)";
+                searchInput.focus();
+            }
+        }
+
+        // Find matches or substitute all occurrences
+        function performSearchReplace(action) {
+            const query = searchInput.value;
+            const replacement = replaceInput.value;
+            const text = editor.value;
+
+            if (!query) {
+                showToast("Please enter a term to search.", "warning");
+                return;
+            }
+
+            const isCaseSensitive = srCaseSensitive.checked;
+            const flags = isCaseSensitive ? "g" : "gi";
+            
+            // Escape special regex chars safely
+            const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const regex = new RegExp(escapedQuery, flags);
+
+            const matches = text.match(regex);
+            const matchesCount = matches ? matches.length : 0;
+
+            if (action === 'count') {
+                srMatchesCount.classList.remove('hidden');
+                srMatchesCount.innerText = `${matchesCount} matches found`;
+                if (matchesCount === 0) {
+                    showToast(`No matches found for "${query}"`, "info");
+                } else {
+                    showToast(`Found ${matchesCount} occurrences!`, "success");
+                }
+            } else if (action === 'replace') {
+                if (matchesCount === 0) {
+                    showToast(`Nothing found to replace for "${query}"`, "warning");
+                    return;
+                }
+                const newText = text.replace(regex, replacement);
+                editor.value = newText;
+                analyzeText();
+                triggerAutoSave();
+                srMatchesCount.innerText = `0 matches found`;
+                showToast(`Replaced ${matchesCount} occurrence(s) successfully!`, "success");
+            }
+        }
+
+        // Export file helper functions
+        function exportData(format) {
+            const text = editor.value;
+            if (!text.trim()) {
+                showToast("Cannot export empty content!", "warning");
+                return;
+            }
+
+            let fileContent = "";
+            let fileName = "lexicount_document";
+            let mimeType = "text/plain";
+
+            if (format === 'txt') {
+                fileContent = text;
+                fileName += ".txt";
+                mimeType = "text/plain;charset=utf-8";
+            } else if (format === 'json') {
+                const wordsList = text.trim().toLowerCase().split(/\s+/).filter(w => w.length > 0);
+                const uniqueWordsSet = new Set(wordsList);
+                const cleanNoSpaces = text.replace(/\s/g, '').length;
+                
+                const report = {
+                    metadata: {
+                        exportedAt: new Date().toISOString(),
+                        app: "LexiCount Studio"
+                    },
+                    statistics: {
+                        words: wordsList.length,
+                        charactersTotal: text.length,
+                        charactersNoSpaces: cleanNoSpaces,
+                        uniqueWordsPercentage: wordsList.length > 0 ? ((uniqueWordsSet.size / wordsList.length) * 100).toFixed(1) + "%" : "0%"
+                    },
+                    text: text
+                };
+                fileContent = JSON.stringify(report, null, 4);
+                fileName += ".json";
+                mimeType = "application/json;charset=utf-8";
+            }
+
+            // Create download anchor trigger
+            const blob = new Blob([fileContent], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Exported document as ${format.toUpperCase()}`, "success");
+        }
+
+        // Custom non-blocking Toast feedback notifications
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let colorClasses = "";
+            let icon = "";
+
+            switch (type) {
+                case "success":
+                    colorClasses = "bg-emerald-50 dark:bg-emerald-950/90 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800";
+                    icon = "fa-circle-check text-emerald-500";
+                    break;
+                case "warning":
+                    colorClasses = "bg-amber-50 dark:bg-amber-950/90 text-amber-800 dark:text-amber-200 border border-amber-200 dark:border-amber-800";
+                    icon = "fa-circle-exclamation text-amber-500";
+                    break;
+                case "error":
+                    colorClasses = "bg-rose-50 dark:bg-rose-950/90 text-rose-800 dark:text-rose-200 border border-rose-200 dark:border-rose-800";
+                    icon = "fa-circle-xmark text-rose-500";
+                    break;
+                default:
+                    colorClasses = "bg-indigo-50 dark:bg-indigo-950/90 text-indigo-800 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-800";
+                    icon = "fa-circle-info text-indigo-500";
+            }
+
+            toast.className = `flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-lg text-xs font-semibold ${colorClasses} transform translate-y-2 opacity-0 transition-all duration-300 pointer-events-auto max-w-sm`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+
+            // Trigger slide in animation
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            // Slide out and remove
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
