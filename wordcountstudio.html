@@ -379,34 +379,6 @@
                 </div>
             </div>
 
-            <!-- AI Word Verification Panel -->
-            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-premium dark:shadow-premium-dark transition-colors duration-300">
-                <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <h3 class="font-bold text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-wand-magic-sparkles text-indigo-500 animate-pulse"></i> AI Word Verification
-                    </h3>
-                    <span class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/30 rounded">Powered by Gemini</span>
-                </div>
-
-                <div class="space-y-4">
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Identify gibberish, spelling mistakes, and unrecognized words using artificial intelligence.</p>
-                    
-                    <button id="btn-verify-words" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i> Verify Word Validity & Spelling
-                    </button>
-
-                    <!-- Scanning Results Container -->
-                    <div id="verification-results" class="space-y-3 max-h-[250px] overflow-y-auto pr-1 hidden">
-                        <!-- Dynamic Results Populated via JS -->
-                    </div>
-
-                    <!-- Placeholder Status -->
-                    <div id="verification-placeholder" class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs italic border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
-                        Click verify above to scan for errors or made-up words.
-                    </div>
-                </div>
-            </div>
-
             <!-- Document Actions: Copy / Export -->
             <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark transition-colors duration-300 flex flex-wrap gap-2 justify-between items-center">
                 <span class="text-xs text-slate-500 dark:text-slate-400">Want to save your analysis elsewhere?</span>
@@ -509,6 +481,7 @@ What secret did this diary hold? He gently opened the cover. The crisp smell of 
         const helpModal = document.getElementById('help-modal');
         const closeHelpBtn = document.getElementById('close-help-btn');
         const closeHelpBtnOk = document.getElementById('close-help-btn-ok');
+
         const btnClear = document.getElementById('btn-clear');
         const btnCopy = document.getElementById('btn-copy');
         const samplesBtn = document.getElementById('samples-btn');
@@ -547,191 +520,6 @@ What secret did this diary hold? He gently opened the cover. The crisp smell of 
 
         // State variables
         let saveTimeout = null;
-        let flaggedWordsList = []; // Track flagged words to warn about readability accuracy
-
-        const btnVerifyWords = document.getElementById('btn-verify-words');
-        const verificationResults = document.getElementById('verification-results');
-        const verificationPlaceholder = document.getElementById('verification-placeholder');
-
-        btnVerifyWords.addEventListener('click', async () => {
-            const text = editor.value.trim();
-            if (!text) {
-                showToast("Please enter some text to verify!", "warning");
-                return;
-            }
-
-            // Set loading state
-            btnVerifyWords.disabled = true;
-            btnVerifyWords.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Scanning with AI...`;
-            verificationPlaceholder.classList.add('hidden');
-            verificationResults.classList.remove('hidden');
-            verificationResults.innerHTML = `
-                <div class="flex flex-col items-center justify-center py-8 text-slate-500">
-                    <div class="h-8 w-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-3"></div>
-                    <p class="text-xs">Analyzing words & spelling conventions...</p>
-                </div>
-            `;
-
-            try {
-                const unrecognized = await scanTextForRealWords(text);
-                renderVerificationResults(unrecognized);
-            } catch (error) {
-                console.error(error);
-                showToast("Failed to verify words. Please try again.", "error");
-                verificationResults.classList.add('hidden');
-                verificationPlaceholder.classList.remove('hidden');
-            } finally {
-                btnVerifyWords.disabled = false;
-                btnVerifyWords.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Verify Word Validity & Spelling`;
-            }
-        });
-
-        // Calls Gemini API to retrieve structured spellcheck and word verification information
-        async function scanTextForRealWords(textToScan, retries = 3, delay = 1000) {
-            const apiKey = ""; // Left empty so Canvas auto-injects key at runtime
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const systemPrompt = "You are an advanced spellchecker and copy-editor. Your goal is to scan the user's text and identify words that are misspelled, made-up, or pure keyboard-mash gibberish (like 'asdfgh' or 'qwerty'). Ignore standard proper nouns, names, and correct punctuation.";
-            const userQuery = `Analyze the following text and find misspelled or unrecognized/fake words: "${textToScan}"`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                },
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            unrecognizedWords: {
-                                type: "ARRAY",
-                                description: "List of flagged words that are misspelled, fake, or keyboard-smash gibberish",
-                                items: {
-                                    type: "OBJECT",
-                                    properties: {
-                                        word: { type: "STRING", description: "The incorrect or unrecognized word found in the text" },
-                                        suggestions: { 
-                                            type: "ARRAY", 
-                                            description: "Suggested real dictionary words that are spelling equivalents, or empty if it is pure gibberish",
-                                            items: { type: "STRING" }
-                                        },
-                                        reason: { type: "STRING", description: "Whether this is a typo, spelling mistake, or unrecognized/gibberish word" }
-                                    },
-                                    required: ["word", "suggestions", "reason"]
-                                }
-                            }
-                        },
-                        required: ["unrecognizedWords"]
-                    }
-                }
-            };
-
-            for (let attempt = 1; attempt <= retries; attempt++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const result = await response.json();
-                    const candidateText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
-                    if (candidateText) {
-                        const parsed = JSON.parse(candidateText);
-                        return parsed.unrecognizedWords || [];
-                    }
-                    throw new Error("Unexpected empty response from model.");
-                } catch (error) {
-                    if (attempt === retries) throw error;
-                    // Exponential backoff
-                    await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, attempt)));
-                }
-            }
-        }
-
-        // Render identified words beautifully with interactive suggestions
-        function renderVerificationResults(results) {
-            // Track flagged words list so readability metric panel can show a live warning
-            flaggedWordsList = (results || []).map(item => item.word.toLowerCase());
-            
-            // Re-trigger analysis immediately to display warning if gibberish is present
-            analyzeText();
-
-            if (!results || results.length === 0) {
-                verificationResults.innerHTML = `
-                    <div class="flex flex-col items-center justify-center text-center py-6 border border-emerald-100 dark:border-emerald-950/30 bg-emerald-50/20 dark:bg-emerald-950/10 rounded-xl p-4">
-                        <i class="fa-solid fa-circle-check text-emerald-500 text-lg mb-2"></i>
-                        <h4 class="text-xs font-bold text-emerald-800 dark:text-emerald-300">All Words Verified!</h4>
-                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">No major typos, gibberish, or spelling anomalies detected.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            let html = `<div class="text-xs font-semibold text-slate-500 mb-2">${results.length} word(s) flagged:</div><div class="space-y-2.5">`;
-
-            results.forEach((item, index) => {
-                const badgeColor = item.reason.toLowerCase().includes("gibberish") ? "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300" : "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300";
-                
-                let suggestionsHtml = "";
-                if (item.suggestions && item.suggestions.length > 0) {
-                    suggestionsHtml = `<div class="flex flex-wrap gap-1 mt-1.5">`;
-                    item.suggestions.forEach(suggestion => {
-                        suggestionsHtml += `
-                            <button onclick="replaceFlaggedWord('${item.word.replace(/'/g, "\\'")}', '${suggestion.replace(/'/g, "\\'")}')" class="px-2 py-0.5 text-[10px] font-semibold bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 rounded border border-indigo-100 dark:border-indigo-900/30 transition-colors">
-                                ${suggestion}
-                            </button>
-                        `;
-                    });
-                    suggestionsHtml += `</div>`;
-                } else {
-                    suggestionsHtml = `<p class="text-[10px] text-slate-400 dark:text-slate-500 italic mt-1">No real-word matches suggested.</p>`;
-                }
-
-                html += `
-                    <div class="p-3 border border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/50 space-y-1">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-xs text-slate-800 dark:text-slate-200 line-through decoration-rose-500">${item.word}</span>
-                            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${badgeColor}">${item.reason}</span>
-                        </div>
-                        ${suggestionsHtml}
-                    </div>
-                `;
-            });
-
-            html += "</div>";
-            verificationResults.innerHTML = html;
-        }
-
-        // Action when a suggestion button is clicked: Replaces incorrect word inside textarea
-        window.replaceFlaggedWord = function(oldWord, newWord) {
-            const currentText = editor.value;
-            // Case insensitive replacement of the exact word
-            const regex = new RegExp('\\b' + oldWord.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\b', 'gi');
-            
-            if (regex.test(currentText)) {
-                editor.value = currentText.replace(regex, newWord);
-                
-                // Immediately filter out the resolved word from local verified lists
-                flaggedWordsList = flaggedWordsList.filter(w => w !== oldWord.toLowerCase());
-
-                analyzeText();
-                triggerAutoSave();
-                showToast(`Replaced "${oldWord}" with "${newWord}"!`, "success");
-                
-                // Re-scan remaining list in case they want a fresh state
-                const scanBtn = document.getElementById('btn-verify-words');
-                scanBtn.click();
-            } else {
-                showToast(`Word "${oldWord}" was not found in editor.`, "warning");
-            }
-        }
 
         // Initialize Theme Mode
         function initTheme() {
@@ -795,7 +583,6 @@ What secret did this diary hold? He gently opened the cover. The crisp smell of 
         function loadSampleText(type) {
             if (SAMPLES[type]) {
                 editor.value = SAMPLES[type];
-                flaggedWordsList = []; // Reset on load
                 analyzeText();
                 showToast(`Loaded ${type} sample!`, "success");
             }
@@ -804,13 +591,6 @@ What secret did this diary hold? He gently opened the cover. The crisp smell of 
 
         // Real-time Event Listener for the editor
         editor.addEventListener('input', () => {
-            // Filter out flagged words that are no longer present in the text
-            const currentText = editor.value.toLowerCase();
-            flaggedWordsList = flaggedWordsList.filter(word => {
-                const regex = new RegExp('\\b' + word.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&') + '\\b', 'i');
-                return regex.test(currentText);
-            });
-
             analyzeText();
             triggerAutoSave();
         });
