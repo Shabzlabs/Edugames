@@ -4,15 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ShabzLabs</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  
+
   <style>
     :root {
       --primary-blue: #3b82f6;
       --dark-blue: #1d4ed8;
       --accent-yellow: #facc15;
-      --soft-bg: linear-gradient(135deg, #a5f3fc, #fde68a);
+      --soft-bg: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -44,11 +49,13 @@
     }
 
     .nav-title {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Quicksand', sans-serif;
       font-size: 24px;
+      font-weight: 700;
       color: #2563eb;
       margin: 0;
       text-shadow: 1px 1px 0px #dbeafe;
+      letter-spacing: -0.01em;
     }
 
     .nav-links {
@@ -99,32 +106,133 @@
     }
 
     .page {
-      max-width: 1100px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 30px 20px;
+      padding: 32px 16px 20px;
     }
 
-    .menu-header {
+    .hero-box {
+      background: white;
+      border-radius: 32px;
+      padding: 38px 28px;
       text-align: center;
-      margin-bottom: 40px;
+      box-shadow: 0 18px 35px rgba(30, 64, 175, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-box::before {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 210px;
+      height: 210px;
+      background: rgba(250, 204, 21, 0.35);
+      border-radius: 999px;
+      filter: blur(12px);
+    }
+
+    .hero-box::after {
+      content: "";
+      position: absolute;
+      bottom: -90px;
+      left: -90px;
+      width: 220px;
+      height: 220px;
+      background: rgba(165, 243, 252, 0.6);
+      border-radius: 999px;
+      filter: blur(14px);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .welcome-pill {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #3730a3;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 999px;
+      margin-bottom: 18px;
     }
 
     .menu-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 36px;
-      color: #1e40af;
-      margin-bottom: 10px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 16px;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .menu-title span {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      color: transparent;
+      background: linear-gradient(90deg, #06b6d4, #4f46e5);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .hero-description {
+      font-size: 18px;
+      font-weight: 500;
+      color: #475569;
+      line-height: 1.7;
+      margin: 0 auto 20px;
     }
 
     .subtitle-tag {
       font-size: 14px;
-      font-weight: bold;
-      color: #059669;
+      font-weight: 700;
+      color: #047857;
       background: #ecfdf5;
       display: inline-block;
-      padding: 5px 15px;
+      padding: 7px 16px;
       border-radius: 20px;
       border: 2px solid #10b981;
+    }
+
+    .section-box {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      padding: 26px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .section-heading h2 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: #1d4ed8;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-heading p {
+      font-size: 16px;
+      font-weight: 500;
+      color: #475569;
+      margin: 0;
     }
 
     .games-grid {
@@ -135,8 +243,8 @@
 
     .game-card {
       background: white;
-      border-radius: 25px;
-      padding: 25px;
+      border-radius: 28px;
+      padding: 26px;
       text-align: center;
       box-shadow: 0 8px 0 #e5e7eb;
       transition: 0.2s;
@@ -145,12 +253,37 @@
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
+      position: relative;
+      overflow: hidden;
     }
 
     .game-card:hover {
       transform: translateY(-8px) rotate(1deg);
       border-color: var(--accent-yellow);
       box-shadow: 0 12px 0 #fde047;
+    }
+
+    .game-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -30px -55px auto;
+      width: 120px;
+      height: 120px;
+      background: rgba(250, 204, 21, 0.18);
+      border-radius: 999px;
+      transition: 0.2s;
+    }
+
+    .game-card:hover::before {
+      transform: scale(1.25);
+      background: rgba(250, 204, 21, 0.28);
+    }
+
+    .game-card > div,
+    .game-card > a,
+    .game-card > span {
+      position: relative;
+      z-index: 2;
     }
 
     .game-icon {
@@ -165,10 +298,19 @@
     }
 
     .game-card h3 {
-      font-family: 'Fredoka One', cursive;
+      font-family: 'Quicksand', sans-serif;
       font-size: 24px;
+      font-weight: 700;
       margin: 10px 0;
       color: #1d4ed8;
+      letter-spacing: -0.01em;
+    }
+
+    .game-card p {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.55;
+      color: #475569;
     }
 
     .tag {
@@ -197,6 +339,11 @@
       transition: 0.1s;
     }
 
+    .play-btn:hover {
+      background: #f97316;
+      transform: translateY(-2px);
+    }
+
     .play-btn:active {
       transform: translateY(3px);
       box-shadow: 0 2px 0 #b45309;
@@ -213,136 +360,180 @@
       font-size: 16px;
     }
 
+    .footer-box {
+      margin-top: 32px;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+    }
+
     @media (max-width: 640px) {
       .navbar {
         flex-direction: column;
         gap: 15px;
         padding: 15px;
       }
+
       .nav-links {
         width: 100%;
         justify-content: center;
         flex-wrap: wrap;
         gap: 10px;
       }
+
       .nav-item {
         font-size: 14px;
         padding: 6px 12px;
+      }
+
+      .hero-box {
+        padding: 30px 20px;
+        border-radius: 26px;
+      }
+
+      .hero-description {
+        font-size: 17px;
+      }
+
+      .section-box {
+        padding: 20px;
+      }
+
+      .section-heading h2 {
+        font-size: 28px;
       }
     }
   </style>
 </head>
 
 <body>
-<nav class="navbar">
-  <a href="index.html" class="nav-left">
-    <div class="lab-container">
-      <div class="bubble" style="left:20%; width:8px; height:8px; animation-delay: 0s;"></div>
-      <div class="bubble" style="left:50%; width:6px; height:6px; animation-delay: 0.5s;"></div>
-      <div class="bubble" style="left:80%; width:10px; height:10px; animation-delay: 1s;"></div>
-      🧪
-    </div>
-    <h1 class="nav-title">Shabz Labs</h1>
-  </a>
+  <nav class="navbar">
+    <a href="index.html" class="nav-left">
+      <div class="lab-container">
+        <div class="bubble" style="left:20%; width:8px; height:8px; animation-delay: 0s;"></div>
+        <div class="bubble" style="left:50%; width:6px; height:6px; animation-delay: 0.5s;"></div>
+        <div class="bubble" style="left:80%; width:10px; height:10px; animation-delay: 1s;"></div>
+        🧪
+      </div>
+      <h1 class="nav-title">Shabz Labs</h1>
+    </a>
 
-  <div class="nav-links">
-    <a href="index.html" class="nav-item active">Home</a>
-    <a href="learn.html" class="nav-item">Learn</a>
-    <a href="teachers.html" class="nav-item">Teachers</a>
-    <a href="games.html" class="nav-item">Games</a>
-    <a href="about.html" class="nav-item">About</a>
-  </div>
-</nav>
+    <div class="nav-links">
+      <a href="index.html" class="nav-item active">Home</a>
+      <a href="learn.html" class="nav-item">Learn</a>
+      <a href="teachers.html" class="nav-item">Teachers</a>
+      <a href="games.html" class="nav-item">Games</a>
+      <a href="about.html" class="nav-item">About</a>
+    </div>
+  </nav>
+
   <div class="page">
-    <header class="menu-header">
-      <h2 class="menu-title"> Interactive Learning Resources for Teachers, Parents, and Students</h2>
-      <span class="subtitle-tag">Directly aligned with the Ontario Curriculum and regularly updated</span>
+    <header class="hero-box">
+      <div class="hero-content">
+        <span class="welcome-pill">Welcome to the Lab!</span>
+        <h2 class="menu-title">Interactive Learning That Feels Like <span>Play</span></h2>
+        <p class="hero-description">
+          Explore fun learning games and classroom resources designed for primary students, teachers, parents, and tutors.
+          Build skills in math, literacy, shapes, probability, and more.
+        </p>
+        <span class="subtitle-tag">Directly aligned with the Ontario Curriculum and regularly updated</span>
+      </div>
     </header>
 
-    <section class="games-grid">
-      <!-- Game Card 1 -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">
-            <img src="shapespacelogo.png" alt="Shape Space Logo">
+    <section class="section-box">
+      <div class="section-heading">
+        <h2>Choose a Learning Activity</h2>
+        <p>Pick a card below to start playing, practising, or exploring.</p>
+      </div>
+
+      <section class="games-grid">
+        <!-- Game Card 1 -->
+        <div class="game-card">
+          <div>
+            <div class="game-icon">
+              <img src="shapespacelogo.png" alt="Shape Space Logo">
+            </div>
+            <span class="tag">Shapes</span>
+            <h3>Shape Space</h3>
+            <p>Can you find all the hidden shapes in the lab?</p>
           </div>
-          <span class="tag">Shapes</span>
-          <h3>Shape Space</h3>
-          <p>Can you find all the hidden shapes in the lab?</p>
+          <a class="play-btn" href="shapeselection.html">PLAY! 🚀</a>
         </div>
-        <a class="play-btn" href="shapeselection.html">PLAY! 🚀</a>
-      </div>
 
-      <!-- Game Card 2 -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🧩</div>
-          <span class="tag">Words</span>
-          <h3>Word Maker</h3>
-          <p>Smash two words together to make a new one!</p>
+        <!-- Game Card 2 -->
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🧩</div>
+            <span class="tag">Words</span>
+            <h3>Word Maker</h3>
+            <p>Smash two words together to make a new one!</p>
+          </div>
+          <a class="play-btn" href="compound.html">PLAY! 🚀</a>
         </div>
-        <a class="play-btn" href="compound.html">PLAY! 🚀</a>
-      </div>
 
-      <!-- Game Card 3 -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🎾</div>
-          <span class="tag">3D Objects</span>
-          <h3>Roll or Stack?</h3>
-          <p>Will it roll? Will it stack? Let's test it out!</p>
+        <!-- Game Card 3 -->
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🎾</div>
+            <span class="tag">3D Objects</span>
+            <h3>Roll or Stack?</h3>
+            <p>Will it roll? Will it stack? Let's test it out!</p>
+          </div>
+          <a class="play-btn" href="rollstack.html">PLAY! 🚀</a>
         </div>
-        <a class="play-btn" href="rollstack.html">PLAY! 🚀</a>
-      </div>
 
-      <!-- Game Card 4 -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🎡</div>
-          <span class="tag">Math</span>
-          <h3>Spinner Adventure</h3>
-          <p>Spin the wheel and track the data with tallies!</p>
+        <!-- Game Card 4 -->
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🎡</div>
+            <span class="tag">Math</span>
+            <h3>Spinner Adventure</h3>
+            <p>Spin the wheel and track the data with tallies!</p>
+          </div>
+          <a class="play-btn" href="probability.html">PLAY! 🚀</a>
         </div>
-        <a class="play-btn" href="probability.html">PLAY! 🚀</a>
-      </div>
 
-      <!-- Game Card 5 -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🌴</div>
-          <span class="tag">Addition</span>
-          <h3>Addition Jungle</h3>
-          <p>Solve fun addition problems deep in the jungle!</p>
+        <!-- Game Card 5 -->
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🌴</div>
+            <span class="tag">Addition</span>
+            <h3>Addition Jungle</h3>
+            <p>Solve fun addition problems deep in the jungle!</p>
+          </div>
+          <a class="play-btn" href="addition.html">PLAY! 🚀</a>
         </div>
-        <a class="play-btn" href="addition.html">PLAY! 🚀</a>
-      </div>
 
-      <!-- Tool Card: Word Counter -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🔢</div>
-          <span class="tag">Writing Tool</span>
-          <h3>Word Counter</h3>
-          <p>Count your words, characters, and sentences while you write!</p>
+        <!-- Tool Card: Word Counter -->
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🔢</div>
+            <span class="tag">Writing Tool</span>
+            <h3>Word Counter</h3>
+            <p>Count your words, characters, and sentences while you write!</p>
+          </div>
+          <a class="play-btn" href="wordcountstudio.html">OPEN ✏️</a>
         </div>
-        <a class="play-btn" href="wordcountstudio.html">OPEN ✏️</a>
-      </div>
 
-      <!-- Coming Soon Card -->
-      <div class="game-card">
-        <div>
-          <div class="game-icon">🧪</div>
-          <span class="tag">Safety</span>
-          <h3>Safety Hero</h3>
-          <p>Keep the lab safe with your super brain!</p>
+        <!-- Coming Soon Card -->
+        <div class="game-card">
+          <div>
+            <div class="game-icon">🧪</div>
+            <span class="tag">Safety</span>
+            <h3>Safety Hero</h3>
+            <p>Keep the lab safe with your super brain!</p>
+          </div>
+          <span class="coming-soon">Coming Soon</span>
         </div>
-        <span class="coming-soon">Coming Soon</span>
-      </div>
+      </section>
     </section>
 
-    <footer class="mt-20 border-t-2 border-blue-200 pt-8 pb-10 text-center">
-      <p class="font-bold text-blue-800 mb-2">© 2026 ShabzLabs</p>
-      <div class="flex justify-center gap-4 text-blue-600 font-medium">
+    <footer class="footer-box">
+      <p class="font-semibold text-blue-800 mb-2">© 2026 ShabzLabs</p>
+      <div class="flex justify-center gap-4 text-blue-600 font-normal flex-wrap">
         <a href="about.html" class="hover:underline">About</a>
         <span>|</span>
         <a href="privacy.html" class="hover:underline">Privacy Policy</a>
