@@ -368,34 +368,8 @@
                 </div>
             </div>
 
-            <!-- AI Word Verification Panel -->
-            <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-premium dark:shadow-premium-dark transition-colors duration-300">
-                <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
-                    <h3 class="font-bold text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-wand-magic-sparkles text-indigo-500 animate-pulse"></i> AI Word Verification
-                    </h3>
-                    <span class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/30 rounded">Powered by Gemini</span>
-                </div>
 
-                <div class="space-y-4">
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Identify gibberish, spelling mistakes, and unrecognized words using artificial intelligence.</p>
-                    
-                    <button id="btn-verify-words" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-xl shadow-md transition-all duration-200 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass text-xs"></i> Verify Word Validity & Spelling
-                    </button>
-
-                    <!-- Scanning Results Container -->
-                    <div id="verification-results" class="space-y-3 max-h-[250px] overflow-y-auto pr-1 hidden">
-                        <!-- Dynamic Results Populated via JS -->
-                    </div>
-
-                    <!-- Placeholder Status -->
-                    <div id="verification-placeholder" class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs italic border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
-                        Click verify above to scan for errors or made-up words.
-                    </div>
-                </div>
-            </div>
-
+            
             <!-- Document Actions: Copy / Export -->
             <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark transition-colors duration-300 flex flex-wrap gap-2 justify-between items-center">
                 <span class="text-xs text-slate-500 dark:text-slate-400">Want to save your analysis elsewhere?</span>
