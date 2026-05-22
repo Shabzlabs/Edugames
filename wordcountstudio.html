@@ -194,14 +194,12 @@
 
             <!-- Search and Replace panel -->
             <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-premium dark:shadow-premium-dark transition-colors duration-300">
-                <button onclick="toggleSearchReplace()" class="w-full flex items-center justify-between font-semibold text-sm text-slate-700 dark:text-slate-300 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors">
-                    <span class="flex items-center gap-2">
-                        <i class="fa-solid fa-magnifying-glass-arrow-right text-indigo-500"></i> Search & Replace Utility
-                    </span>
-                    <i id="sr-chevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
-                </button>
+                <div class="flex items-center gap-2 font-semibold text-sm text-slate-700 dark:text-slate-300 mb-4">
+                    <i class="fa-solid fa-magnifying-glass-arrow-right text-indigo-500"></i>
+                    <span>Search & Replace Utility</span>
+                </div>
                 
-                <div id="search-replace-container" class="hidden mt-4 space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                <div id="search-replace-container" class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="space-y-1">
                             <label class="text-[11px] font-medium text-slate-500 dark:text-slate-400">Search Text</label>
@@ -405,6 +403,23 @@ What secret did this diary hold? He gently opened the cover. The crisp smell of 
 
         // Cache elements
         const editor = document.getElementById('editor');
+
+        // Make Tab key insert an indent inside the text box like a Word document
+        editor.addEventListener('keydown', function (e) {
+            if (e.key === 'Tab') {
+                e.preventDefault();
+
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                const tabSpaces = "    "; // 4 spaces for a clean paragraph indent
+
+                this.value = this.value.substring(0, start) + tabSpaces + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + tabSpaces.length;
+
+                analyzeText();
+                triggerAutoSave();
+            }
+        });
         const themeToggleBtn = document.getElementById('theme-toggle');
         const helpBtn = document.getElementById('help-btn');
         const helpModal = document.getElementById('help-modal');
@@ -671,18 +686,7 @@ excludeStopWordsCheckbox.addEventListener('change', () => {
             showToast(`Converted case to ${mode}!`, "success");
         }
 
-        // Search & Replace Panel Drawer Toggle
-        function toggleSearchReplace() {
-            const container = document.getElementById('search-replace-container');
-            const chevron = document.getElementById('sr-chevron');
-            container.classList.toggle('hidden');
-            if (container.classList.contains('hidden')) {
-                chevron.style.transform = "rotate(0deg)";
-            } else {
-                chevron.style.transform = "rotate(180deg)";
-                searchInput.focus();
-            }
-        }
+        // Search & Replace is always visible, so no dropdown toggle is needed.
 
         // Find matches or substitute all occurrences
         function performSearchReplace(action) {
