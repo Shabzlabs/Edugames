@@ -373,9 +373,246 @@
             }
         }
     
+
+        /* Crop the wrong-answer wizard closer so it shows at about leg level */
+        #wizard-wrong-video {
+            object-fit: cover !important;
+            object-position: center 18% !important;
+            transform: translateX(-50%) scale(1.10);
+            transform-origin: center center;
+        }
+
+        @media (max-width: 640px) {
+            #wizard-wrong-video {
+                object-fit: cover !important;
+                object-position: center 18% !important;
+                transform: translateX(-50%) scale(1.10);
+                transform-origin: center center;
+            }
+        }
+
         #wand-sparkle {
             display: none !important;
         }
+    
+        /* FINAL override: actually crop the bottom of sorrywizard.webm */
+        #wizard-wrong-video {
+            width: 245px !important;
+            height: 245px !important;
+            max-width: 245px !important;
+            max-height: 245px !important;
+            min-width: 245px !important;
+            min-height: 245px !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+            top: -10px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            clip-path: inset(0 0 22% 0) !important;
+        }
+
+        @media (max-width: 640px) {
+            #wizard-wrong-video {
+                width: 210px !important;
+                height: 210px !important;
+                max-width: 210px !important;
+                max-height: 210px !important;
+                min-width: 210px !important;
+                min-height: 210px !important;
+                top: -8px !important;
+                clip-path: inset(0 0 22% 0) !important;
+            }
+        }
+
+    
+        /* Make the normal/correct wizard laugh video match the larger sorry wizard size */
+        #wizard-correct-video {
+            width: 245px !important;
+            height: 245px !important;
+            max-width: 245px !important;
+            max-height: 245px !important;
+            min-width: 245px !important;
+            min-height: 245px !important;
+            object-fit: contain !important;
+            object-position: center center !important;
+            top: -10px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+        }
+
+        @media (max-width: 640px) {
+            #wizard-correct-video {
+                width: 210px !important;
+                height: 210px !important;
+                max-width: 210px !important;
+                max-height: 210px !important;
+                min-width: 210px !important;
+                min-height: 210px !important;
+                top: -8px !important;
+            }
+        }
+
+    
+        /* FINAL alignment: make both wizard videos sit in the same spot and visual frame */
+        #wizard-correct-video,
+        #wizard-wrong-video {
+            width: 245px !important;
+            height: 245px !important;
+            max-width: 245px !important;
+            max-height: 245px !important;
+            min-width: 245px !important;
+            min-height: 245px !important;
+            top: -10px !important;
+            left: 50% !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+            clip-path: inset(0 0 22% 0) !important;
+        }
+
+        /* Keep sorry wizard as the reference position */
+        #wizard-wrong-video {
+            transform: translateX(-50%) !important;
+            transform-origin: center top !important;
+        }
+
+        /* Mirror and enlarge the laugh wizard so the staff is in the same hand and the body fits the same frame */
+        #wizard-correct-video {
+            transform: translateX(-50%) scale(-1.28, 1.28) !important;
+            transform-origin: center top !important;
+        }
+
+        @media (max-width: 640px) {
+            #wizard-correct-video,
+            #wizard-wrong-video {
+                width: 210px !important;
+                height: 210px !important;
+                max-width: 210px !important;
+                max-height: 210px !important;
+                min-width: 210px !important;
+                min-height: 210px !important;
+                top: -8px !important;
+                left: 50% !important;
+                object-fit: cover !important;
+                object-position: center top !important;
+                clip-path: inset(0 0 22% 0) !important;
+            }
+
+            #wizard-wrong-video {
+                transform: translateX(-50%) !important;
+                transform-origin: center top !important;
+            }
+
+            #wizard-correct-video {
+                transform: translateX(-50%) scale(-1.22, 1.22) !important;
+                transform-origin: center top !important;
+            }
+        }
+
+    
+        /* FINAL SORRY-WIZARD MATCHING OVERRIDE:
+           Make the sorry wizard larger and lower so it matches the wizardlaugh framing better. */
+        #wizard-wrong-video {
+            width: 278px !important;
+            height: 278px !important;
+            max-width: 278px !important;
+            max-height: 278px !important;
+            min-width: 278px !important;
+            min-height: 278px !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+            left: 50% !important;
+            top: 10px !important;
+            transform: translateX(-50%) !important;
+            transform-origin: center top !important;
+            clip-path: inset(0 0 22% 0) !important;
+        }
+
+        @media (max-width: 640px) {
+            #wizard-wrong-video {
+                width: 236px !important;
+                height: 236px !important;
+                max-width: 236px !important;
+                max-height: 236px !important;
+                min-width: 236px !important;
+                min-height: 236px !important;
+                left: 50% !important;
+                top: 8px !important;
+                transform: translateX(-50%) !important;
+                transform-origin: center top !important;
+                clip-path: inset(0 0 22% 0) !important;
+            }
+        }
+
+    
+        /* FINAL override: zoom in the sorry wizard and crop the bottom to above the belt */
+        #wizard-wrong-video {
+            width: 300px !important;
+            height: 300px !important;
+            max-width: 300px !important;
+            max-height: 300px !important;
+            min-width: 300px !important;
+            min-height: 300px !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+            left: 50% !important;
+            top: -4px !important;
+            transform: translateX(-50%) !important;
+            transform-origin: center top !important;
+            clip-path: inset(0 0 42% 0) !important;
+        }
+
+        @media (max-width: 640px) {
+            #wizard-wrong-video {
+                width: 250px !important;
+                height: 250px !important;
+                max-width: 250px !important;
+                max-height: 250px !important;
+                min-width: 250px !important;
+                min-height: 250px !important;
+                left: 50% !important;
+                top: -2px !important;
+                transform: translateX(-50%) !important;
+                transform-origin: center top !important;
+                clip-path: inset(0 0 42% 0) !important;
+            }
+        }
+
+    
+        /* FINAL FINAL override: make the sorry wizard bigger and move it down */
+        #wizard-wrong-video {
+            width: 380px !important;
+            height: 380px !important;
+            max-width: 380px !important;
+            max-height: 380px !important;
+            min-width: 380px !important;
+            min-height: 380px !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+            left: 50% !important;
+            top: 18px !important;
+            transform: translateX(-50%) !important;
+            transform-origin: center top !important;
+            clip-path: inset(0 0 42% 0) !important;
+            z-index: 30 !important;
+        }
+
+        @media (max-width: 640px) {
+            #wizard-wrong-video {
+                width: 275px !important;
+                height: 275px !important;
+                max-width: 275px !important;
+                max-height: 275px !important;
+                min-width: 275px !important;
+                min-height: 275px !important;
+                left: 50% !important;
+                top: 24px !important;
+                transform: translateX(-50%) !important;
+                transform-origin: center top !important;
+                clip-path: inset(0 0 42% 0) !important;
+                z-index: 30 !important;
+            }
+        }
+
     </style>
 </head>
 <body class="min-h-screen text-white flex flex-col items-center justify-between p-3 sm:p-6 select-none">
