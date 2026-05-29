@@ -79,7 +79,7 @@
         }
 
         .wizard-wrong {
-            animation: wizardLaugh 0.85s ease-in-out;
+            animation: none;
         }
 
         .room-scene {
@@ -106,10 +106,12 @@
             right: 38px;
             top: 42px;
             width: min(300px, 36vw);
+            height: 230px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 9;
+            justify-content: flex-start;
+            z-index: 20;
         }
 
         .wizard-chair {
@@ -117,18 +119,30 @@
         }
 
         .wizard-video {
-            width: 220px;
-            height: 220px;
+            width: 220px !important;
+            height: 220px !important;
+            max-width: 220px !important;
+            max-height: 220px !important;
+            min-width: 220px !important;
+            min-height: 220px !important;
             object-fit: contain;
             filter: none;
             display: block;
             opacity: 1;
             mix-blend-mode: normal;
             pointer-events: none;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .wizard-video.show {
             display: block;
+        }
+
+        .wizard-video-hidden {
+            display: none !important;
         }
 
         .speech-card {
@@ -287,19 +301,32 @@
 
         @media (max-width: 640px) {
             .room-scene {
-                min-height: 575px;
+                min-height: 610px;
                 border-radius: 26px;
             }
 
             .wizard-seat {
-                right: 14px;
-                top: 42px;
-                width: 165px;
+                right: 8px;
+                top: 28px;
+                width: 205px;
+                height: 205px;
+                z-index: 20;
             }
 
             .wizard-video {
-                width: 150px;
-                height: 150px;
+                width: 190px !important;
+                height: 190px !important;
+                max-width: 190px !important;
+                max-height: 190px !important;
+                min-width: 190px !important;
+                min-height: 190px !important;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .wizard-seat {
+                height: 160px;
             }
 
             .wizard-chair {
@@ -309,12 +336,14 @@
             }
 
             .speech-card {
-                top: 78px;
-                right: 148px;
-                width: calc(100% - 170px);
-                min-width: 0;
-                padding: 10px 12px;
+                top: 84px;
+                left: 10px;
+                right: auto;
+                width: calc(100% - 215px);
+                min-width: 145px;
+                padding: 8px 10px;
                 border-radius: 16px;
+                z-index: 18;
             }
 
             .speech-card::after {
@@ -326,10 +355,11 @@
             }
 
             .laugh-bubble {
-                top: 18px;
-                left: -65px;
-                padding: 6px 10px;
-                font-size: 0.8rem;
+                top: 4px;
+                left: -56px;
+                padding: 5px 9px;
+                font-size: 0.75rem;
+                z-index: 22;
             }
 
             .wood-table-wrap {
@@ -381,7 +411,8 @@
 
             <div class="wizard-seat floating">
                 <div class="wizard-chair"></div>
-                <video id="wizard-correct-video" class="wizard-video show" src="wizardlaugh_transparent.webm" preload="auto" playsinline></video>
+                <video id="wizard-correct-video" class="wizard-video show" src="wizardlaugh_transparent.webm" preload="auto" playsinline webkit-playsinline></video>
+                <video id="wizard-wrong-video" class="wizard-video wizard-video-hidden" src="sorrywizard.webm" preload="auto" playsinline webkit-playsinline></video>
                 <div id="laugh-bubble" class="laugh-bubble">Ha ha, try again!</div>
                 <div id="wand-sparkle" class="absolute top-10 right-12 text-4xl transition-all duration-300 scale-0">✨</div>
             </div>
@@ -639,6 +670,7 @@
             video.pause();
             video.muted = true;
             video.classList.add('show');
+            video.style.display = 'block';
 
             try {
                 video.currentTime = 0;
@@ -647,58 +679,107 @@
             }
         }
 
-        function setWizardIdleFrame() {
-            const video = document.getElementById('wizard-correct-video');
-            if (!video) return;
-
-            video.pause();
-            video.muted = true;
-            video.classList.add('show');
-
-            try {
-                video.currentTime = 0;
-            } catch (error) {
-                // Some browsers wait until video metadata loads before allowing currentTime changes.
-            }
-        }
+        
 
         function playWizardCorrectVideo() {
-            const video = document.getElementById('wizard-correct-video');
-            if (!video) return;
+            const correctVideo = document.getElementById('wizard-correct-video');
+            const wrongVideo = document.getElementById('wizard-wrong-video');
 
-            video.classList.add('show');
-            video.pause();
-            video.currentTime = 0;
-            video.muted = false;
-            video.volume = 1;
+            if (wrongVideo) {
+                wrongVideo.pause();
+                wrongVideo.muted = true;
+                wrongVideo.classList.add('wizard-video-hidden');
+                wrongVideo.classList.remove('show');
+                try {
+                    wrongVideo.currentTime = 0;
+                } catch (error) {
+                    // Some browsers wait until video metadata loads before allowing currentTime changes.
+                }
+            }
 
-            const playPromise = video.play();
+            if (!correctVideo) return;
+
+            correctVideo.classList.remove('wizard-video-hidden');
+            correctVideo.classList.add('show');
+            correctVideo.style.display = 'block';
+            correctVideo.pause();
+
+            try {
+                correctVideo.currentTime = 0;
+            } catch (error) {
+                // Some browsers wait until video metadata loads before allowing currentTime changes.
+            }
+
+            correctVideo.muted = false;
+            correctVideo.volume = 1;
+
+            const playPromise = correctVideo.play();
             if (playPromise !== undefined) {
                 playPromise.catch(() => {
                     setWizardIdleFrame();
                 });
             }
 
-            video.onended = () => {
+            correctVideo.onended = () => {
+                setWizardIdleFrame();
+            };
+        }
+
+        function playWizardWrongVideo() {
+            const correctVideo = document.getElementById('wizard-correct-video');
+            const wrongVideo = document.getElementById('wizard-wrong-video');
+
+            if (!wrongVideo) {
+                setWizardIdleFrame();
+                return;
+            }
+
+            if (correctVideo) {
+                correctVideo.pause();
+                correctVideo.muted = true;
+                correctVideo.classList.add('wizard-video-hidden');
+                correctVideo.classList.remove('show');
+            }
+
+            wrongVideo.classList.remove('wizard-video-hidden');
+            wrongVideo.classList.add('show');
+            wrongVideo.style.display = 'block';
+            wrongVideo.pause();
+
+            try {
+                wrongVideo.currentTime = 0;
+            } catch (error) {
+                // Some browsers wait until video metadata loads before allowing currentTime changes.
+            }
+
+            wrongVideo.muted = false;
+            wrongVideo.volume = 1;
+
+            const playPromise = wrongVideo.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    setWizardIdleFrame();
+                });
+            }
+
+            wrongVideo.onended = () => {
                 setWizardIdleFrame();
             };
         }
 
         function animateWizard(result) {
-            const video = document.getElementById('wizard-correct-video');
+            const correctVideo = document.getElementById('wizard-correct-video');
+            const wrongVideo = document.getElementById('wizard-wrong-video');
             const laughBubble = document.getElementById('laugh-bubble');
 
-            if (!video) return;
-
-            video.classList.remove('wizard-wrong');
-            void video.offsetWidth;
+            if (correctVideo) correctVideo.classList.remove('wizard-wrong');
+            if (wrongVideo) wrongVideo.classList.remove('wizard-wrong');
 
             if (result === 'correct') {
                 laughBubble.classList.remove('show');
                 playWizardCorrectVideo();
             } else {
-                setWizardIdleFrame();
-                video.classList.add('wizard-wrong');
+                playWizardWrongVideo();
                 laughBubble.classList.add('show');
                 setTimeout(() => laughBubble.classList.remove('show'), 1000);
             }
@@ -810,11 +891,27 @@
         }
 
         window.onload = function() {
-            const video = document.getElementById('wizard-correct-video');
-            if (video) {
-                video.addEventListener('loadedmetadata', setWizardIdleFrame);
-                setWizardIdleFrame();
+            const correctVideo = document.getElementById('wizard-correct-video');
+            const wrongVideo = document.getElementById('wizard-wrong-video');
+
+            if (correctVideo) {
+                correctVideo.addEventListener('loadedmetadata', setWizardIdleFrame);
             }
+
+            if (wrongVideo) {
+                wrongVideo.addEventListener('loadedmetadata', () => {
+                    wrongVideo.pause();
+                    wrongVideo.muted = true;
+                    wrongVideo.classList.add('wizard-video-hidden');
+                    try {
+                        wrongVideo.currentTime = 0;
+                    } catch (error) {
+                        // Some browsers wait until video metadata loads before allowing currentTime changes.
+                    }
+                });
+            }
+
+            setWizardIdleFrame();
             initLevel();
         };
     </script>
