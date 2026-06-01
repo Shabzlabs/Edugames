@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wizard's Pattern Table</title>
+    <title>Wizard's Pattern Quest</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         * {
             box-sizing: border-box;
@@ -18,6 +19,10 @@
                 radial-gradient(circle at 16% 28%, rgba(168, 85, 247, 0.32), transparent 25%),
                 linear-gradient(180deg, #160821 0%, #241034 45%, #0f051d 100%);
             overflow-x: hidden;
+        }
+
+        .title-font {
+            font-family: 'Cinzel', serif;
         }
 
         body::before {
@@ -38,32 +43,18 @@
         }
 
         @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 12px rgba(250, 204, 21, 0.25), inset 0 0 12px rgba(250, 204, 21, 0.15); }
-            50% { box-shadow: 0 0 28px rgba(250, 204, 21, 0.55), inset 0 0 20px rgba(250, 204, 21, 0.22); }
+            0%, 100% {
+                box-shadow: 0 0 12px rgba(250, 204, 21, 0.25), inset 0 0 12px rgba(250, 204, 21, 0.15);
+            }
+            50% {
+                box-shadow: 0 0 28px rgba(250, 204, 21, 0.55), inset 0 0 20px rgba(250, 204, 21, 0.22);
+            }
         }
 
         @keyframes pop {
             0% { transform: scale(1); }
             50% { transform: scale(1.12); }
             100% { transform: scale(1); }
-        }
-
-        @keyframes wizardCelebrate {
-            0% { transform: translateY(0) scale(1) rotate(0deg); filter: drop-shadow(0 24px 28px rgba(0,0,0,0.55)) drop-shadow(0 0 18px rgba(250,204,21,0.25)); }
-            25% { transform: translateY(-18px) scale(1.07) rotate(-4deg); filter: drop-shadow(0 24px 28px rgba(0,0,0,0.55)) drop-shadow(0 0 30px rgba(250,204,21,0.75)); }
-            50% { transform: translateY(0) scale(1.03) rotate(4deg); }
-            75% { transform: translateY(-10px) scale(1.06) rotate(-2deg); }
-            100% { transform: translateY(0) scale(1) rotate(0deg); filter: drop-shadow(0 24px 28px rgba(0,0,0,0.55)) drop-shadow(0 0 18px rgba(250,204,21,0.25)); }
-        }
-
-        @keyframes wizardLaugh {
-            0% { transform: translateX(0) rotate(0deg); }
-            15% { transform: translateX(-7px) rotate(-3deg); }
-            30% { transform: translateX(7px) rotate(3deg); }
-            45% { transform: translateX(-7px) rotate(-3deg); }
-            60% { transform: translateX(7px) rotate(3deg); }
-            75% { transform: translateX(-4px) rotate(-2deg); }
-            100% { transform: translateX(0) rotate(0deg); }
         }
 
         .floating {
@@ -74,10 +65,7 @@
             animation: pop 0.5s ease-in-out;
         }
 
-        .wizard-correct {
-            animation: wizardCelebrate 1s ease-in-out;
-        }
-
+        .wizard-correct,
         .wizard-wrong {
             animation: none;
         }
@@ -85,14 +73,14 @@
         .room-scene {
             position: relative;
             width: 100%;
-            min-height: 510px;
+            min-height: 445px;
             border: 3px solid rgba(250, 204, 21, 0.35);
             border-radius: 34px;
             overflow: hidden;
             background:
                 linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.35)),
                 url("wizardroom.png") center center / cover no-repeat;
-            box-shadow: 0 26px 60px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45);
         }
 
         .stone-wall,
@@ -104,14 +92,14 @@
         .wizard-seat {
             position: absolute;
             right: 38px;
-            top: 42px;
+            top: 28px;
             width: min(300px, 36vw);
             height: 230px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            z-index: 20;
+            z-index: 80;
         }
 
         .wizard-chair {
@@ -135,6 +123,7 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 90;
         }
 
         .wizard-video.show {
@@ -147,16 +136,16 @@
 
         .speech-card {
             position: absolute;
-            top: 92px;
+            top: 76px;
             right: 275px;
-            z-index: 7;
+            z-index: 10;
             width: min(320px, calc(100% - 340px));
             min-width: 240px;
             background: rgba(255, 255, 255, 0.96);
             color: #1f2937;
             border: 3px solid rgba(255, 255, 255, 0.98);
             border-radius: 22px;
-            padding: 14px 16px;
+            padding: 12px 15px;
             text-align: left;
             box-shadow: 0 16px 28px rgba(0,0,0,0.28);
         }
@@ -175,12 +164,12 @@
 
         .speech-label {
             display: inline-block;
-            margin-bottom: 6px;
-            padding: 4px 10px;
+            margin-bottom: 5px;
+            padding: 3px 9px;
             background: #ede9fe;
             color: #6d28d9;
             border-radius: 999px;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             font-weight: 700;
             letter-spacing: 0.04em;
             text-transform: uppercase;
@@ -198,7 +187,7 @@
             font-weight: 800;
             opacity: 0;
             pointer-events: none;
-            z-index: 8;
+            z-index: 28;
             box-shadow: 0 10px 18px rgba(0,0,0,0.22);
         }
 
@@ -219,46 +208,46 @@
             animation: pop 0.45s ease-in-out;
         }
 
+        /* TABLE IMAGE — REDUCED SO BOTTOM SHOWS */
         .wood-table-wrap {
             position: absolute;
             left: 50%;
-            bottom: 20px;
+            bottom: -80px;
             transform: translateX(-50%);
-            width: min(860px, calc(100% - 24px));
+            width: min(900px, calc(100% - 40px));
+            height: 350px;
             z-index: 4;
-            perspective: 900px;
         }
 
         .wood-table {
             position: relative;
-            min-height: 205px;
-            border-radius: 42px 42px 26px 26px;
-            background:
-                radial-gradient(ellipse at 50% 8%, rgba(255,255,255,0.23), transparent 42%),
-                repeating-linear-gradient(90deg, rgba(255,255,255,0.055) 0 12px, transparent 12px 46px),
-                linear-gradient(180deg, #9a5a26 0%, #6b3513 54%, #3a1708 100%);
-            border: 5px solid rgba(120, 53, 15, 0.98);
-            box-shadow: 0 26px 42px rgba(0,0,0,0.55), inset 0 10px 22px rgba(255,255,255,0.13);
-            transform: rotateX(8deg);
-            transform-origin: bottom center;
-            padding: 30px 18px 24px;
+            width: 100%;
+            height: 100%;
+            background: url("table.png") center center / 100% 100% no-repeat;
         }
 
-        .table-label {
+        .pattern-track-overlay {
             position: absolute;
-            top: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(180deg, #facc15, #d97706);
-            color: #2b1604;
-            border-radius: 999px;
-            padding: 7px 18px;
-            font-weight: 800;
-            letter-spacing: 0.08em;
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.26);
-            white-space: nowrap;
+            left: 5%;
+            right: 5%;
+            top: 115px;
+            width: 90%;
+            min-height: 112px;
+            padding: 0;
+            z-index: 6;
+            flex-wrap: nowrap !important;
+            justify-content: center;
+            align-items: center;
+            gap: 12px !important;
+        }
+
+        .pattern-track-overlay > div {
+            flex: 0 0 auto;
+        }
+
+        .table-label,
+        .front-edge {
+            display: none;
         }
 
         .shape-card {
@@ -280,18 +269,6 @@
             box-shadow: 0 16px 22px rgba(0,0,0,0.34), inset 0 0 16px rgba(250,204,21,0.06);
         }
 
-        .front-edge {
-            position: absolute;
-            left: 5%;
-            right: 5%;
-            bottom: -18px;
-            height: 40px;
-            border-radius: 0 0 28px 28px;
-            background: linear-gradient(180deg, #4b1f0c, #2b1005);
-            box-shadow: 0 18px 26px rgba(0,0,0,0.45);
-            z-index: -1;
-        }
-
         @media (max-width: 900px) {
             .speech-card {
                 right: 220px;
@@ -301,16 +278,16 @@
 
         @media (max-width: 640px) {
             .room-scene {
-                min-height: 610px;
+                min-height: 520px;
                 border-radius: 26px;
             }
 
             .wizard-seat {
                 right: 8px;
-                top: 28px;
+                top: 22px;
                 width: 205px;
-                height: 205px;
-                z-index: 20;
+                height: 160px;
+                z-index: 80;
             }
 
             .wizard-video {
@@ -325,25 +302,15 @@
                 transform: translateX(-50%);
             }
 
-            .wizard-seat {
-                height: 160px;
-            }
-
-            .wizard-chair {
-                width: 155px;
-                height: 108px;
-                top: 80px;
-            }
-
             .speech-card {
-                top: 84px;
+                top: 68px;
                 left: 10px;
                 right: auto;
                 width: calc(100% - 215px);
                 min-width: 145px;
-                padding: 8px 10px;
+                padding: 7px 9px;
                 border-radius: 16px;
-                z-index: 18;
+                z-index: 10;
             }
 
             .speech-card::after {
@@ -363,97 +330,33 @@
             }
 
             .wood-table-wrap {
-                bottom: 18px;
+                bottom: -20px;
+                width: calc(100% - 18px);
+                height: 300px;
             }
 
             .wood-table {
-                min-height: 300px;
-                padding-top: 32px;
-                transform: rotateX(4deg);
+                height: 100%;
+                background: url("table.png") center center / 100% 100% no-repeat;
             }
-        }
-    
 
-        /* Crop the wrong-answer wizard closer so it shows at about leg level */
-        #wizard-wrong-video {
-            object-fit: cover !important;
-            object-position: center 18% !important;
-            transform: translateX(-50%) scale(1.10);
-            transform-origin: center center;
-        }
-
-        @media (max-width: 640px) {
-            #wizard-wrong-video {
-                object-fit: cover !important;
-                object-position: center 18% !important;
-                transform: translateX(-50%) scale(1.10);
-                transform-origin: center center;
+            .pattern-track-overlay {
+                left: 4%;
+                right: 4%;
+                top: 95px;
+                width: 92%;
+                min-height: 95px;
+                gap: 7px !important;
+                flex-wrap: nowrap !important;
+                justify-content: center;
+                align-items: center;
             }
         }
 
         #wand-sparkle {
             display: none !important;
         }
-    
-        /* FINAL override: actually crop the bottom of sorrywizard.webm */
-        #wizard-wrong-video {
-            width: 245px !important;
-            height: 245px !important;
-            max-width: 245px !important;
-            max-height: 245px !important;
-            min-width: 245px !important;
-            min-height: 245px !important;
-            object-fit: cover !important;
-            object-position: center top !important;
-            top: -10px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            clip-path: inset(0 0 22% 0) !important;
-        }
 
-        @media (max-width: 640px) {
-            #wizard-wrong-video {
-                width: 210px !important;
-                height: 210px !important;
-                max-width: 210px !important;
-                max-height: 210px !important;
-                min-width: 210px !important;
-                min-height: 210px !important;
-                top: -8px !important;
-                clip-path: inset(0 0 22% 0) !important;
-            }
-        }
-
-    
-        /* Make the normal/correct wizard laugh video match the larger sorry wizard size */
-        #wizard-correct-video {
-            width: 245px !important;
-            height: 245px !important;
-            max-width: 245px !important;
-            max-height: 245px !important;
-            min-width: 245px !important;
-            min-height: 245px !important;
-            object-fit: contain !important;
-            object-position: center center !important;
-            top: -10px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-        }
-
-        @media (max-width: 640px) {
-            #wizard-correct-video {
-                width: 210px !important;
-                height: 210px !important;
-                max-width: 210px !important;
-                max-height: 210px !important;
-                min-width: 210px !important;
-                min-height: 210px !important;
-                top: -8px !important;
-            }
-        }
-
-    
-        /* FINAL alignment: make both wizard videos sit in the same spot and visual frame */
         #wizard-correct-video,
         #wizard-wrong-video {
             width: 245px !important;
@@ -469,116 +372,11 @@
             clip-path: inset(0 0 22% 0) !important;
         }
 
-        /* Keep sorry wizard as the reference position */
-        #wizard-wrong-video {
-            transform: translateX(-50%) !important;
-            transform-origin: center top !important;
-        }
-
-        /* Mirror and enlarge the laugh wizard so the staff is in the same hand and the body fits the same frame */
         #wizard-correct-video {
             transform: translateX(-50%) scale(-1.28, 1.28) !important;
             transform-origin: center top !important;
         }
 
-        @media (max-width: 640px) {
-            #wizard-correct-video,
-            #wizard-wrong-video {
-                width: 210px !important;
-                height: 210px !important;
-                max-width: 210px !important;
-                max-height: 210px !important;
-                min-width: 210px !important;
-                min-height: 210px !important;
-                top: -8px !important;
-                left: 50% !important;
-                object-fit: cover !important;
-                object-position: center top !important;
-                clip-path: inset(0 0 22% 0) !important;
-            }
-
-            #wizard-wrong-video {
-                transform: translateX(-50%) !important;
-                transform-origin: center top !important;
-            }
-
-            #wizard-correct-video {
-                transform: translateX(-50%) scale(-1.22, 1.22) !important;
-                transform-origin: center top !important;
-            }
-        }
-
-    
-        /* FINAL SORRY-WIZARD MATCHING OVERRIDE:
-           Make the sorry wizard larger and lower so it matches the wizardlaugh framing better. */
-        #wizard-wrong-video {
-            width: 278px !important;
-            height: 278px !important;
-            max-width: 278px !important;
-            max-height: 278px !important;
-            min-width: 278px !important;
-            min-height: 278px !important;
-            object-fit: cover !important;
-            object-position: center top !important;
-            left: 50% !important;
-            top: 10px !important;
-            transform: translateX(-50%) !important;
-            transform-origin: center top !important;
-            clip-path: inset(0 0 22% 0) !important;
-        }
-
-        @media (max-width: 640px) {
-            #wizard-wrong-video {
-                width: 236px !important;
-                height: 236px !important;
-                max-width: 236px !important;
-                max-height: 236px !important;
-                min-width: 236px !important;
-                min-height: 236px !important;
-                left: 50% !important;
-                top: 8px !important;
-                transform: translateX(-50%) !important;
-                transform-origin: center top !important;
-                clip-path: inset(0 0 22% 0) !important;
-            }
-        }
-
-    
-        /* FINAL override: zoom in the sorry wizard and crop the bottom to above the belt */
-        #wizard-wrong-video {
-            width: 300px !important;
-            height: 300px !important;
-            max-width: 300px !important;
-            max-height: 300px !important;
-            min-width: 300px !important;
-            min-height: 300px !important;
-            object-fit: cover !important;
-            object-position: center top !important;
-            left: 50% !important;
-            top: -4px !important;
-            transform: translateX(-50%) !important;
-            transform-origin: center top !important;
-            clip-path: inset(0 0 42% 0) !important;
-        }
-
-        @media (max-width: 640px) {
-            #wizard-wrong-video {
-                width: 250px !important;
-                height: 250px !important;
-                max-width: 250px !important;
-                max-height: 250px !important;
-                min-width: 250px !important;
-                min-height: 250px !important;
-                left: 50% !important;
-                top: -2px !important;
-                transform: translateX(-50%) !important;
-                transform-origin: center top !important;
-                clip-path: inset(0 0 42% 0) !important;
-            }
-        }
-
-    
-        /* FINAL FINAL override: make the sorry wizard bigger and move it down */
         #wizard-wrong-video {
             width: 380px !important;
             height: 380px !important;
@@ -593,10 +391,26 @@
             transform: translateX(-50%) !important;
             transform-origin: center top !important;
             clip-path: inset(0 0 42% 0) !important;
-            z-index: 30 !important;
+            z-index: 95 !important;
         }
 
         @media (max-width: 640px) {
+            #wizard-correct-video {
+                width: 210px !important;
+                height: 210px !important;
+                max-width: 210px !important;
+                max-height: 210px !important;
+                min-width: 210px !important;
+                min-height: 210px !important;
+                top: -8px !important;
+                left: 50% !important;
+                object-fit: cover !important;
+                object-position: center top !important;
+                clip-path: inset(0 0 22% 0) !important;
+                transform: translateX(-50%) scale(-1.22, 1.22) !important;
+                transform-origin: center top !important;
+            }
+
             #wizard-wrong-video {
                 width: 275px !important;
                 height: 275px !important;
@@ -609,34 +423,35 @@
                 transform: translateX(-50%) !important;
                 transform-origin: center top !important;
                 clip-path: inset(0 0 42% 0) !important;
-                z-index: 30 !important;
+                z-index: 95 !important;
             }
         }
-
     </style>
 </head>
-<body class="min-h-screen text-white flex flex-col items-center justify-between p-3 sm:p-6 select-none">
 
-    <div class="w-full max-w-5xl flex flex-col sm:flex-row justify-between items-center gap-3 bg-purple-950/70 border-2 border-purple-500/30 rounded-2xl px-5 py-3 backdrop-blur-md shadow-lg mb-4 relative z-10">
-        <div class="flex items-center gap-3 text-center sm:text-left">
-            <span class="text-3xl sm:text-4xl">🧙‍♂️</span>
-            <div>
-                <h1 class="text-xl sm:text-2xl font-bold text-yellow-300 tracking-wide">Wizard's Pattern Table</h1>
-                <p class="text-xs sm:text-sm text-purple-300">Grade 1 & 2 Shape Pattern Challenge</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-4">
+<body class="min-h-screen text-white flex flex-col items-center justify-start p-2 sm:p-3 select-none">
+
+    <!-- Centered Aesthetic Title -->
+    <div class="z-10 mt-1 mb-2 text-center">
+        <h1 class="title-font text-3xl sm:text-5xl font-bold text-yellow-300 drop-shadow-[0_0_15px_rgba(253,224,71,0.6)] tracking-widest">
+            WIZARD'S QUEST
+        </h1>
+        <p class="text-purple-300 text-xs sm:text-sm tracking-[0.2em] uppercase mt-1">
+            Magic Shape Apprentice
+        </p>
+
+        <div class="mt-2 flex items-center justify-center gap-3">
             <div class="text-right">
-                <div class="text-xs text-purple-300 uppercase font-semibold">Magic Power</div>
-                <div class="text-lg font-bold text-emerald-400" id="score-display">0 / 500 XP</div>
+                <div class="text-[10px] text-purple-300 uppercase font-semibold">Magic Power</div>
+                <div class="text-base font-bold text-emerald-400" id="score-display">0 / 500 XP</div>
             </div>
-            <div class="w-28 sm:w-40 h-4 bg-purple-900 rounded-full overflow-hidden border border-purple-400/30">
+            <div class="w-28 sm:w-40 h-3 bg-purple-900 rounded-full overflow-hidden border border-purple-400/30">
                 <div id="progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-teal-300 transition-all duration-500" style="width: 0%"></div>
             </div>
         </div>
     </div>
 
-    <main class="w-full max-w-5xl flex-1 flex flex-col justify-center items-center gap-5 relative z-10">
+    <main class="w-full max-w-5xl flex-1 flex flex-col justify-start items-center gap-3 relative z-10">
         <section class="room-scene">
             <div class="stone-wall"></div>
             <div class="window-glow"></div>
@@ -659,29 +474,27 @@
                 <p id="wizard-speech" class="text-sm sm:text-base font-semibold leading-relaxed text-slate-700">
                     Welcome, apprentice. Study the shapes on the table. Which one completes the pattern?
                 </p>
-                <div class="mt-2 text-[11px] sm:text-xs text-violet-700 font-bold" id="pattern-instruction">
+                <div class="mt-1 text-[11px] sm:text-xs text-violet-700 font-bold" id="pattern-instruction">
                     Pattern Formula: Hexagon ➔ Square ➔ Triangle
                 </div>
             </div>
 
             <div class="wood-table-wrap">
                 <div class="wood-table">
-                    <div class="table-label">Shapes on the Wizard's Table</div>
-                    <div id="pattern-track" class="flex flex-wrap items-center justify-center gap-2 sm:gap-4 min-h-[112px] w-full py-3">
+                    <div id="pattern-track" class="pattern-track-overlay flex items-center justify-center gap-2 sm:gap-4">
                     </div>
-                    <div class="front-edge"></div>
                 </div>
             </div>
         </section>
 
-        <section class="w-full bg-slate-950/55 border-2 border-purple-400/20 rounded-3xl p-4 sm:p-5 shadow-xl backdrop-blur-md">
-            <h3 class="text-center text-md sm:text-lg text-yellow-300 font-semibold mb-4">
+        <section class="w-full bg-slate-950/55 border-2 border-purple-400/20 rounded-3xl p-3 sm:p-4 shadow-xl backdrop-blur-md">
+            <h3 class="text-center text-sm sm:text-base text-yellow-300 font-semibold mb-2">
                 Choose the shape token to place on the table:
             </h3>
-            <div id="choices-grid" class="flex justify-center items-center gap-3 sm:gap-6 w-full flex-wrap"></div>
+            <div id="choices-grid" class="flex justify-center items-center gap-2 sm:gap-5 w-full flex-wrap"></div>
         </section>
 
-        <div id="feedback-panel" class="min-h-10 text-center font-bold text-lg sm:text-xl transition-all duration-300 flex items-center justify-center gap-2 px-3"></div>
+        <div id="feedback-panel" class="min-h-8 text-center font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2 px-3"></div>
     </main>
 
     <div id="victory-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
@@ -700,7 +513,7 @@
 
     <canvas id="confetti-canvas" class="fixed inset-0 pointer-events-none z-40 hidden"></canvas>
 
-    <footer class="w-full text-center py-2 text-xs text-purple-300/70 mt-4 flex flex-col sm:flex-row justify-center items-center gap-2 relative z-10">
+    <footer class="w-full text-center py-1 text-xs text-purple-300/70 mt-1 flex flex-col sm:flex-row justify-center items-center gap-1 relative z-10">
         <span>Designed for early primary pattern learning.</span>
         <span class="hidden sm:inline">•</span>
         <button onclick="toggleAudio()" class="text-purple-200/90 hover:text-purple-100 underline focus:outline-none flex items-center gap-1">
@@ -802,8 +615,10 @@
 
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
+
             osc.connect(gain);
             gain.connect(audioCtx.destination);
+
             const now = audioCtx.currentTime;
 
             if (type === 'success') {
@@ -826,15 +641,19 @@
                 osc.stop(now + 0.35);
             } else if (type === 'victory') {
                 const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+
                 notes.forEach((freq, index) => {
                     const noteOsc = audioCtx.createOscillator();
                     const noteGain = audioCtx.createGain();
+
                     noteOsc.connect(noteGain);
                     noteGain.connect(audioCtx.destination);
+
                     noteOsc.type = 'triangle';
                     noteOsc.frequency.setValueAtTime(freq, now + (index * 0.1));
                     noteGain.gain.setValueAtTime(0.12, now + (index * 0.1));
                     noteGain.gain.exponentialRampToValueAtTime(0.01, now + (index * 0.1) + 0.35);
+
                     noteOsc.start(now + (index * 0.1));
                     noteOsc.stop(now + (index * 0.1) + 0.35);
                 });
@@ -848,6 +667,7 @@
 
         function initLevel() {
             const level = LEVELS[currentLevelIndex];
+
             document.getElementById('wizard-speech').textContent = level.prompt;
             document.getElementById('pattern-instruction').textContent = `Pattern Formula: ${level.formula}`;
 
@@ -857,22 +677,26 @@
             level.pattern.forEach((shapeKey, index) => {
                 const shapeDiv = document.createElement('div');
                 const rotate = index % 2 === 0 ? 'rotate-[-1deg]' : 'rotate-[1deg]';
-                shapeDiv.className = `shape-card ${rotate} flex flex-col items-center justify-center p-2 sm:p-3 min-w-[72px] sm:min-w-[88px]`;
+
+                shapeDiv.className = `shape-card ${rotate} flex flex-col items-center justify-center p-2 sm:p-3 min-w-[66px] sm:min-w-[82px]`;
                 shapeDiv.innerHTML = SHAPE_TEMPLATES[shapeKey].svg;
 
                 const label = document.createElement('span');
                 label.className = 'text-[10px] sm:text-xs mt-1 font-bold text-purple-100 bg-slate-950/45 px-2 py-0.5 rounded-full';
                 label.textContent = SHAPE_TEMPLATES[shapeKey].name;
+
                 shapeDiv.appendChild(label);
                 patternTrack.appendChild(shapeDiv);
             });
 
             const qMarkDiv = document.createElement('div');
-            qMarkDiv.className = 'question-slot flex flex-col items-center justify-center p-2 bg-yellow-500/10 border-2 border-dashed border-yellow-300 rounded-2xl w-[76px] h-[92px] sm:w-[96px] sm:h-[108px]';
+            qMarkDiv.className = 'question-slot flex flex-col items-center justify-center p-2 bg-yellow-500/10 border-2 border-dashed border-yellow-300 rounded-2xl w-[70px] h-[88px] sm:w-[86px] sm:h-[102px]';
+
             qMarkDiv.innerHTML = `
                 <div class="text-4xl sm:text-5xl font-extrabold text-yellow-200">?</div>
                 <span class="text-[10px] sm:text-xs mt-1 font-bold text-yellow-100">Place Here</span>
             `;
+
             patternTrack.appendChild(qMarkDiv);
             setupChoices(level);
         }
@@ -888,13 +712,15 @@
 
             options.forEach((key) => {
                 const button = document.createElement('button');
-                button.className = 'choice-token flex flex-col items-center justify-center p-4 border-4 border-slate-700 hover:border-yellow-300 rounded-3xl transition-all hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-yellow-400/50';
+
+                button.className = 'choice-token flex flex-col items-center justify-center p-3 sm:p-4 border-4 border-slate-700 hover:border-yellow-300 rounded-3xl transition-all hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-yellow-400/50';
                 button.onclick = () => handleChoice(key, button);
                 button.innerHTML = SHAPE_TEMPLATES[key].svg;
 
                 const badge = document.createElement('span');
                 badge.className = 'mt-2 px-3 py-1 bg-slate-700 text-slate-100 rounded-full font-bold text-xs group-hover:bg-yellow-400 group-hover:text-slate-900 transition-colors uppercase';
                 badge.textContent = SHAPE_TEMPLATES[key].name;
+
                 button.appendChild(badge);
                 grid.appendChild(button);
             });
@@ -911,12 +737,8 @@
 
             try {
                 video.currentTime = 0;
-            } catch (error) {
-                // Some browsers wait until video metadata loads before allowing currentTime changes.
-            }
+            } catch (error) {}
         }
-
-        
 
         function playWizardCorrectVideo() {
             const correctVideo = document.getElementById('wizard-correct-video');
@@ -927,11 +749,10 @@
                 wrongVideo.muted = true;
                 wrongVideo.classList.add('wizard-video-hidden');
                 wrongVideo.classList.remove('show');
+
                 try {
                     wrongVideo.currentTime = 0;
-                } catch (error) {
-                    // Some browsers wait until video metadata loads before allowing currentTime changes.
-                }
+                } catch (error) {}
             }
 
             if (!correctVideo) return;
@@ -943,14 +764,13 @@
 
             try {
                 correctVideo.currentTime = 0;
-            } catch (error) {
-                // Some browsers wait until video metadata loads before allowing currentTime changes.
-            }
+            } catch (error) {}
 
             correctVideo.muted = false;
             correctVideo.volume = 1;
 
             const playPromise = correctVideo.play();
+
             if (playPromise !== undefined) {
                 playPromise.catch(() => {
                     setWizardIdleFrame();
@@ -985,14 +805,13 @@
 
             try {
                 wrongVideo.currentTime = 0;
-            } catch (error) {
-                // Some browsers wait until video metadata loads before allowing currentTime changes.
-            }
+            } catch (error) {}
 
             wrongVideo.muted = false;
             wrongVideo.volume = 1;
 
             const playPromise = wrongVideo.play();
+
             if (playPromise !== undefined) {
                 playPromise.catch(() => {
                     setWizardIdleFrame();
@@ -1018,7 +837,10 @@
             } else {
                 playWizardWrongVideo();
                 laughBubble.classList.add('show');
-                setTimeout(() => laughBubble.classList.remove('show'), 1000);
+
+                setTimeout(() => {
+                    laughBubble.classList.remove('show');
+                }, 1000);
             }
         }
 
@@ -1029,15 +851,18 @@
             if (key === level.target) {
                 animateWizard('correct');
                 playSound('success');
+
                 buttonElement.classList.add('pop-animation');
+
                 feedbackPanel.innerHTML = `<span class="text-emerald-300">Correct. The ${SHAPE_TEMPLATES[key].name} completes the table pattern.</span>`;
-                feedbackPanel.className = 'min-h-10 text-center font-bold text-lg sm:text-xl transition-all duration-300 flex items-center justify-center scale-105 px-3';
+                feedbackPanel.className = 'min-h-8 text-center font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center scale-105 px-3';
 
                 score += xpPerLevel;
                 updateXPDisplay();
 
                 setTimeout(() => {
                     currentLevelIndex++;
+
                     if (currentLevelIndex < LEVELS.length) {
                         feedbackPanel.innerHTML = '';
                         initLevel();
@@ -1048,8 +873,13 @@
             } else {
                 animateWizard('wrong');
                 playSound('error');
+
                 buttonElement.classList.add('animate-bounce');
-                setTimeout(() => buttonElement.classList.remove('animate-bounce'), 800);
+
+                setTimeout(() => {
+                    buttonElement.classList.remove('animate-bounce');
+                }, 800);
+
                 feedbackPanel.innerHTML = `<span class="text-rose-300">Almost. Look from the beginning of the pattern and try again.</span>`;
                 document.getElementById('wizard-speech').textContent = 'Study the order carefully and try again.';
             }
@@ -1069,15 +899,18 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
+
         window.addEventListener('resize', resizeCanvas);
 
         function triggerGrandVictory() {
             playSound('victory');
+
             document.getElementById('victory-modal').classList.remove('hidden');
             canvas.classList.remove('hidden');
             resizeCanvas();
 
             particles = [];
+
             for (let i = 0; i < 150; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
@@ -1097,6 +930,7 @@
 
         function drawConfetti() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             particles.forEach((p, idx) => {
                 p.tiltAngle += p.tiltAngleIncremental;
                 p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
@@ -1111,7 +945,12 @@
                 ctx.stroke();
 
                 if (p.y > canvas.height) {
-                    particles[idx] = { ...p, x: Math.random() * canvas.width, y: -20, tilt: Math.random() * 10 - 5 };
+                    particles[idx] = {
+                        ...p,
+                        x: Math.random() * canvas.width,
+                        y: -20,
+                        tilt: Math.random() * 10 - 5
+                    };
                 }
             });
         }
@@ -1119,11 +958,16 @@
         function restartGame() {
             document.getElementById('victory-modal').classList.add('hidden');
             canvas.classList.add('hidden');
+
             clearInterval(confettiInterval);
+
             currentLevelIndex = 0;
             score = 0;
+
             updateXPDisplay();
+
             document.getElementById('feedback-panel').innerHTML = '';
+
             initLevel();
         }
 
@@ -1140,11 +984,10 @@
                     wrongVideo.pause();
                     wrongVideo.muted = true;
                     wrongVideo.classList.add('wizard-video-hidden');
+
                     try {
                         wrongVideo.currentTime = 0;
-                    } catch (error) {
-                        // Some browsers wait until video metadata loads before allowing currentTime changes.
-                    }
+                    } catch (error) {}
                 });
             }
 
