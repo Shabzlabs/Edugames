@@ -12,12 +12,13 @@
         body {
             background-color: #fefce8;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            height: 100vh;
+            min-height: 100vh;
             width: 100vw;
             margin: 0;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         .shabzlabs-home-btn {
@@ -219,6 +220,77 @@
             animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
+        .learning-content-section {
+            width: min(1100px, calc(100% - 40px));
+            margin: 28px auto 34px;
+            padding: 28px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.92);
+            border: 2px solid rgba(251, 146, 60, 0.28);
+            box-shadow: 0 18px 38px rgba(15, 23, 42, 0.14);
+            color: #1f2937;
+        }
+
+        .learning-content-section h2 {
+            color: #ea580c;
+            font-weight: 900;
+            font-size: 1.85rem;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+
+        .learning-content-section h3 {
+            color: #1f2937;
+            font-weight: 900;
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        .learning-content-section p {
+            color: #475569;
+            font-weight: 700;
+            line-height: 1.7;
+        }
+
+        .learning-card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .learning-card {
+            background: #fff7ed;
+            border: 2px solid #fed7aa;
+            border-radius: 22px;
+            padding: 20px;
+        }
+
+        .learning-links {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid #fed7aa;
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 0.82rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .learning-links a {
+            color: #ea580c;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .learning-content-section {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
 
             .shabzlabs-home-btn {
@@ -342,6 +414,60 @@
             <p class="mt-auto pt-6 text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center" id="status-message">Make a prediction to start!</p>
         </div>
     </main>
+
+    <section class="learning-content-section">
+        <h2>About Spinner Adventure</h2>
+        <p>
+            Spinner Adventure is an interactive probability and data game that helps students practise making predictions,
+            collecting results, and comparing outcomes. Students look carefully at a spinner, choose which result they think
+            is most likely and least likely, spin the wheel, and record each result using a tally chart.
+        </p>
+
+        <div class="learning-card-grid">
+            <div class="learning-card">
+                <h3>What Students Learn</h3>
+                <p>
+                    Students build early probability vocabulary such as most likely, least likely, fair, unfair, outcome,
+                    prediction, and result. They also practise organizing data with tally marks and using evidence from
+                    repeated spins to compare what they predicted with what actually happened.
+                </p>
+            </div>
+
+            <div class="learning-card">
+                <h3>How to Play</h3>
+                <p>
+                    First, study the spinner and make two predictions: which option is most likely to win and which option
+                    is least likely to win. Then spin the wheel ten times. After each spin, add a tally beside the result.
+                    At the end, compare the data with your original predictions.
+                </p>
+            </div>
+
+            <div class="learning-card">
+                <h3>For Teachers and Parents</h3>
+                <p>
+                    This activity works well for probability lessons, math centres, data management practice, small-group
+                    instruction, and review. It gives students a visual and hands-on way to understand chance instead of
+                    only reading probability questions on paper.
+                </p>
+            </div>
+
+            <div class="learning-card">
+                <h3>Learning Goals</h3>
+                <p>
+                    Students learn to make reasonable predictions, collect data accurately, represent results with tallies,
+                    and explain whether the final data supports or challenges their thinking. Later levels introduce uneven
+                    spinners so students can notice how spinner sections affect probability.
+                </p>
+            </div>
+        </div>
+
+        <nav class="learning-links" aria-label="ShabzLabs site links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy Policy</a>
+        </nav>
+    </section>
 
     <script>
         let currentLevel = 1;
