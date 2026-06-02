@@ -6,6 +6,8 @@
     <title>Wizard's Pattern Quest</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         * {
@@ -500,12 +502,14 @@
 
 <body class="min-h-screen text-white flex flex-col items-center justify-start p-2 sm:p-3 select-none">
 
-    <!-- Centered Aesthetic Title -->
-    <div class="z-10 mt-1 mb-2 text-center">
-        <h1 class="title-font text-3xl sm:text-5xl font-bold text-yellow-300 drop-shadow-[0_0_15px_rgba(253,224,71,0.6)] tracking-widest">
+    <!-- Title Bar with ShabzLabs Home Button -->
+    <div class="z-10 mt-1 mb-2 w-full max-w-5xl relative flex items-center justify-center px-2">
+        <h1 class="title-font text-3xl sm:text-5xl font-bold text-yellow-300 drop-shadow-[0_0_15px_rgba(253,224,71,0.6)] tracking-widest text-center">
             WIZARD'S SHAPE QUEST
         </h1>
-        <a href="index.html" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold shadow-sm shadow-indigo-200 dark:shadow-none transition-all duration-200" title="Go to ShabzLabs Home">
+
+        <!-- ShabzLabs Home Button -->
+        <a href="index.html" class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold shadow-sm shadow-indigo-200 transition-all duration-200" title="Go to ShabzLabs Home">
             <i class="fa-solid fa-house"></i>
             <span class="hidden sm:inline">ShabzLabs</span>
         </a>
