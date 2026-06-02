@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Divider - Scaffolded Multiplication & Division Game</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Fredoka (rounded/friendly) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', 'Inter', sans-serif;
+        }
+        /* Custom bubbly styles and animations */
+        .bubble-glow {
+            box-shadow: inset -10px -10px 15px rgba(0,0,0,0.12), 
+                        inset 10px 10px 15px rgba(255,255,255,0.8),
+                        0 8px 16px rgba(0,0,0,0.06);
+        }
+        .bubble-sheen {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 30%;
+            height: 30%;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-select {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+        /* Confetti piece styling */
+        .confetti {
+            position: absolute;
+            pointer-events: none;
+            will-change: transform;
+        }
+        /* Shake animation for incorrect answer */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .shake-element {
+            animation: shake 0.4s ease-in-out;
+        }
+        /* Crawling dotted lines for the cursor helper */
+        .dotted-connector {
+            stroke-dasharray: 8, 6;
+            animation: flow-dash 0.8s linear infinite;
+        }
+        @keyframes flow-dash {
+            to {
+                stroke-dashoffset: -14;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-tr from-purple-950 via-violet-900 to-fuchsia-950 min-h-screen text-slate-800 flex flex-col justify-between overflow-x-hidden antialiased">
+
+    <header class="w-full max-w-5xl mx-auto px-4 pt-1 pb-1">
+        <div class="flex flex-col sm:flex-row justify-between items-center bg-white/10 backdrop-blur-md rounded-2xl p-2 shadow-md border border-white/20 gap-2 relative">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🫧</span>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight">Bubble Divider</h1>
+                    <p class="text-[10px] text-purple-200/80 font-semibold tracking-wide uppercase leading-tight">Molecular Division Sandbox</p>
+                </div>
+            </div>
+            <button id="btn-sound" class="absolute top-2 right-2 bg-white/10 hover:bg-white/25 border border-white/10 text-white px-2 py-1 rounded-lg transition duration-150" title="Toggle Sound">
+                <span id="sound-icon" class="text-sm">🔊</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow w-full max-w-5xl mx-auto px-4 py-1 flex flex-col gap-1.5">
+        
+        <!-- Game Instruction & Formula Banner -->
+        <div class="bg-white/15 backdrop-blur-md rounded-2xl p-1.5 shadow-xl border border-white/15 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[82px]">
+            <!-- Subtle background bubbles -->
+            <div class="absolute -top-10 -left-10 w-24 h-24 bg-purple-500/10 rounded-full blur-xl pointer-events-none"></div>
+            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-pink-500/10 rounded-full blur-xl pointer-events-none"></div>
+
+            <div class="w-full grid grid-cols-[1fr_auto_1fr] items-center gap-1 mb-0.5">
+                <div></div>
+                <span class="text-purple-200 font-bold text-[10px] md:text-xs tracking-wide uppercase leading-none text-center">Build Multiplication with Equal Groups!</span>
+                <div class="flex items-center justify-end gap-1">
+                    <div class="bg-purple-900/50 backdrop-blur-sm px-2 py-0.5 rounded-md text-center border border-purple-500/30">
+                        <span class="text-[7px] text-purple-200 font-bold block uppercase tracking-wider leading-none">Solved</span>
+                        <span id="score-counter" class="text-xs font-bold text-white leading-none">0</span>
+                    </div>
+                    <div class="bg-pink-900/50 backdrop-blur-sm px-2 py-0.5 rounded-md text-center border border-pink-500/30">
+                        <span class="text-[7px] text-pink-200 font-bold block uppercase tracking-wider leading-none">Level</span>
+                        <span id="level-indicator" class="text-xs font-bold text-white leading-none">1/8</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mathematical Expression Display -->
+            <div class="flex items-center justify-center gap-1.5 md:gap-2 mt-0.5 mb-1">
+                <div class="bg-white/10 border-2 border-purple-400 px-3 py-1 rounded-xl shadow-inner backdrop-blur-sm">
+                    <span id="val-dividend" class="text-2xl md:text-4xl font-black text-purple-200">12</span>
+                </div>
+                <span class="text-2xl md:text-3xl font-extrabold text-pink-300">÷</span>
+                <div class="bg-white/10 border-2 border-pink-400 px-3 py-1 rounded-xl shadow-inner backdrop-blur-sm">
+                    <span id="val-divisor" class="text-2xl md:text-4xl font-black text-pink-200">3</span>
+                </div>
+                <span class="text-2xl md:text-3xl font-extrabold text-pink-300">=</span>
+                <div class="bg-emerald-950/40 border-2 border-dashed border-emerald-400 px-3 py-1 rounded-xl shadow-sm min-w-[70px] flex justify-center items-center backdrop-blur-sm">
+                    <span id="val-quotient" class="text-2xl md:text-4xl font-black text-emerald-300">?</span>
+                </div>
+            </div>
+
+            <p id="instruction-sub" class="text-[10px] md:text-xs text-slate-200 font-medium leading-tight max-w-4xl">
+                Link <span class="font-bold text-purple-300">12</span> bubbles into groups of <span class="font-bold text-pink-300 text-lg">3</span>. Complete groups fly neatly to the shelves on the left!
+            </p>
+        </div>
+
+        <!-- Floating Physics Sandbox Container -->
+        <div id="sandbox-container" class="relative bg-gradient-to-br from-purple-500/10 via-violet-500/10 to-fuchsia-500/15 rounded-3xl border-3 border-dashed border-purple-300 shadow-inner flex-grow min-h-[400px] overflow-hidden flex">
+            
+            <!-- Left Side: Orderly Grouping Shelves (Dynamic Background) -->
+            <div id="shelves-container" class="w-[200px] bg-slate-950/20 border-r-2 border-dashed border-purple-500/30 p-3 z-10 flex flex-col justify-around rounded-l-3xl pointer-events-none">
+                <!-- Loaded dynamically by renderShelves() -->
+            </div>
+
+            <!-- Right Side: Sandbox Workspace Background Text -->
+            <div id="sandbox-workspace-panel" class="flex-grow relative pointer-events-none">
+                <!-- Instructions Overlaid faintly inside sandbox background -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-10 select-none flex-col">
+                    <span class="text-2xl md:text-4xl font-black text-white tracking-widest uppercase text-center">SPAWN AREA</span>
+                    <span class="text-xs text-white font-bold">Link bubbles to send them to the shelves!</span>
+                </div>
+            </div>
+
+            <!-- Global SVG Container (covers shelves + workspace) -->
+            <svg id="links-svg" class="absolute inset-0 w-full h-full pointer-events-none z-20"></svg>
+
+            <!-- Global Bubbles Layer (covers shelves + workspace) -->
+            <div id="bubble-workspace" class="absolute inset-0 z-30">
+                <!-- JavaScript manages bubbles here -->
+            </div>
+
+            <!-- Interactive Number Pad Input Modal (Localized to the empty spawn area on the right) -->
+            <div id="overlay-numpad" class="absolute left-[200px] right-0 top-0 bottom-0 bg-purple-950/20 backdrop-blur-sm z-40 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+                <div class="bg-white/95 rounded-3xl p-5 max-w-xs w-full mx-4 shadow-2xl border-4 border-indigo-400 text-center transform scale-90 transition-transform duration-300 relative">
+                    
+                    <div class="mt-1">
+                        <h3 class="text-xl font-black text-indigo-600 mb-0.5 flex items-center justify-center gap-2">
+                            <span>⭐</span> Excellent Job!
+                        </h3>
+                        <p class="text-[11px] text-slate-500 font-bold mb-3 uppercase tracking-wider">All groups are on shelves! Solve the equation:</p>
+                        
+                        <!-- Equation displaying without answer -->
+                        <div id="numpad-equation" class="flex items-center justify-center gap-2.5 bg-indigo-50/85 border-2 border-indigo-100 py-1.5 rounded-xl mb-3">
+                            <span id="num-eq-dividend" class="text-xl font-bold text-blue-600">12</span>
+                            <span class="text-lg font-extrabold text-indigo-400">÷</span>
+                            <span id="num-eq-divisor" class="text-xl font-bold text-purple-600">3</span>
+                            <span class="text-lg font-extrabold text-indigo-400">=</span>
+                            <div id="numpad-input-display-container" class="bg-white border-2 border-dashed border-indigo-400 px-3 py-1 rounded-lg min-w-[56px] flex items-center justify-center h-[38px]">
+                                <span id="numpad-input-text" class="text-xl font-black text-indigo-800">?</span>
+                            </div>
+                        </div>
+
+                        <!-- Custom Grid Number Pad -->
+                        <div class="grid grid-cols-3 gap-2 max-w-[220px] mx-auto mb-4">
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="1">1</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="2">2</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="3">3</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="4">4</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="5">5</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="6">6</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="7">7</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="8">8</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="9">9</button>
+                            <button class="numpad-btn bg-rose-100 hover:bg-rose-200 active:scale-95 text-base font-bold py-2 rounded-xl text-rose-700 transition" data-val="back">⌫</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-lg font-bold py-2 rounded-xl text-slate-700 transition" data-val="0">0</button>
+                            <button class="numpad-btn bg-slate-100 hover:bg-slate-200 active:scale-95 text-sm font-bold py-2 rounded-xl text-slate-500 transition" data-val="clear">C</button>
+                        </div>
+
+                        <div class="flex gap-2 text-sm">
+                            <button id="btn-numpad-cancel" class="flex-1 py-2.5 rounded-xl font-bold text-slate-500 bg-slate-100 hover:bg-slate-200 transition">
+                                Back to Map
+                            </button>
+                            <button id="btn-numpad-submit" class="flex-[1.5] py-2.5 rounded-xl font-black text-white bg-indigo-500 hover:brightness-105 active:scale-98 transition shadow-md">
+                                Check Answer!
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Interactive Controller Bar -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-2 bg-white/10 backdrop-blur-md rounded-2xl p-2.5 shadow-lg border border-white/20">
+            
+            <!-- Scaffolded Level Selector Buttons -->
+            <div class="flex flex-col gap-2 w-full sm:w-auto">
+                <div class="flex items-center justify-between gap-3">
+                    <span class="text-sm font-semibold text-purple-200 mr-1">Learning Level:</span>
+                    <span id="level-title" class="text-xs font-bold text-pink-200 bg-white/10 border border-white/15 rounded-full px-3 py-1">Level 1: Groups of 2</span>
+                </div>
+                <div id="level-button-row" class="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1">
+                    <button class="level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-amber-500 text-white shadow-md border-b-4 border-amber-700 active:translate-y-0.5 hover:brightness-105 transition-all" data-level="0">1</button>
+                    <button class="level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-all" data-level="1">2</button>
+                    <button class="level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-all" data-level="2">3</button>
+                    <button class="level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-all" data-level="3">4</button>
+                    <button class="level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-all" data-level="4">5</button>
+                    <button class="level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-all" data-level="5">6</button>
+                    <button class="level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-all" data-level="6">7</button>
+                    <button class="level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-all" data-level="7">8</button>
+                </div>
+            </div>
+
+            <!-- Action buttons: Check & Reset Links -->
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <button id="btn-clear-links" class="flex-1 sm:flex-none px-4 py-3 rounded-xl font-bold bg-rose-500/20 border border-rose-500/30 hover:bg-rose-500/30 text-rose-200 transition active:scale-95 flex items-center justify-center gap-1.5 text-sm">
+                    <span>✂️</span> Cut All Links
+                </button>
+                <button id="btn-reset" class="flex-1 sm:flex-none px-4 py-3 rounded-xl font-bold bg-white/10 hover:bg-white/20 text-white border border-white/15 transition active:scale-95 flex items-center justify-center gap-1.5 text-sm">
+                    <span>🔄</span> Next Practice
+                </button>
+                <button id="btn-check" class="flex-grow sm:flex-none px-8 py-3 rounded-xl font-extrabold text-white bg-gradient-to-r from-emerald-500 to-teal-500 shadow-md border-b-4 border-emerald-700 hover:brightness-105 active:translate-y-0.5 transition-all text-lg flex items-center justify-center gap-2">
+                    <span>✨</span> Check My Groups!
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Celebration Modal (Fullscreen Overlay is suitable here) -->
+    <div id="overlay-celebration" class="fixed inset-0 bg-indigo-950/80 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl border-4 border-emerald-400 text-center transform scale-90 transition-transform duration-300 relative">
+            
+            <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 w-24 h-24 bg-emerald-100 border-4 border-emerald-400 rounded-full flex items-center justify-center text-5xl shadow-md">
+                🏆
+            </div>
+
+            <div class="mt-8">
+                <h3 class="text-3xl font-black text-emerald-600 mb-2">Perfect Score!</h3>
+                <p id="celebration-math" class="text-2xl font-bold bg-slate-100 py-2.5 rounded-2xl text-slate-700 mb-4 border border-dashed border-slate-300">12 ÷ 3 = 4</p>
+                <p id="celebration-explanation" class="text-slate-600 mb-6 leading-relaxed text-sm md:text-base">
+                    Splendid job! You grouped 12 bubbles into 4 perfect clusters of 3 bubbles each!
+                </p>
+                <button id="btn-modal-next" class="w-full py-4 rounded-2xl font-black text-xl text-white bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg border-b-4 border-emerald-700 hover:brightness-105 active:scale-98 transition duration-150">
+                    Next Question!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error/Incorrect Help Modal -->
+    <div id="overlay-help" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full mx-4 shadow-2xl border-4 border-amber-400 text-center transform scale-90 transition-transform duration-300">
+            <div class="text-4xl mb-3">🧐 Let's Count Together</div>
+            <h3 class="text-2xl font-bold text-amber-700 mb-2">Not Quite Right Yet!</h3>
+            
+            <p id="help-text" class="text-slate-600 mb-6 text-sm md:text-base">
+                To solve this division problem, every single cluster must have exactly the right amount of linked bubbles!
+            </p>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6 text-left">
+                <span class="text-xs font-bold text-amber-800 uppercase block tracking-wider mb-2">Current Cluster Status:</span>
+                <div id="help-bucket-status" class="flex flex-col gap-1 text-sm font-semibold text-slate-700">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <button id="btn-help-close" class="w-full py-3 rounded-xl font-bold text-slate-700 bg-slate-200 hover:bg-slate-300 transition">
+                I'll adjust them!
+            </button>
+        </div>
+    </div>
+
+    <footer class="w-full text-center py-1.5 text-[10px] text-purple-300/60 font-semibold tracking-wide">
+        Bubble Divider Math Learning Tool &copy; 2026 Shabzlabs 🫧
+    </footer>
+
+    <script>
+        // Web Audio API Synthesizer for playful sound effects
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let soundEnabled = true;
+
+        function playTone(freq, type, duration, delay = 0) {
+            if (!soundEnabled) return;
+            setTimeout(() => {
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    
+                    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                    // Smooth decay
+                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + duration);
+                } catch(e) {
+                    console.log("Audio play error:", e);
+                }
+            }, delay * 1000);
+        }
+
+        // Play SFX
+        function playPopSound() {
+            playTone(150, 'sine', 0.1);
+            playTone(300, 'sine', 0.15, 0.02);
+        }
+
+        function playSelectSound() {
+            playTone(400, 'sine', 0.1);
+        }
+
+        function playLinkSound() {
+            playTone(330, 'triangle', 0.15);
+            playTone(660, 'sine', 0.2, 0.05);
+        }
+
+        function playUnlinkSound() {
+            playTone(520, 'sawtooth', 0.1);
+            playTone(260, 'sine', 0.15, 0.05);
+        }
+
+        function playVictorySound() {
+            const scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+            scale.forEach((freq, idx) => {
+                playTone(freq, 'sine', 0.4, idx * 0.08);
+            });
+        }
+
+        function playErrorSound() {
+            playTone(180, 'sawtooth', 0.25);
+            playTone(170, 'sawtooth', 0.35, 0.15);
+        }
+
+        // Toggle sound
+        document.getElementById('btn-sound').addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-icon').innerText = soundEnabled ? "🔊" : "🔇";
+            if(soundEnabled) {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                playPopSound();
+            }
+        });
+
+        const learningLevels = [
+            {
+                title: "Level 1: Groups of 2",
+                focus: "Skip-count by 2s and see that equal pairs build multiplication facts.",
+                problems: [
+                    { dividend: 4, divisor: 2 },
+                    { dividend: 6, divisor: 2 },
+                    { dividend: 8, divisor: 2 },
+                    { dividend: 10, divisor: 2 },
+                    { dividend: 12, divisor: 2 }
+                ]
+            },
+            {
+                title: "Level 2: Groups of 3",
+                focus: "Build equal groups of 3 and connect repeated addition to multiplication.",
+                problems: [
+                    { dividend: 6, divisor: 3 },
+                    { dividend: 9, divisor: 3 },
+                    { dividend: 12, divisor: 3 },
+                    { dividend: 15, divisor: 3 },
+                    { dividend: 18, divisor: 3 }
+                ]
+            },
+            {
+                title: "Level 3: Groups of 4",
+                focus: "Use arrays and equal groups of 4 to strengthen multiplication fluency.",
+                problems: [
+                    { dividend: 8, divisor: 4 },
+                    { dividend: 12, divisor: 4 },
+                    { dividend: 16, divisor: 4 },
+                    { dividend: 20, divisor: 4 },
+                    { dividend: 24, divisor: 4 }
+                ]
+            },
+            {
+                title: "Level 4: Groups of 5",
+                focus: "Use the 5s pattern to make larger products feel predictable.",
+                problems: [
+                    { dividend: 10, divisor: 5 },
+                    { dividend: 15, divisor: 5 },
+                    { dividend: 20, divisor: 5 },
+                    { dividend: 25, divisor: 5 },
+                    { dividend: 30, divisor: 5 }
+                ]
+            },
+            {
+                title: "Level 5: Mixed 2s, 3s, 4s, 5s",
+                focus: "Switch between familiar facts so students choose the right grouping strategy.",
+                problems: [
+                    { dividend: 14, divisor: 2 },
+                    { dividend: 21, divisor: 3 },
+                    { dividend: 24, divisor: 4 },
+                    { dividend: 30, divisor: 5 },
+                    { dividend: 27, divisor: 3 }
+                ]
+            },
+            {
+                title: "Level 6: Sixes and Sevens",
+                focus: "Move into less familiar facts while keeping the visual support.",
+                problems: [
+                    { dividend: 12, divisor: 6 },
+                    { dividend: 18, divisor: 6 },
+                    { dividend: 24, divisor: 6 },
+                    { dividend: 14, divisor: 7 },
+                    { dividend: 21, divisor: 7 },
+                    { dividend: 28, divisor: 7 }
+                ]
+            },
+            {
+                title: "Level 7: Eights and Nines",
+                focus: "Practice harder facts with controlled bubble counts.",
+                problems: [
+                    { dividend: 16, divisor: 8 },
+                    { dividend: 24, divisor: 8 },
+                    { dividend: 32, divisor: 8 },
+                    { dividend: 18, divisor: 9 },
+                    { dividend: 27, divisor: 9 },
+                    { dividend: 36, divisor: 9 }
+                ]
+            },
+            {
+                title: "Level 8: Multiplication Challenge",
+                focus: "Mix all facts so students must reason from equal groups, not just memorize.",
+                problems: [
+                    { dividend: 24, divisor: 3 },
+                    { dividend: 28, divisor: 4 },
+                    { dividend: 35, divisor: 5 },
+                    { dividend: 36, divisor: 6 },
+                    { dividend: 32, divisor: 8 },
+                    { dividend: 45, divisor: 9 }
+                ]
+            }
+        ];
+
+        let currentLearningLevel = 0;
+        let currentProblemIndex = 0;
+        let currentDividend = 4;
+        let currentDivisor = 2;
+        let correctQuotient = 2;
+        let score = 0;
+
+        // Interactive variables
+        let selectedBubbleId = null;
+        let links = []; // Array of link objects: { id1, id2 }
+        
+        // Track the cursor/touch pointer dynamically inside the sandbox relative coordinates
+        let sandboxPointerX = 0;
+        let sandboxPointerY = 0;
+
+        // Shelf alignment variables
+        const shelfWidth = 200; 
+        let shelfSlots = []; // Stores the string representation of bubble ID clusters currently resting in each slot
+
+        // State tracker to prevent auto-opening multiple times
+        let autoTriggerLock = false;
+
+        // Numpad input tracking
+        let numpadInputValue = "";
+
+        // Container bounds and elements
+        const sandbox = document.getElementById('sandbox-container');
+        const workspace = document.getElementById('bubble-workspace');
+        const linksSvg = document.getElementById('links-svg');
+        const shelvesContainer = document.getElementById('shelves-container');
+
+        // Physics variables & bubbles storage
+        let bubbles = [];
+        let animationFrameId = null;
+
+        function updateBubbleTransform(bubble) {
+            const scale = bubble.visualScale || 1;
+            bubble.element.style.transform = `translate(${bubble.x}px, ${bubble.y}px) scale(${scale})`;
+        }
+
+        function getBubbleCollisionRadius(bubble) {
+            return bubble.radius * (bubble.visualScale || 1);
+        }
+
+        function getDockedClusterLayout(clusterLength, slotHeight, baseRadius) {
+            let cols;
+            if (clusterLength <= 3) {
+                cols = clusterLength;
+            } else if (clusterLength === 4) {
+                cols = 2;
+            } else if (clusterLength <= 6) {
+                cols = 3;
+            } else {
+                cols = Math.ceil(Math.sqrt(clusterLength));
+            }
+
+            const rows = Math.ceil(clusterLength / cols);
+            const usableWidth = shelfWidth - 42;
+            const usableHeight = Math.max(30, slotHeight - 18);
+            const rawDiameter = Math.min(usableWidth / cols, usableHeight / rows);
+            const scale = Math.max(0.34, Math.min(0.82, rawDiameter / (baseRadius * 2)));
+
+            return { cols, rows, usableWidth, usableHeight, scale };
+        }
+
+        function getDockedTargetForBubble(cluster, slotIdx, bubble) {
+            const sortedCluster = cluster.slice().sort((a, b) => a - b);
+            const bubbleIndex = sortedCluster.indexOf(bubble.id);
+            const containerHeight = sandbox.clientHeight || 460;
+            const slotHeight = containerHeight / Math.max(correctQuotient, 1);
+            const slotTop = slotIdx * slotHeight;
+            const layout = getDockedClusterLayout(cluster.length, slotHeight, bubble.radius);
+            const leftPadding = (shelfWidth - layout.usableWidth) / 2;
+            const topPadding = slotTop + (slotHeight - layout.usableHeight) / 2;
+            const cellWidth = layout.usableWidth / layout.cols;
+            const cellHeight = layout.usableHeight / layout.rows;
+            const row = Math.floor(bubbleIndex / layout.cols);
+            const col = bubbleIndex % layout.cols;
+            const targetCenterX = leftPadding + cellWidth * (col + 0.5);
+            const targetCenterY = topPadding + cellHeight * (row + 0.5);
+
+            return {
+                targetX: targetCenterX - bubble.radius,
+                targetY: targetCenterY - bubble.radius,
+                scale: layout.scale
+            };
+        }
+
+        function getBubbleScaleForState(cluster, isDocked) {
+            if (!cluster) return 1;
+            if (!isDocked) {
+                return cluster.length === currentDivisor ? 0.82 : 1;
+            }
+
+            const slotHeight = (sandbox.clientHeight || 460) / Math.max(correctQuotient, 1);
+            const sampleBubble = bubbles.find(b => cluster.includes(b.id));
+            if (!sampleBubble) return 0.72;
+            return getDockedClusterLayout(cluster.length, slotHeight, sampleBubble.radius).scale;
+        }
+
+        function generateProblem() {
+            const levelData = learningLevels[currentLearningLevel];
+            const selected = levelData.problems[currentProblemIndex % levelData.problems.length];
+
+            currentDividend = selected.dividend;
+            currentDivisor = selected.divisor;
+            correctQuotient = currentDividend / currentDivisor;
+
+            autoTriggerLock = false;
+            resetNumpadState();
+
+            // Update DOM text
+            document.getElementById('val-dividend').innerText = currentDividend;
+            document.getElementById('val-divisor').innerText = currentDivisor;
+            document.getElementById('val-quotient').innerText = "?";
+            document.getElementById('level-indicator').innerText = `${currentLearningLevel + 1}/8`;
+            document.getElementById('level-title').innerText = levelData.title;
+
+            document.getElementById('instruction-sub').innerHTML = `
+                Link <span class="font-bold text-purple-200">${currentDividend}</span> bubbles into groups of 
+                <span class="font-bold text-pink-200 text-lg">${currentDivisor}</span>. 
+                Multiplication connection: <span class="font-black text-emerald-300">? groups × ${currentDivisor} = ${currentDividend}</span>.
+                ${levelData.focus}
+            `;
+
+            renderShelves();
+        }
+
+        // Generate the shelf placeholders on the left dynamically based on correctQuotient.
+        // Initially sets their visual status to completely invisible (opacity-0, no borders).
+        function renderShelves() {
+            shelvesContainer.innerHTML = "";
+            shelfSlots = Array(correctQuotient).fill(null);
+
+            for (let i = 0; i < correctQuotient; i++) {
+                const slotDiv = document.createElement('div');
+                slotDiv.id = `shelf-slot-${i}`;
+                // Completely empty, invisible, and transparent initially (prevents giving away the answer)
+                slotDiv.className = `flex-grow flex flex-col items-center justify-center rounded-2xl p-2.5 my-1.5 transition-all duration-300 relative h-0 opacity-0 pointer-events-none`;
+                
+                slotDiv.innerHTML = `
+                    <div class="absolute -top-2 left-3 bg-purple-700 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm opacity-0 transition-opacity duration-300 group-label">
+                        Group ${i + 1}
+                    </div>
+                    <div class="slot-status text-slate-400 text-xs font-semibold text-center mt-2 opacity-0 transition-opacity duration-300">
+                        Waiting...
+                    </div>
+                `;
+                shelvesContainer.appendChild(slotDiv);
+            }
+        }
+
+        // Helper to convert array of bubble IDs to unique sorted string
+        function getClusterIdString(clusterArray) {
+            return clusterArray.slice().sort((a,b) => a-b).join(',');
+        }
+
+        // Match current clusters to stable shelf slots and dynamically toggle shelf visibility.
+        function updateShelfSlotMappings(clusters) {
+            const correctClusters = clusters.filter(c => c.length === currentDivisor);
+            const correctClusterStrings = correctClusters.map(c => getClusterIdString(c));
+
+            // 1. Remove clusters that no longer exist or are broken from current slots
+            for (let i = 0; i < shelfSlots.length; i++) {
+                const assignedString = shelfSlots[i];
+                if (assignedString && !correctClusterStrings.includes(assignedString)) {
+                    shelfSlots[i] = null; // free up the slot
+                }
+            }
+
+            // 2. Assign newly formed correct clusters to empty slots in order (top to bottom)
+            correctClusterStrings.forEach(cStr => {
+                if (!shelfSlots.includes(cStr)) {
+                    // Find first available slot
+                    const emptyIdx = shelfSlots.indexOf(null);
+                    if (emptyIdx !== -1) {
+                        shelfSlots[emptyIdx] = cStr;
+                    }
+                }
+            });
+
+            // 3. Update the UI styles of the shelves - making them visible ONLY when assigned.
+            for (let i = 0; i < correctQuotient; i++) {
+                const slotDiv = document.getElementById(`shelf-slot-${i}`);
+                if (!slotDiv) continue;
+
+                const isFilled = shelfSlots[i] !== null;
+                const statusEl = slotDiv.querySelector('.slot-status');
+                const labelEl = slotDiv.querySelector('.group-label');
+
+                if (isFilled) {
+                    // Fade slot into view with gorgeous green styling
+                    slotDiv.className = `flex-grow flex flex-col items-center justify-center border-2 border-solid border-emerald-400 bg-emerald-950/40 rounded-2xl p-2.5 my-1.5 transition-all duration-300 relative h-0 shadow-inner opacity-100 backdrop-blur-sm`;
+                    if (statusEl) {
+                        statusEl.className = "slot-status text-emerald-400 font-bold text-xs opacity-100 transition-opacity duration-300 mt-2";
+                        statusEl.innerHTML = `<span>✨ Locked! (${currentDivisor}/${currentDivisor})</span>`;
+                    }
+                    if (labelEl) {
+                        labelEl.className = "absolute -top-2 left-3 bg-purple-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm opacity-100 transition-opacity duration-300 group-label";
+                    }
+                } else {
+                    // Instantly hide slot back to invisible state
+                    slotDiv.className = `flex-grow flex flex-col items-center justify-center rounded-2xl p-2.5 my-1.5 transition-all duration-300 relative h-0 opacity-0 pointer-events-none`;
+                    if (statusEl) {
+                        statusEl.className = "slot-status text-slate-400 text-xs font-semibold text-center mt-2 opacity-0 transition-opacity duration-300";
+                    }
+                    if (labelEl) {
+                        labelEl.className = "absolute -top-2 left-3 bg-indigo-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-sm opacity-0 transition-opacity duration-300 group-label";
+                    }
+                }
+            }
+
+            // 4. Automatic Number Pad pop-up check when all shelves are completed perfectly
+            const allShelvesFilled = shelfSlots.every(slot => slot !== null);
+            if (allShelvesFilled && !autoTriggerLock) {
+                autoTriggerLock = true;
+                setTimeout(() => {
+                    triggerNumpadWindow();
+                }, 800); // Friendly pause for visual transition
+            }
+        }
+
+        function triggerConfetti() {
+            const colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.width = Math.random() * 8 + 6 + 'px';
+                confetti.style.height = Math.random() * 8 + 6 + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '20%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const x = sandbox.clientWidth / 2;
+                const y = sandbox.clientHeight / 2;
+                confetti.style.left = x + 'px';
+                confetti.style.top = y + 'px';
+                
+                workspace.appendChild(confetti);
+
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 12 + 4;
+                const vx = Math.cos(angle) * speed;
+                const vy = Math.sin(angle) * speed - 5;
+                let currentX = x;
+                let currentY = y;
+                let opacity = 1;
+
+                function updateConfetti() {
+                    currentX += vx;
+                    currentY += vy + 0.3;
+                    opacity -= 0.015;
+                    confetti.style.transform = `translate(${currentX - x}px, ${currentY - y}px) rotate(${currentX * 2}deg)`;
+                    confetti.style.opacity = opacity;
+
+                    if (opacity > 0) {
+                        requestAnimationFrame(updateConfetti);
+                    } else {
+                        confetti.remove();
+                    }
+                }
+                updateConfetti();
+            }
+        }
+
+        function initBubbles() {
+            // Remove previous bubble elements from DOM
+            bubbles.forEach(b => {
+                if (b.element) b.element.remove();
+            });
+            bubbles = [];
+            links = [];
+            selectedBubbleId = null;
+            linksSvg.innerHTML = "";
+
+            const containerWidth = sandbox.clientWidth || 800;
+            const containerHeight = sandbox.clientHeight || 460;
+
+            // Spawn only in the right side sandbox-workspace zone (excluding the 200px shelf)
+            const playableWidth = containerWidth - shelfWidth;
+
+            for (let i = 0; i < currentDividend; i++) {
+                const bubbleElement = document.createElement('div');
+                const radius = Math.min(24, Math.max(18, Math.floor(playableWidth / 22)));
+                
+                const bubbleColorClass = "bg-gradient-to-tr from-sky-300 to-blue-500";
+
+                bubbleElement.className = `absolute rounded-full bubble-glow cursor-pointer select-none z-30 flex items-center justify-center ${bubbleColorClass} text-white border-2 border-white/60 transition-transform active:scale-95 duration-100`;
+                bubbleElement.style.width = `${radius * 2}px`;
+                bubbleElement.style.height = `${radius * 2}px`;
+                bubbleElement.style.touchAction = 'none';
+
+                // Golden selection indicator ring
+                const selectionRing = document.createElement('div');
+                selectionRing.className = 'absolute -inset-1.5 rounded-full border-3 border-amber-400 opacity-0 pointer-events-none transition-opacity duration-150';
+                bubbleElement.appendChild(selectionRing);
+
+                // High gloss sheen layer
+                const sheen = document.createElement('div');
+                sheen.className = 'bubble-sheen';
+                bubbleElement.appendChild(sheen);
+
+                workspace.appendChild(bubbleElement);
+
+                // Even grid distribution inside the right workspace zone
+                const cols = Math.ceil(Math.sqrt(currentDividend));
+                const col = i % cols;
+                const row = Math.floor(i / cols);
+                
+                // Safe coordinates within right sandbox play zone to guarantee no clipping upon generation
+                const minSpawnX = shelfWidth + radius + 10;
+                const maxSpawnX = containerWidth - (radius * 2) - 10;
+                const calculatedX = shelfWidth + radius + (playableWidth / (cols + 1)) * (col + 1) - radius + (Math.random() - 0.5) * 15;
+                const startX = Math.max(minSpawnX, Math.min(maxSpawnX, calculatedX));
+
+                const minSpawnY = radius + 10;
+                const maxSpawnY = containerHeight - (radius * 2) - 10;
+                const calculatedY = (containerHeight / (cols + 1)) * (row + 1) - radius + (Math.random() - 0.5) * 15;
+                const startY = Math.max(minSpawnY, Math.min(maxSpawnY, calculatedY));
+
+                const bubbleObj = {
+                    id: i,
+                    element: bubbleElement,
+                    selectionRing: selectionRing,
+                    radius: radius,
+                    visualScale: 1,
+                    x: startX,
+                    y: startY,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: (Math.random() - 0.5) * 1.5,
+                    isDragging: false
+                };
+
+                bubbleElement.style.transform = `translate(${startX}px, ${startY}px) scale(1)`;
+
+                setupBubbleInteractions(bubbleObj);
+                bubbles.push(bubbleObj);
+            }
+        }
+
+        function setupBubbleInteractions(bubble) {
+            const el = bubble.element;
+            let startPointerX = 0;
+            let startPointerY = 0;
+            let dragTriggered = false;
+
+            el.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                el.setPointerCapture(e.pointerId);
+                bubble.isDragging = true;
+                dragTriggered = false;
+                
+                startPointerX = e.clientX;
+                startPointerY = e.clientY;
+
+                bubble.vx = 0;
+                bubble.vy = 0;
+
+                // Relative click coordinates
+                const rect = sandbox.getBoundingClientRect();
+                bubble.grabOffsetX = (e.clientX - rect.left) - bubble.x;
+                bubble.grabOffsetY = (e.clientY - rect.top) - bubble.y;
+            });
+
+            el.addEventListener('pointermove', (e) => {
+                if (!bubble.isDragging) return;
+                
+                const rect = sandbox.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+
+                // Detect if they dragged a significant amount or just clicked
+                if (Math.hypot(e.clientX - startPointerX, e.clientY - startPointerY) > 6) {
+                    dragTriggered = true;
+                }
+
+                // Clamped inside entire sandbox boundary including left shelf
+                bubble.x = Math.max(5, Math.min(sandbox.clientWidth - bubble.radius * 2, mouseX - bubble.grabOffsetX));
+                bubble.y = Math.max(5, Math.min(sandbox.clientHeight - bubble.radius * 2, mouseY - bubble.grabOffsetY));
+
+                updateBubbleTransform(bubble);
+            });
+
+            el.addEventListener('pointerup', (e) => {
+                if (!bubble.isDragging) return;
+                el.releasePointerCapture(e.pointerId);
+                bubble.isDragging = false;
+
+                // Give it a small throw vector based on drag motion
+                if (dragTriggered) {
+                    bubble.vx = (Math.random() - 0.5) * 1.5;
+                    bubble.vy = (Math.random() - 0.5) * 1.5;
+                } else {
+                    // It was a click! Trigger connecting/selection logic
+                    handleBubbleClick(bubble);
+                }
+            });
+        }
+
+        function handleBubbleClick(bubble) {
+            if (selectedBubbleId === null) {
+                // Select this bubble
+                selectedBubbleId = bubble.id;
+                bubble.selectionRing.classList.remove('opacity-0');
+                bubble.selectionRing.classList.add('opacity-100', 'pulse-select');
+                playSelectSound();
+            } else if (selectedBubbleId === bubble.id) {
+                // Deselect if clicked again
+                deselectAll();
+                playPopSound();
+            } else {
+                // Connect/Disconnect selected bubble with this one
+                const prevSelectedId = selectedBubbleId;
+                toggleLink(prevSelectedId, bubble.id);
+                
+                // Fetch the newly connected cluster layout
+                const clusters = getClusters();
+                const currentCluster = clusters.find(c => c.includes(bubble.id));
+                
+                if (currentCluster && currentCluster.length === currentDivisor) {
+                    // Group is perfectly filled! Deselect to let the group dock nicely
+                    deselectAll();
+                } else {
+                    // Group is still growing! Shift the selection ring and line origin to this newly clicked bubble
+                    deselectAll();
+                    selectedBubbleId = bubble.id;
+                    bubble.selectionRing.classList.remove('opacity-0');
+                    bubble.selectionRing.classList.add('opacity-100', 'pulse-select');
+                }
+            }
+        }
+
+        function deselectAll() {
+            if (selectedBubbleId !== null) {
+                const prevSelected = bubbles.find(b => b.id === selectedBubbleId);
+                if (prevSelected) {
+                    prevSelected.selectionRing.classList.remove('opacity-100', 'pulse-select');
+                    prevSelected.selectionRing.classList.add('opacity-0');
+                }
+                selectedBubbleId = null;
+            }
+        }
+
+        function toggleLink(id1, id2) {
+            // Find if link already exists
+            const existingIndex = links.findIndex(link => 
+                (link.id1 === id1 && link.id2 === id2) || 
+                (link.id1 === id2 && link.id2 === id1)
+            );
+
+            if (existingIndex !== -1) {
+                // Remove link
+                links.splice(existingIndex, 1);
+                playUnlinkSound();
+            } else {
+                // Add link
+                links.push({ id1, id2 });
+                playLinkSound();
+            }
+        }
+
+        function clearAllLinks() {
+            links = [];
+            deselectAll();
+            playUnlinkSound();
+        }
+
+        // BFS to extract all separate connected bubble clusters
+        function getClusters() {
+            const visited = new Set();
+            const clusters = [];
+            
+            bubbles.forEach(b => {
+                if (!visited.has(b.id)) {
+                    const cluster = [];
+                    const queue = [b.id];
+                    visited.add(b.id);
+                    
+                    while (queue.length > 0) {
+                        const currId = queue.shift();
+                        cluster.push(currId);
+                        
+                        // Discover neighbors
+                        links.forEach(link => {
+                            if (link.id1 === currId && !visited.has(link.id2)) {
+                                visited.add(link.id2);
+                                queue.push(link.id2);
+                            } else if (link.id2 === currId && !visited.has(link.id1)) {
+                                visited.add(link.id1);
+                                queue.push(link.id1);
+                            }
+                        });
+                    }
+                    clusters.push(cluster);
+                }
+            });
+            return clusters;
+        }
+
+        function drawLinks() {
+            linksSvg.innerHTML = "";
+            const clusters = getClusters();
+
+            // Track slot mappings in real time
+            updateShelfSlotMappings(clusters);
+
+            // Draw confirmed robust linkages
+            links.forEach(link => {
+                const b1 = bubbles.find(b => b.id === link.id1);
+                const b2 = bubbles.find(b => b.id === link.id2);
+                if (!b1 || !b2) return;
+
+                const c1x = b1.x + b1.radius;
+                const c1y = b1.y + b1.radius;
+                const c2x = b2.x + b2.radius;
+                const c2y = b2.y + b2.radius;
+
+                // Find cluster color
+                const cluster = clusters.find(c => c.includes(b1.id));
+                const isCorrectSize = cluster && cluster.length === currentDivisor;
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", c1x);
+                line.setAttribute("y1", c1y);
+                line.setAttribute("x2", c2x);
+                line.setAttribute("y2", c2y);
+                
+                if (isCorrectSize) {
+                    // Bright glowing green for correctly-sized groups on shelf
+                    line.setAttribute("stroke", "#10b981");
+                    line.setAttribute("stroke-width", "8");
+                    line.setAttribute("stroke-linecap", "round");
+                    line.setAttribute("filter", "drop-shadow(0 0 4px rgba(16,185,129,0.5))");
+                } else {
+                    // Standard elastic thread color
+                    line.setAttribute("stroke", "#a78bfa");
+                    line.setAttribute("stroke-width", "5");
+                    line.setAttribute("stroke-linecap", "round");
+                }
+                linksSvg.appendChild(line);
+            });
+
+            // Draw dynamic cursor dotted trailing line if a bubble is currently selected (Pure white)
+            if (selectedBubbleId !== null) {
+                const activeSelBubble = bubbles.find(b => b.id === selectedBubbleId);
+                if (activeSelBubble) {
+                    const cX = activeSelBubble.x + activeSelBubble.radius;
+                    const cY = activeSelBubble.y + activeSelBubble.radius;
+                    
+                    const pointerLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    pointerLine.setAttribute("x1", cX);
+                    pointerLine.setAttribute("y1", cY);
+                    pointerLine.setAttribute("x2", sandboxPointerX);
+                    pointerLine.setAttribute("y2", sandboxPointerY);
+                    pointerLine.setAttribute("stroke", "#ffffff"); // Pure white dotted line
+                    pointerLine.setAttribute("stroke-width", "4");
+                    pointerLine.setAttribute("opacity", "0.9");
+                    pointerLine.classList.add("dotted-connector"); // Triggers CSS marching dash offset
+                    linksSvg.appendChild(pointerLine);
+                }
+            }
+
+            // Dynamically color-code bubbles depending on cluster sizes
+            bubbles.forEach(b => {
+                const cluster = clusters.find(c => c.includes(b.id));
+                const isCorrectSize = cluster && cluster.length === currentDivisor;
+                const isSolo = cluster && cluster.length === 1;
+
+                const clusterStr = cluster ? getClusterIdString(cluster) : null;
+                const isDocked = !!clusterStr && shelfSlots.includes(clusterStr);
+
+                // Shrink correct groups, and shrink docked groups even more when many shelves must fit.
+                b.visualScale = getBubbleScaleForState(cluster, isDocked);
+                updateBubbleTransform(b);
+
+                if (isCorrectSize) {
+                    // Emerald glow to indicate correct size
+                    b.element.className = b.element.className.replace(/from-sky-\d+ to-blue-\d+/, 'from-emerald-400 to-teal-500');
+                    b.element.style.borderColor = "#a7f3d0";
+                } else if (!isSolo) {
+                    // Red/Amber warning if group size is incorrect
+                    b.element.className = b.element.className.replace(/from-(sky|emerald)-\d+ to-(blue|teal)-\d+/, 'from-indigo-400 to-indigo-600');
+                    b.element.style.borderColor = "#c7d2fe";
+                } else {
+                    // Default single floating bubble
+                    b.element.className = b.element.className.replace(/from-(indigo|emerald)-\d+ to-(indigo|teal)-\d+/, 'from-sky-300 to-blue-500');
+                    b.element.style.borderColor = "rgba(255,255,255,0.6)";
+                }
+            });
+        }
+
+        function resolveCollisions() {
+            for (let i = 0; i < bubbles.length; i++) {
+                for (let j = i + 1; j < bubbles.length; j++) {
+                    const b1 = bubbles[i];
+                    const b2 = bubbles[j];
+
+                    const c1x = b1.x + b1.radius;
+                    const c1y = b1.y + b1.radius;
+                    const c2x = b2.x + b2.radius;
+                    const c2y = b2.y + b2.radius;
+
+                    const dx = c2x - c1x;
+                    const dy = c2y - c1y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const minDist = getBubbleCollisionRadius(b1) + getBubbleCollisionRadius(b2);
+
+                    if (dist < minDist) {
+                        const overlap = minDist - dist;
+
+                        if (dist === 0) continue;
+
+                        const nx = dx / dist;
+                        const ny = dy / dist;
+
+                        // Position correction
+                        if (!b1.isDragging) {
+                            b1.x -= nx * overlap * 0.5;
+                            b1.y -= ny * overlap * 0.5;
+                        }
+                        if (!b2.isDragging) {
+                            b2.x += nx * overlap * 0.5;
+                            b2.y += ny * overlap * 0.5;
+                        }
+
+                        // Bounce velocities
+                        const rvx = b1.vx - b2.vx;
+                        const rvy = b1.vy - b2.vy;
+                        const velAlongNormal = rvx * nx + rvy * ny;
+
+                        if (velAlongNormal > 0) {
+                            const restitution = 0.8;
+                            const impulse = (1 + restitution) * velAlongNormal / 2;
+
+                            if (!b1.isDragging) {
+                                b1.vx -= impulse * nx;
+                                b1.vy -= impulse * ny;
+                            }
+                            if (!b2.isDragging) {
+                                b2.vx += impulse * nx;
+                                b2.vy += impulse * ny;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function applySpringForces(clusters) {
+            links.forEach(link => {
+                const b1 = bubbles.find(b => b.id === link.id1);
+                const b2 = bubbles.find(b => b.id === link.id2);
+                if (!b1 || !b2) return;
+
+                const c1x = b1.x + b1.radius;
+                const c1y = b1.y + b1.radius;
+                const c2x = b2.x + b2.radius;
+                const c2y = b2.y + b2.radius;
+
+                const dx = c2x - c1x;
+                const dy = c2y - c1y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                // Natural comfortable spacing distance between molecules
+                const targetDistance = (getBubbleCollisionRadius(b1) + getBubbleCollisionRadius(b2)) * 1.45;
+                const springStiffness = 0.05;
+
+                if (dist === 0) return;
+
+                const force = (dist - targetDistance) * springStiffness;
+                const fx = (dx / dist) * force;
+                const fy = (dy / dist) * force;
+
+                // Apply spring forces to non-dragged bubbles
+                if (!b1.isDragging) {
+                    b1.vx += fx;
+                    b1.vy += fy;
+                }
+                if (!b2.isDragging) {
+                    b2.vx -= fx;
+                    b2.vy -= fy;
+                }
+            });
+
+            // Apply "Glide to Shelf" gravity pull for completed clusters
+            bubbles.forEach(b => {
+                if (b.isDragging) return;
+
+                const bubbleCluster = clusters.find(c => c.includes(b.id));
+                if (!bubbleCluster) return;
+
+                const clusterStr = getClusterIdString(bubbleCluster);
+                const slotIdx = shelfSlots.indexOf(clusterStr);
+
+                if (slotIdx !== -1) {
+                    // This group is correctly completed. Arrange the bubbles neatly inside the shelf slot.
+                    const dockedLayout = getDockedTargetForBubble(bubbleCluster, slotIdx, b);
+                    const pullStrength = 0.11;
+                    b.vx += (dockedLayout.targetX - b.x) * pullStrength;
+                    b.vy += (dockedLayout.targetY - b.y) * pullStrength;
+                    b.visualScale += (dockedLayout.scale - (b.visualScale || 1)) * 0.2;
+
+                    // Reduce random drifting for locked shelf groups so they rest beautifully.
+                    b.vx *= 0.86;
+                    b.vy *= 0.86;
+                } else {
+                    // Invisible barrier: keep un-grouped bubbles on the right side of the screen
+                    const boundary = shelfWidth + 10;
+                    if (b.x < boundary) {
+                        b.x = boundary;
+                        b.vx = Math.abs(b.vx) * 0.8 + 0.3; // bounce gently to the right
+                    }
+                }
+            });
+        }
+
+        function updatePhysics() {
+            const containerWidth = sandbox.clientWidth || 800;
+            const containerHeight = sandbox.clientHeight || 460;
+            const clusters = getClusters();
+
+            applySpringForces(clusters);
+            resolveCollisions();
+
+            bubbles.forEach(bubble => {
+                if (bubble.isDragging) return;
+
+                bubble.x += bubble.vx;
+                bubble.y += bubble.vy;
+
+                // Friction/Drag
+                bubble.vx *= 0.96;
+                bubble.vy *= 0.96;
+
+                // Tiny natural upward hover float
+                bubble.vy -= 0.008;
+
+                // Safe clamping on all walls
+                // Left wall bounce
+                if (bubble.x < 5) {
+                    bubble.x = 5;
+                    bubble.vx = Math.abs(bubble.vx) * 0.6;
+                }
+                // Right wall bounce
+                else if (bubble.x + bubble.radius * 2 > containerWidth - 5) {
+                    bubble.x = containerWidth - bubble.radius * 2 - 5;
+                    bubble.vx = -bubble.vx * 0.6;
+                }
+
+                // Bounce off top/bottom boundaries
+                if (bubble.y < 5) {
+                    bubble.y = 5;
+                    bubble.vy = Math.abs(bubble.vy) * 0.6;
+                } else if (bubble.y + bubble.radius * 2 > containerHeight - 5) {
+                    bubble.y = containerHeight - bubble.radius * 2 - 5;
+                    bubble.vy = -bubble.vy * 0.6;
+                }
+
+                // Small continuous gentle drift for free elements to feel floating/alive
+                const bubbleCluster = clusters.find(c => c.includes(bubble.id));
+                const clusterStr = bubbleCluster ? getClusterIdString(bubbleCluster) : null;
+                const isDocked = shelfSlots.includes(clusterStr);
+
+                if (!isDocked && Math.abs(bubble.vx) < 0.15 && Math.abs(bubble.vy) < 0.15) {
+                    bubble.vx += (Math.random() - 0.5) * 0.25;
+                    bubble.vy += (Math.random() - 0.5) * 0.25;
+                }
+
+                updateBubbleTransform(bubble);
+            });
+
+            drawLinks();
+            animationFrameId = requestAnimationFrame(updatePhysics);
+        }
+
+        function checkGroupingAnswer() {
+            const clusters = getClusters();
+            
+            // Check if there are any isolated bubbles (not connected to anything)
+            const activeLinkedCount = links.length;
+            if (activeLinkedCount === 0) {
+                playErrorSound();
+                showHelpModal(`
+                    You haven't linked any bubbles yet! Click a bubble and then click another one to draw connections!
+                `, true);
+                return;
+            }
+
+            // Identify cluster sizes
+            const sizes = clusters.map(c => c.length);
+            
+            // If any single bubble isn't connected to a correct group size
+            const hasIncorrectSize = sizes.some(size => size !== currentDivisor);
+
+            if (!hasIncorrectSize) {
+                // Correctly divided into equal sized clusters! Trigger the Number Pad entry!
+                triggerNumpadWindow();
+            } else {
+                playErrorSound();
+
+                // Detailed dynamic help reporting
+                let statusHTML = "";
+                clusters.forEach((cluster, idx) => {
+                    const count = cluster.length;
+                    let badge = "";
+
+                    if (count === currentDivisor) {
+                        badge = `<span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-0.5 rounded-full">Correct size (${count})</span>`;
+                    } else if (count > currentDivisor) {
+                        badge = `<span class="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full">Too big (${count})</span>`;
+                    } else {
+                        badge = `<span class="bg-rose-100 text-rose-700 text-xs px-2 py-0.5 rounded-full">Too small (${count})</span>`;
+                    }
+
+                    statusHTML += `
+                        <div class="flex justify-between items-center py-1 border-b border-slate-100">
+                            <span>Group ${idx + 1} has ${count} bubble${count !== 1 ? 's' : ''}</span>
+                            ${badge}
+                        </div>
+                    `;
+                });
+
+                document.getElementById('help-bucket-status').innerHTML = statusHTML;
+                showHelpModal(`
+                    We need each cluster of linked bubbles to have exactly **${currentDivisor}** bubbles! 
+                    Check each cluster size and try adjusting your links.
+                `, false);
+            }
+        }
+
+        // Display the interactive Number Pad Window
+        function triggerNumpadWindow() {
+            resetNumpadState();
+            document.getElementById('num-eq-dividend').innerText = currentDividend;
+            document.getElementById('num-eq-divisor').innerText = currentDivisor;
+            
+            playSelectSound();
+            toggleOverlay('overlay-numpad', true);
+        }
+
+        function resetNumpadState() {
+            numpadInputValue = "";
+            const textEl = document.getElementById('numpad-input-text');
+            textEl.innerText = "?";
+            textEl.className = "text-2xl font-black text-indigo-400";
+            
+            const boxContainer = document.getElementById('numpad-input-display-container');
+            boxContainer.classList.remove('shake-element', 'border-rose-400', 'border-indigo-400');
+            boxContainer.classList.add('border-indigo-400');
+        }
+
+        function handleNumpadInput(val) {
+            const textEl = document.getElementById('numpad-input-text');
+            const boxContainer = document.getElementById('numpad-input-display-container');
+            boxContainer.classList.remove('shake-element', 'border-rose-400');
+
+            if (val === 'clear') {
+                numpadInputValue = "";
+            } else if (val === 'back') {
+                numpadInputValue = numpadInputValue.slice(0, -1);
+            } else {
+                // Limit to maximum of 3 digits (quotients in this range are very small anyway)
+                if (numpadInputValue.length < 3) {
+                    numpadInputValue += val;
+                }
+            }
+
+            if (numpadInputValue === "") {
+                textEl.innerText = "?";
+                textEl.className = "text-2xl font-black text-indigo-400";
+            } else {
+                textEl.innerText = numpadInputValue;
+                textEl.className = "text-2xl font-black text-indigo-800";
+            }
+            playPopSound();
+        }
+
+        function submitNumpadAnswer() {
+            const boxContainer = document.getElementById('numpad-input-display-container');
+            
+            if (numpadInputValue === "") {
+                playErrorSound();
+                boxContainer.classList.add('shake-element', 'border-rose-400');
+                setTimeout(() => boxContainer.classList.remove('shake-element'), 400);
+                return;
+            }
+
+            const parsedVal = parseInt(numpadInputValue);
+            
+            if (parsedVal === correctQuotient) {
+                // Correct Quotient Entered! Close numpad, trigger full celebration
+                toggleOverlay('overlay-numpad', false);
+                
+                score += 1;
+                document.getElementById('score-counter').innerText = score;
+                document.getElementById('val-quotient').innerText = correctQuotient;
+
+                playVictorySound();
+                triggerConfetti();
+
+                document.getElementById('celebration-math').innerText = `${currentDividend} ÷ ${currentDivisor} = ${correctQuotient}`;
+                document.getElementById('celebration-explanation').innerHTML = `
+                    Superb job! You grouped <span class="font-black text-blue-600">${currentDividend} bubbles</span> into 
+                    <span class="font-black text-emerald-600">${correctQuotient} separate groups</span> of exactly 
+                    <span class="font-black text-purple-600">${currentDivisor} bubbles each</span>. That also shows 
+                    <span class="font-black text-indigo-600">${correctQuotient} × ${currentDivisor} = ${currentDividend}</span>!
+                `;
+                toggleOverlay('overlay-celebration', true);
+            } else {
+                // Incorrect numeric answer
+                playErrorSound();
+                boxContainer.classList.add('shake-element', 'border-rose-400');
+                setTimeout(() => boxContainer.classList.remove('shake-element'), 400);
+                
+                // Keep input but style as incorrect
+                const textEl = document.getElementById('numpad-input-text');
+                textEl.className = "text-2xl font-black text-rose-500";
+            }
+        }
+
+        function toggleOverlay(id, isVisible) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const content = el.querySelector('div');
+            if (isVisible) {
+                el.classList.remove('opacity-0', 'pointer-events-none');
+                if (content) {
+                    content.classList.remove('scale-90');
+                    content.classList.add('scale-100');
+                }
+            } else {
+                el.classList.add('opacity-0', 'pointer-events-none');
+                if (content) {
+                    content.classList.remove('scale-100');
+                    content.classList.add('scale-90');
+                }
+            }
+        }
+
+        function showHelpModal(text, isEmptyCheck = false) {
+            document.getElementById('help-text').innerHTML = text;
+            const statusBox = document.getElementById('help-bucket-status');
+            
+            if (isEmptyCheck) {
+                statusBox.parentElement.style.display = 'none';
+            } else {
+                statusBox.parentElement.style.display = 'block';
+            }
+            toggleOverlay('overlay-help', true);
+        }
+
+        function updateLevelButtons() {
+            document.querySelectorAll('.level-btn').forEach(btn => {
+                const btnLevel = parseInt(btn.getAttribute('data-level'));
+                if (btnLevel === currentLearningLevel) {
+                    btn.className = "level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-amber-500 text-white shadow-md border-b-4 border-amber-700 active:translate-y-0.5 hover:brightness-105 transition-all";
+                } else {
+                    btn.className = "level-btn px-3 py-1.5 rounded-xl text-xs font-black bg-white/10 text-white border border-white/15 hover:bg-white/20 transition-all";
+                }
+            });
+        }
+
+        function setLearningLevel(levelIndex) {
+            currentLearningLevel = Math.max(0, Math.min(learningLevels.length - 1, levelIndex));
+            currentProblemIndex = 0;
+            updateLevelButtons();
+            resetSandbox();
+        }
+
+        function advanceToNextProblem() {
+            const levelData = learningLevels[currentLearningLevel];
+            currentProblemIndex++;
+
+            // Once the student completes the full question sequence, automatically move up one level.
+            if (currentProblemIndex >= levelData.problems.length && currentLearningLevel < learningLevels.length - 1) {
+                currentLearningLevel++;
+                currentProblemIndex = 0;
+            } else if (currentProblemIndex >= levelData.problems.length) {
+                currentProblemIndex = 0; // Loop the challenge level for extra practice.
+            }
+
+            updateLevelButtons();
+        }
+
+        function resetSandbox() {
+            generateProblem();
+            initBubbles();
+            playPopSound();
+        }
+
+        // Keep track of pointer movements inside the sandbox globally
+        sandbox.addEventListener('pointermove', (e) => {
+            const rect = sandbox.getBoundingClientRect();
+            sandboxPointerX = e.clientX - rect.left;
+            sandboxPointerY = e.clientY - rect.top;
+        });
+
+        // Attach number pad key event click listeners
+        document.querySelectorAll('.numpad-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const val = btn.getAttribute('data-val');
+                handleNumpadInput(val);
+            });
+        });
+
+        // Physical Keyboard Support for the Number Pad
+        window.addEventListener('keydown', (e) => {
+            const numpadModal = document.getElementById('overlay-numpad');
+            const isOpen = !numpadModal.classList.contains('pointer-events-none');
+            if (!isOpen) return;
+
+            if (e.key >= '0' && e.key <= '9') {
+                handleNumpadInput(e.key);
+            } else if (e.key === 'Backspace') {
+                handleNumpadInput('back');
+            } else if (e.key === 'Escape') {
+                toggleOverlay('overlay-numpad', false);
+            } else if (e.key === 'Enter') {
+                submitNumpadAnswer();
+            }
+        });
+
+        document.getElementById('btn-numpad-cancel').addEventListener('click', () => {
+            toggleOverlay('overlay-numpad', false);
+        });
+
+        document.getElementById('btn-numpad-submit').addEventListener('click', () => {
+            submitNumpadAnswer();
+        });
+
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                setLearningLevel(parseInt(btn.getAttribute('data-level')));
+            });
+        });
+
+        document.getElementById('btn-clear-links').addEventListener('click', () => {
+            clearAllLinks();
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            advanceToNextProblem();
+            resetSandbox();
+        });
+
+        document.getElementById('btn-check').addEventListener('click', () => {
+            checkGroupingAnswer();
+        });
+
+        document.getElementById('btn-modal-next').addEventListener('click', () => {
+            toggleOverlay('overlay-celebration', false);
+            advanceToNextProblem();
+            resetSandbox();
+        });
+
+        document.getElementById('btn-help-close').addEventListener('click', () => {
+            toggleOverlay('overlay-help', false);
+        });
+
+        window.onload = function() {
+            setLearningLevel(0);
+            updatePhysics();
+        }
+    </script>
+</body>
+</html>
