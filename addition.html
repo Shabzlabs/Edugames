@@ -7,6 +7,8 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2337631070618916"
      crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;800;900&display=swap');
 
@@ -130,10 +132,149 @@
             border-radius: 2rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
         }
+
+
+        .shabzlabs-home-btn {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 60;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 16px;
+            background: rgba(79, 70, 229, 0.94);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            font-size: 0.86rem;
+            font-weight: 900;
+            line-height: 1;
+            text-decoration: none;
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28), 0 0 20px rgba(79, 70, 229, 0.46);
+            transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+            white-space: nowrap;
+        }
+
+        .shabzlabs-home-btn:hover {
+            background: rgba(67, 56, 202, 0.98);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34), 0 0 26px rgba(99, 102, 241, 0.62);
+            transform: translateY(-1px);
+        }
+
+        .desktop-learning-content {
+            display: none;
+        }
+
+        @media (min-width: 769px) {
+            .desktop-learning-content {
+                display: block;
+                width: min(1100px, calc(100vw - 48px));
+                margin: 56px auto 24px;
+                position: relative;
+                z-index: 10;
+            }
+
+            .learning-card {
+                background: rgba(6, 78, 59, 0.88);
+                border: 2px solid rgba(251, 191, 36, 0.45);
+                border-radius: 28px;
+                padding: 30px;
+                box-shadow: 0 20px 45px rgba(0, 0, 0, 0.38);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                color: #ecfdf5;
+            }
+
+            .learning-card h2 {
+                font-size: 1.9rem;
+                line-height: 1.15;
+                color: #facc15;
+                margin-bottom: 14px;
+                font-weight: 900;
+            }
+
+            .learning-card h3 {
+                font-size: 1.35rem;
+                line-height: 1.15;
+                color: #ffffff;
+                margin-bottom: 10px;
+                font-weight: 900;
+            }
+
+            .learning-card p {
+                font-size: 1rem;
+                line-height: 1.7;
+                color: #d1fae5;
+            }
+
+            .learning-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+                margin-top: 24px;
+            }
+
+            .learning-box {
+                background: rgba(255, 255, 255, 0.10);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                border-radius: 22px;
+                padding: 20px;
+            }
+
+            .learning-links {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px;
+                margin-top: 24px;
+                font-size: 0.82rem;
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .learning-links a {
+                color: #fde68a;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+            }
+
+            .learning-links a:hover {
+                color: #ffffff;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .shabzlabs-home-btn {
+                width: 38px;
+                height: 38px;
+                padding: 0;
+                border-radius: 13px;
+                top: 10px;
+                right: 10px;
+                gap: 0;
+            }
+
+            .shabzlabs-home-btn span {
+                display: none;
+            }
+
+            .shabzlabs-home-btn i {
+                font-size: 0.95rem;
+            }
+        }
+
     </style>
 </head>
 
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <a href="index.html" class="shabzlabs-home-btn" title="Back to ShabzLabs Home" aria-label="Back to ShabzLabs Home">
+        <i class="fa-solid fa-house"></i>
+        <span>ShabzLabs</span>
+    </a>
 
     <!-- Background Decoration -->
     <div class="leaf top-10 left-10 rotate-12">🌿</div>
@@ -265,6 +406,54 @@
             PLAY AGAIN
         </button>
     </div>
+
+
+
+    <section class="desktop-learning-content" aria-label="Addition Jungle learning information">
+        <div class="learning-card">
+            <h2>About Addition Jungle</h2>
+            <p>
+                Addition Jungle is an interactive math game that helps young learners practise addition facts through a playful jungle-themed challenge. Students solve addition equations, type their answers using a number pad, and move through progressively harder levels while earning bananas for correct responses.
+            </p>
+
+            <div class="learning-grid">
+                <div class="learning-box">
+                    <h3>What Students Learn</h3>
+                    <p>
+                        Students practise one-digit addition, adding a two-digit number from 10 to 20 with a one-digit number, and adding two-digit numbers. The game supports number sense, mental math, fact fluency, place value awareness, and confidence with multi-step practice.
+                    </p>
+                </div>
+
+                <div class="learning-box">
+                    <h3>How to Play</h3>
+                    <p>
+                        Read the addition question on the card, enter the answer using the number pad, and press GO. Correct answers flip the card to reveal the solution and move the student forward. Students can continue through ten questions per level and complete all three levels to finish the game.
+                    </p>
+                </div>
+
+                <div class="learning-box">
+                    <h3>For Teachers and Parents</h3>
+                    <p>
+                        This activity can be used for math centres, independent practice, tutoring, early finishers, or extra support for students who need repeated practice with addition facts. The immediate feedback helps students correct mistakes and stay engaged.
+                    </p>
+                </div>
+
+                <div class="learning-box">
+                    <h3>Learning Goals</h3>
+                    <p>
+                        Learners strengthen addition fluency, improve accuracy, practise using numbers confidently, and build persistence through short, repeated challenges. The level structure helps students move from simple facts toward more challenging addition problems.
+                    </p>
+                </div>
+            </div>
+
+            <nav class="learning-links" aria-label="ShabzLabs site links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </nav>
+        </div>
+    </section>
 
     <script>
         let currentAnswer = 0;
