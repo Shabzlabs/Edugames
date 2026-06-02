@@ -498,6 +498,92 @@
                 z-index: 95 !important;
             }
         }
+
+        /* Desktop-only educational content for AdSense review. Hidden on mobile so the game layout stays untouched. */
+        .adsense-info-section {
+            display: none;
+        }
+
+        @media (min-width: 641px) {
+            .adsense-info-section {
+                display: block;
+                width: 100%;
+                max-width: 1024px;
+                margin: 22px auto 18px;
+                padding: 0 12px;
+                position: relative;
+                z-index: 10;
+            }
+
+            .adsense-info-card {
+                background: rgba(15, 23, 42, 0.72);
+                border: 2px solid rgba(250, 204, 21, 0.22);
+                border-radius: 28px;
+                padding: 26px;
+                box-shadow: 0 20px 42px rgba(0, 0, 0, 0.34);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+
+            .adsense-info-card h2 {
+                color: #fde68a;
+                font-weight: 900;
+                font-size: 1.55rem;
+                line-height: 1.2;
+                margin-bottom: 10px;
+            }
+
+            .adsense-info-card h3 {
+                color: #ffffff;
+                font-weight: 900;
+                font-size: 1.18rem;
+                line-height: 1.25;
+                margin-bottom: 8px;
+            }
+
+            .adsense-info-card p {
+                color: #ddd6fe;
+                font-size: 0.98rem;
+                line-height: 1.7;
+            }
+
+            .adsense-info-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+                margin-top: 22px;
+            }
+
+            .adsense-info-box {
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.13);
+                border-radius: 22px;
+                padding: 20px;
+            }
+
+            .adsense-info-links {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 14px;
+                margin-top: 22px;
+                padding-top: 18px;
+                border-top: 1px solid rgba(255, 255, 255, 0.12);
+            }
+
+            .adsense-info-links a {
+                color: #c4b5fd;
+                font-weight: 800;
+                font-size: 0.86rem;
+                text-decoration: underline;
+                text-underline-offset: 4px;
+            }
+
+            .adsense-info-links a:hover {
+                color: #ffffff;
+            }
+        }
+
     </style>
 </head>
 
@@ -571,6 +657,65 @@
 
         <div id="feedback-panel" class="min-h-8 text-center font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2 px-3"></div>
     </main>
+
+    <!-- Desktop-only educational content added below the game for AdSense review. Hidden on mobile. -->
+    <section class="adsense-info-section" aria-label="About Wizard's Shape Quest">
+        <div class="adsense-info-card">
+            <h2>About Wizard's Shape Quest</h2>
+            <p>
+                Wizard's Shape Quest is an interactive pattern-recognition game for early elementary learners.
+                Students study a sequence of shapes on the wizard's table, identify the rule, and choose the
+                missing shape that completes the pattern. The game supports visual reasoning, sequencing,
+                shape vocabulary, and early algebraic thinking in a playful classroom-friendly format.
+            </p>
+
+            <div class="adsense-info-grid">
+                <div class="adsense-info-box">
+                    <h3>What Students Learn</h3>
+                    <p>
+                        Students practise recognizing repeating patterns using shapes such as hexagons, squares,
+                        triangles, stars, circles, and hearts. They learn to look carefully at order, repetition,
+                        missing terms, and pattern rules instead of guessing randomly.
+                    </p>
+                </div>
+
+                <div class="adsense-info-box">
+                    <h3>How to Play</h3>
+                    <p>
+                        Look at the shape sequence on the table and read the wizard's pattern clue. Choose the
+                        shape token that should come next. Correct answers add Magic Power, while incorrect
+                        answers encourage students to re-check the pattern from the beginning.
+                    </p>
+                </div>
+
+                <div class="adsense-info-box">
+                    <h3>For Teachers and Parents</h3>
+                    <p>
+                        This activity can be used for math centres, patterning lessons, small-group practice,
+                        independent review, or warm-up activities. It gives students repeated practice with
+                        identifying and extending patterns in a visual, low-pressure way.
+                    </p>
+                </div>
+
+                <div class="adsense-info-box">
+                    <h3>Learning Goals</h3>
+                    <p>
+                        Learners build confidence with shape names, sequence order, pattern prediction, and
+                        explaining what comes next. These skills support later work with number patterns,
+                        functions, problem solving, and mathematical reasoning.
+                    </p>
+                </div>
+            </div>
+
+            <nav class="adsense-info-links" aria-label="ShabzLabs page links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </nav>
+        </div>
+    </section>
+
 
     <div id="victory-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
         <div class="bg-gradient-to-b from-purple-900 to-indigo-950 border-4 border-yellow-400 rounded-3xl p-8 max-w-lg w-full text-center shadow-2xl relative">
