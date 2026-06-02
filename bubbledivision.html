@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Fredoka', 'Inter', sans-serif;
@@ -66,10 +68,6 @@
     </style>
 </head>
 <body class="bg-gradient-to-tr from-purple-950 via-violet-900 to-fuchsia-950 min-h-screen text-slate-800 flex flex-col justify-between overflow-x-hidden antialiased">
-        <a href="index.html" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold shadow-sm shadow-indigo-200 dark:shadow-none transition-all duration-200" title="Go to ShabzLabs Home">
-            <i class="fa-solid fa-house"></i>
-            <span class="hidden sm:inline">ShabzLabs</span>
-         </a>
     <header class="w-full max-w-5xl mx-auto px-4 pt-1 pb-1">
         <div class="flex flex-col sm:flex-row justify-between items-center bg-white/10 backdrop-blur-md rounded-2xl p-2 shadow-md border border-white/20 gap-2 relative">
             <div class="flex items-center gap-3">
@@ -79,9 +77,17 @@
                     <p class="text-[10px] text-purple-200/80 font-semibold tracking-wide uppercase leading-tight">Molecular Division Sandbox</p>
                 </div>
             </div>
-            <button id="btn-sound" class="absolute top-2 right-2 bg-white/10 hover:bg-white/25 border border-white/10 text-white px-2 py-1 rounded-lg transition duration-150" title="Toggle Sound">
-                <span id="sound-icon" class="text-sm">🔊</span>
-            </button>
+            <div class="flex items-center gap-2 ml-auto">
+                <!-- ShabzLabs Home Button -->
+                <a href="index.html" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold shadow-sm shadow-indigo-200 transition-all duration-200" title="Go to ShabzLabs Home">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="hidden sm:inline">ShabzLabs</span>
+                </a>
+
+                <button id="btn-sound" class="bg-white/10 hover:bg-white/25 border border-white/10 text-white px-2 py-1 rounded-lg transition duration-150" title="Toggle Sound">
+                    <span id="sound-icon" class="text-sm">🔊</span>
+                </button>
+            </div>
         </div>
     </header>
 
