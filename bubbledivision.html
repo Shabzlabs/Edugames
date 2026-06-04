@@ -82,8 +82,57 @@
             left: 200px;
         }
 
-        /* Mobile only: make groups side 25% and spawn area 75%. Also hide the dotted helper line. */
+        /* Mobile only: make groups side 25% and spawn area 75%. Keep the dotted connection helper visible. */
         @media (max-width: 640px) {
+            header.w-full {
+                padding-top: 0.35rem !important;
+                padding-bottom: 0.25rem !important;
+            }
+
+            header.w-full > div {
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 0.5rem !important;
+                padding: 0.65rem 0.75rem !important;
+                border-radius: 1.4rem !important;
+            }
+
+            header.w-full > div > div:first-child {
+                min-width: 0;
+                gap: 0.55rem !important;
+            }
+
+            header.w-full > div > div:first-child > span {
+                font-size: 1.35rem !important;
+                filter: drop-shadow(0 2px 5px rgba(255,255,255,0.18));
+            }
+
+            header.w-full h1 {
+                font-size: 1.28rem !important;
+                line-height: 1 !important;
+                letter-spacing: -0.02em;
+                white-space: nowrap;
+            }
+
+            header.w-full p {
+                font-size: 0.52rem !important;
+                letter-spacing: 0.08em !important;
+                line-height: 1.05 !important;
+            }
+
+            header.w-full .ml-auto {
+                margin-left: 0 !important;
+                gap: 0.45rem !important;
+                flex-shrink: 0;
+            }
+
+            header.w-full a[title="Go to ShabzLabs Home"],
+            header.w-full #btn-sound {
+                padding: 0.55rem 0.65rem !important;
+                border-radius: 0.9rem !important;
+            }
+
             #shelves-container {
                 width: 25% !important;
                 flex: 0 0 25% !important;
@@ -100,7 +149,9 @@
             }
 
             .dotted-connector {
-                display: none;
+                display: initial;
+                stroke-dasharray: 7, 5;
+                animation: flow-dash 0.65s linear infinite;
             }
         }
     </style>
@@ -367,7 +418,7 @@
             <a href="index.html" class="underline hover:text-white transition-colors">Home</a>
             <a href="about.html" class="underline hover:text-white transition-colors">About</a>
             <a href="privacy.html" class="underline hover:text-white transition-colors">Privacy Policy</a>
-            <a href="terms.html" class="hover:underline">Terms of Service</a>
+            <a href="terms.html" class="hover:underline hover:text-white transition-colors">Terms of Service</a>
             <a href="contact.html" class="underline hover:text-white transition-colors">Contact</a>
         </div>
     </footer>
@@ -902,8 +953,10 @@
 
                 // Relative click coordinates
                 const rect = sandbox.getBoundingClientRect();
-                bubble.grabOffsetX = (e.clientX - rect.left) - bubble.x;
-                bubble.grabOffsetY = (e.clientY - rect.top) - bubble.y;
+                sandboxPointerX = e.clientX - rect.left;
+                sandboxPointerY = e.clientY - rect.top;
+                bubble.grabOffsetX = sandboxPointerX - bubble.x;
+                bubble.grabOffsetY = sandboxPointerY - bubble.y;
             });
 
             el.addEventListener('pointermove', (e) => {
@@ -912,6 +965,8 @@
                 const rect = sandbox.getBoundingClientRect();
                 const mouseX = e.clientX - rect.left;
                 const mouseY = e.clientY - rect.top;
+                sandboxPointerX = mouseX;
+                sandboxPointerY = mouseY;
 
                 // Detect if they dragged a significant amount or just clicked
                 if (Math.hypot(e.clientX - startPointerX, e.clientY - startPointerY) > 6) {
