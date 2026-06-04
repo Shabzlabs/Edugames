@@ -48,25 +48,14 @@
     .nav-left {
       display: flex;
       align-items: center;
-      gap: 15px;
       text-decoration: none;
     }
 
     .site-logo {
-      width: 46px;
-      height: 46px;
+      width: 150px;
+      height: auto;
       object-fit: contain;
       display: block;
-    }
-
-    .nav-title {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: #2563eb;
-      margin: 0;
-      text-shadow: 1px 1px 0px #dbeafe;
-      letter-spacing: -0.01em;
     }
 
     .nav-links {
@@ -360,6 +349,15 @@
         padding: 15px;
       }
 
+      .nav-left {
+        justify-content: center;
+      }
+
+      .site-logo {
+        width: 140px;
+        height: auto;
+      }
+
       .nav-links {
         width: 100%;
         justify-content: center;
@@ -370,11 +368,6 @@
       .nav-item {
         font-size: 14px;
         padding: 6px 12px;
-      }
-
-      .site-logo {
-        width: 44px;
-        height: 44px;
       }
 
       .hero-box {
@@ -409,7 +402,6 @@
   <nav class="navbar">
     <a href="index.html" class="nav-left">
       <img src="logo.png" alt="ShabzLabs Logo" class="site-logo">
-      <h1 class="nav-title">Shabz Labs</h1>
     </a>
 
     <div class="nav-links">
