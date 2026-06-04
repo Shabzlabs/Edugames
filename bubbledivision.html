@@ -68,8 +68,37 @@
             }
         }
 
-        /* Mobile only: hide the white dotted helper line so it does not stick out on small screens */
+        /* Desktop sandbox split: fixed 200px group side, rest is spawn area */
+        #shelves-container {
+            width: 200px;
+            flex: 0 0 200px;
+        }
+
+        #sandbox-workspace-panel {
+            flex: 1 1 auto;
+        }
+
+        #overlay-numpad {
+            left: 200px;
+        }
+
+        /* Mobile only: make groups side 25% and spawn area 75%. Also hide the dotted helper line. */
         @media (max-width: 640px) {
+            #shelves-container {
+                width: 25% !important;
+                flex: 0 0 25% !important;
+                padding: 0.45rem !important;
+            }
+
+            #sandbox-workspace-panel {
+                flex: 0 0 75% !important;
+                width: 75% !important;
+            }
+
+            #overlay-numpad {
+                left: 25% !important;
+            }
+
             .dotted-connector {
                 display: none;
             }
@@ -147,7 +176,7 @@
         <div id="sandbox-container" class="relative bg-gradient-to-br from-purple-500/10 via-violet-500/10 to-fuchsia-500/15 rounded-3xl border-3 border-dashed border-purple-300 shadow-inner flex-grow min-h-[400px] overflow-hidden flex">
             
             <!-- Left Side: Orderly Grouping Shelves (Dynamic Background) -->
-            <div id="shelves-container" class="w-[200px] bg-slate-950/20 border-r-2 border-dashed border-purple-500/30 p-3 z-10 flex flex-col justify-around rounded-l-3xl pointer-events-none">
+            <div id="shelves-container" class="bg-slate-950/20 border-r-2 border-dashed border-purple-500/30 p-3 z-10 flex flex-col justify-around rounded-l-3xl pointer-events-none">
                 <!-- Loaded dynamically by renderShelves() -->
             </div>
 
@@ -169,7 +198,7 @@
             </div>
 
             <!-- Interactive Number Pad Input Modal (Localized to the empty spawn area on the right) -->
-            <div id="overlay-numpad" class="absolute left-[200px] right-0 top-0 bottom-0 bg-purple-950/20 backdrop-blur-sm z-40 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+            <div id="overlay-numpad" class="absolute right-0 top-0 bottom-0 bg-purple-950/20 backdrop-blur-sm z-40 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
                 <div class="bg-white/95 rounded-3xl p-5 max-w-xs w-full mx-4 shadow-2xl border-4 border-indigo-400 text-center transform scale-90 transition-transform duration-300 relative">
                     
                     <div class="mt-1">
@@ -527,7 +556,10 @@
         let sandboxPointerY = 0;
 
         // Shelf alignment variables
-        const shelfWidth = 200; 
+        function getShelfWidth() {
+            const containerWidth = sandbox ? sandbox.clientWidth : window.innerWidth;
+            return window.innerWidth <= 640 ? containerWidth * 0.25 : 200;
+        }
         let shelfSlots = []; // Stores the string representation of bubble ID clusters currently resting in each slot
 
         // State tracker to prevent auto-opening multiple times
@@ -568,7 +600,7 @@
             }
 
             const rows = Math.ceil(clusterLength / cols);
-            const usableWidth = shelfWidth - 42;
+            const usableWidth = getShelfWidth() - 42;
             const usableHeight = Math.max(30, slotHeight - 18);
             const rawDiameter = Math.min(usableWidth / cols, usableHeight / rows);
             const scale = Math.max(0.34, Math.min(0.82, rawDiameter / (baseRadius * 2)));
@@ -583,7 +615,7 @@
             const slotHeight = containerHeight / Math.max(correctQuotient, 1);
             const slotTop = slotIdx * slotHeight;
             const layout = getDockedClusterLayout(cluster.length, slotHeight, bubble.radius);
-            const leftPadding = (shelfWidth - layout.usableWidth) / 2;
+            const leftPadding = (getShelfWidth() - layout.usableWidth) / 2;
             const topPadding = slotTop + (slotHeight - layout.usableHeight) / 2;
             const cellWidth = layout.usableWidth / layout.cols;
             const cellHeight = layout.usableHeight / layout.rows;
@@ -789,7 +821,7 @@
             const containerHeight = sandbox.clientHeight || 460;
 
             // Spawn only in the right side sandbox-workspace zone (excluding the 200px shelf)
-            const playableWidth = containerWidth - shelfWidth;
+            const playableWidth = containerWidth - getShelfWidth();
 
             for (let i = 0; i < currentDividend; i++) {
                 const bubbleElement = document.createElement('div');
@@ -820,9 +852,9 @@
                 const row = Math.floor(i / cols);
                 
                 // Safe coordinates within right sandbox play zone to guarantee no clipping upon generation
-                const minSpawnX = shelfWidth + radius + 10;
+                const minSpawnX = getShelfWidth() + radius + 10;
                 const maxSpawnX = containerWidth - (radius * 2) - 10;
-                const calculatedX = shelfWidth + radius + (playableWidth / (cols + 1)) * (col + 1) - radius + (Math.random() - 0.5) * 15;
+                const calculatedX = getShelfWidth() + radius + (playableWidth / (cols + 1)) * (col + 1) - radius + (Math.random() - 0.5) * 15;
                 const startX = Math.max(minSpawnX, Math.min(maxSpawnX, calculatedX));
 
                 const minSpawnY = radius + 10;
@@ -1217,7 +1249,7 @@
                     b.vy *= 0.86;
                 } else {
                     // Invisible barrier: keep un-grouped bubbles on the right side of the screen
-                    const boundary = shelfWidth + 10;
+                    const boundary = getShelfWidth() + 10;
                     if (b.x < boundary) {
                         b.x = boundary;
                         b.vx = Math.abs(b.vx) * 0.8 + 0.3; // bounce gently to the right
