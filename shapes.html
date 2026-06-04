@@ -3,241 +3,334 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Basic Shapes for Kids - ShabzLabs</title>
+
+  <title>Basic Shapes for Kids | ShabzLabs</title>
+  <meta name="description" content="Learn about basic 2D shapes for kids, including triangles, squares, rectangles, rhombuses, trapezoids, pentagons, hexagons, and octagons.">
+
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2337631070618916"
      crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    .footer-box {
-  margin-top: 32px;
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(255,255,255,0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  padding: 24px;
-  text-align: center;
-}
-    .navbar {
-  background: white;
-  border-bottom: 4px solid #3b82f6;
-  padding: 10px 5%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
+    :root {
+      --primary-blue: #3b82f6;
+      --dark-blue: #1d4ed8;
+      --accent-yellow: #facc15;
+      --soft-bg: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+    }
 
-.nav-left {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  text-decoration: none;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.nav-title {
-  font-family: 'Fredoka One', cursive;
-  font-size: 24px;
-  color: #2563eb;
-  margin: 0;
-}
-
-.nav-links {
-  display: flex;
-  gap: 20px;
-}
-
-.nav-item {
-  text-decoration: none;
-  color: #1e40af;
-  font-weight: 700;
-  font-size: 16px;
-  padding: 8px 16px;
-  border-radius: 12px;
-}
-
-.nav-item:hover {
-  background: #eff6ff;
-  color: #2563eb;
-}
-
-.nav-item.active {
-  background: #3b82f6;
-  color: white;
-  box-shadow: 0 4px 0 #1d4ed8;
-}
-
-@media (max-width: 640px) {
-  .navbar {
-    flex-direction: column;
-    gap: 12px;
-    padding: 12px;
-  }
-
-  .nav-links {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .nav-item {
-    font-size: 14px;
-    padding: 6px 12px;
-  }
-}
     body {
       margin: 0;
       font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(135deg, #a5f3fc, #fde68a);
+      background: var(--soft-bg);
       min-height: 100vh;
       color: #1f2937;
     }
 
-    .page {
-      max-width: 950px;
-      margin: 0 auto;
-      padding: 25px 20px 50px;
+    .navbar {
+      background: white;
+      border-bottom: 4px solid var(--primary-blue);
+      padding: 10px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
-    .hero {
-      background: #ffffff;
-      border: 4px solid #3b82f6;
-      border-radius: 25px;
-      padding: 25px 20px;
-      text-align: center;
-      box-shadow: 0 8px 0 #1d4ed8;
-      margin-bottom: 30px;
+    .nav-left {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
     }
 
-    .hero-icon {
-      font-size: 55px;
-      margin-bottom: 8px;
+    .site-logo {
+      width: 130px;
+      height: auto;
+      object-fit: contain;
+      display: block;
     }
 
-    h1 {
-      font-family: 'Fredoka One', cursive;
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-item {
+      text-decoration: none;
+      color: #1e40af;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background: #eff6ff;
       color: #2563eb;
-      font-size: 36px;
-      margin: 0;
-      text-shadow: 2px 2px 0 #dbeafe;
+      transform: translateY(-2px);
     }
 
-    .subtitle {
-      display: inline-block;
-      background: #ecfdf5;
-      color: #059669;
-      font-weight: bold;
-      margin-top: 10px;
-      padding: 7px 16px;
+    .nav-item.active {
+      background: var(--primary-blue);
+      color: white;
+      box-shadow: 0 4px 0 var(--dark-blue);
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 16px 20px;
+    }
+
+    .hero-box {
+      background: white;
+      border-radius: 32px;
+      padding: 34px 28px;
+      text-align: center;
+      box-shadow: 0 18px 35px rgba(30, 64, 175, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.15);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-box::before {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 210px;
+      height: 210px;
+      background: rgba(250, 204, 21, 0.35);
       border-radius: 999px;
-      border: 2px solid #86efac;
+      filter: blur(12px);
+    }
+
+    .hero-box::after {
+      content: "";
+      position: absolute;
+      bottom: -90px;
+      left: -90px;
+      width: 220px;
+      height: 220px;
+      background: rgba(165, 243, 252, 0.6);
+      border-radius: 999px;
+      filter: blur(14px);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .hero-icons {
+      font-size: 52px;
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+
+    .welcome-pill {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #3730a3;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 16px;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title span {
+      color: transparent;
+      background: linear-gradient(90deg, #06b6d4, #4f46e5);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .hero-description {
+      font-size: 18px;
+      font-weight: 500;
+      color: #475569;
+      line-height: 1.7;
+      margin: 0 auto 20px;
+    }
+
+    .subtitle-tag {
+      font-size: 14px;
+      font-weight: 700;
+      color: #047857;
+      background: #ecfdf5;
+      display: inline-block;
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 2px solid #10b981;
     }
 
     .content-card {
       background: white;
-      border-radius: 22px;
-      padding: 25px;
+      border-radius: 28px;
+      padding: 28px;
       margin-bottom: 22px;
-      box-shadow: 0 6px 0 #e5e7eb;
+      box-shadow: 0 8px 0 #e5e7eb;
       border: 3px solid #f3f4f6;
     }
 
-    h2 {
-      font-family: 'Fredoka One', cursive;
+    .content-card h2 {
+      font-family: 'Quicksand', sans-serif;
       color: #1d4ed8;
-      font-size: 26px;
-      margin-top: 0;
+      font-size: 30px;
+      font-weight: 700;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
     }
 
-    h3 {
+    .content-card h3 {
       color: #166534;
       font-size: 22px;
-      margin-bottom: 8px;
+      font-weight: 700;
+      margin: 0 0 8px;
     }
 
-    p {
+    .content-card p {
       font-size: 17px;
+      font-weight: 500;
       line-height: 1.7;
+      color: #374151;
+      margin: 0 0 12px;
     }
 
     .shape-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
       gap: 18px;
       margin-top: 20px;
     }
 
-    .shape-box {
+    .shape-card {
       background: #f9fafb;
-      border-radius: 18px;
+      border-radius: 22px;
       padding: 18px;
       text-align: center;
       border: 3px solid #dbeafe;
-      box-shadow: 0 5px 0 #bfdbfe;
+      box-shadow: 0 6px 0 #bfdbfe;
+      transition: 0.2s;
     }
 
-    .shape-icon {
-      font-size: 55px;
-      margin-bottom: 10px;
+    .shape-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-yellow);
+      box-shadow: 0 8px 0 #fde047;
+      background: white;
     }
 
-    .shape-box h3 {
-      margin: 5px 0;
+    .shape-visual {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 10px;
+      display: block;
+      filter: drop-shadow(0 5px 7px rgba(15, 23, 42, 0.12));
+    }
+
+    .shape-card h3 {
+      margin: 8px 0;
       color: #1d4ed8;
-      font-family: 'Fredoka One', cursive;
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .shape-card p {
+      font-size: 15.5px;
+      line-height: 1.55;
+      color: #4b5563;
+      margin: 0;
     }
 
     .comparison {
       background: #fef3c7;
       border: 3px solid #facc15;
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 18px;
       margin-top: 15px;
+    }
+
+    .comparison + .comparison {
+      margin-top: 18px;
+    }
+
+    .comparison p {
+      margin-bottom: 0;
     }
 
     .tip {
       background: #dcfce7;
       border: 3px solid #86efac;
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 18px;
       margin-top: 15px;
-      font-weight: bold;
+      font-weight: 700;
       color: #166534;
     }
 
     .button-row {
       text-align: center;
-      margin-top: 30px;
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .play-btn,
+    .home-btn {
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 18px;
+      transition: 0.1s;
     }
 
     .play-btn {
-      display: inline-block;
       background: #f59e0b;
-      color: white;
-      text-decoration: none;
-      padding: 14px 28px;
-      border-radius: 999px;
-      font-weight: bold;
-      font-size: 18px;
       box-shadow: 0 5px 0 #b45309;
-      margin: 8px;
     }
 
     .home-btn {
-      display: inline-block;
       background: #2563eb;
-      color: white;
-      text-decoration: none;
-      padding: 14px 28px;
-      border-radius: 999px;
-      font-weight: bold;
-      font-size: 18px;
       box-shadow: 0 5px 0 #1e40af;
-      margin: 8px;
+    }
+
+    .play-btn:hover,
+    .home-btn:hover {
+      transform: translateY(-2px);
     }
 
     .play-btn:active,
@@ -246,41 +339,110 @@
       box-shadow: 0 2px 0 #92400e;
     }
 
-    footer {
+    .footer-box {
+      margin-top: 32px;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 24px;
       text-align: center;
-      margin-top: 40px;
-      font-size: 14px;
-      color: #555;
     }
 
-    footer a {
-      color: #1d4ed8;
-      font-weight: bold;
+    @media (max-width: 640px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .nav-left {
+        justify-content: center;
+      }
+
+      .site-logo {
+        width: 120px;
+        height: auto;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .nav-item {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+
+      .hero-box {
+        padding: 28px 20px;
+        border-radius: 26px;
+      }
+
+      .hero-icons {
+        font-size: 44px;
+      }
+
+      .hero-title {
+        font-size: 36px;
+      }
+
+      .hero-description {
+        font-size: 17px;
+      }
+
+      .content-card {
+        padding: 22px;
+      }
+
+      .content-card h2 {
+        font-size: 25px;
+      }
+
+      .shape-visual {
+        width: 88px;
+        height: 88px;
+      }
+
+      .play-btn,
+      .home-btn {
+        width: 100%;
+        text-align: center;
+      }
     }
   </style>
 </head>
 
 <body>
   <nav class="navbar">
-  <a href="index.html" class="nav-left">
-    <div style="font-size: 28px;">🧪</div>
-    <h1 class="nav-title">Shabz Labs</h1>
-  </a>
+    <a href="index.html" class="nav-left">
+      <img src="logo.png" alt="ShabzLabs Logo" class="site-logo">
+    </a>
 
-  <div class="nav-links">
-    <a href="index.html" class="nav-item">Home</a>
-    <a href="shapes.html" class="nav-item active">Lessons</a>
-    <a href="games.html" class="nav-item">Games</a>
-    <a href="about.html" class="nav-item">About</a>
-  </div>
-</nav>
-    
+    <div class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="learn.html" class="nav-item active">Learn</a>
+      <a href="teachers.html" class="nav-item">Teachers</a>
+      <a href="games.html" class="nav-item">Games</a>
+      <a href="about.html" class="nav-item">About</a>
+    </div>
+  </nav>
+
   <div class="page">
 
-    <header class="hero">
-      <div style="font-size: 50px;">📐✨🎨</div>
-      <h1>The World of Shapes</h1>
-      <p class="subtitle">A ShabzLabs Science Mission</p>
+    <header class="hero-box">
+      <div class="hero-content">
+        <div class="hero-icons">📐✨🎨</div>
+        <span class="welcome-pill">2D Shapes</span>
+        <h1 class="hero-title">The World of <span>Shapes</span></h1>
+        <p class="hero-description">
+          Learn about flat 2D shapes, their sides, corners, and how we can spot them in everyday life.
+        </p>
+        <span class="subtitle-tag">A ShabzLabs Science Mission</span>
+      </div>
     </header>
 
     <section class="content-card">
@@ -294,13 +456,11 @@
     </section>
 
     <section class="content-card">
-      
       <h2>Meet the 2D Shapes</h2>
       <p>Shapes are flat patterns made of lines and curves. Let's look at the most common ones!</p>
-      
+
       <div class="shape-grid">
-        
-        <!-- Triangle -->
+
         <div class="shape-card">
           <svg class="shape-visual" viewBox="0 0 100 100">
             <defs>
@@ -313,77 +473,70 @@
             <path d="M50,25 L80,80 L20,80 Z" fill="white" opacity="0.2"/>
           </svg>
           <h3>Triangle</h3>
-          <p><strong>3 Sides</strong> and 3 Corners.</p>
+          <p><strong>3 Sides</strong> and 3 corners.</p>
         </div>
 
-        <!-- Square -->
         <div class="shape-card">
           <svg class="shape-visual" viewBox="0 0 100 100">
             <rect x="15" y="15" width="70" height="70" fill="#3b82f6" stroke="#1e40af" stroke-width="4" rx="4" />
             <rect x="25" y="25" width="50" height="50" fill="white" opacity="0.2" rx="2" />
           </svg>
           <h3>Square</h3>
-          <p><strong>4 Equal Sides</strong> and 4 Corners.</p>
+          <p><strong>4 equal sides</strong> and 4 corners.</p>
         </div>
 
-        <!-- Rectangle -->
         <div class="shape-card">
           <svg class="shape-visual" viewBox="0 0 100 100">
             <rect x="10" y="30" width="80" height="40" fill="#10b981" stroke="#065f46" stroke-width="4" rx="4" />
             <rect x="20" y="40" width="60" height="20" fill="white" opacity="0.2" rx="2" />
           </svg>
           <h3>Rectangle</h3>
-          <p><strong>4 Sides</strong> with equal opposite sides.</p>
+          <p><strong>4 sides</strong> with equal opposite sides.</p>
         </div>
 
-        <!-- Rhombus -->
         <div class="shape-card">
           <svg class="shape-visual" viewBox="0 0 100 100">
             <polygon points="50,10 85,50 50,90 15,50" fill="#a855f7" stroke="#6b21a8" stroke-width="4" stroke-linejoin="round"/>
             <polygon points="50,25 70,50 50,75 30,50" fill="white" opacity="0.2"/>
           </svg>
           <h3>Rhombus</h3>
-          <p><strong>4 Equal Sides</strong>. Like a diamond!</p>
+          <p><strong>4 equal sides.</strong> Like a diamond!</p>
         </div>
 
-        <!-- Trapezoid -->
         <div class="shape-card">
           <svg class="shape-visual" viewBox="0 0 100 100">
             <polygon points="25,20 75,20 95,80 5,80" fill="#f59e0b" stroke="#92400e" stroke-width="4" stroke-linejoin="round"/>
             <polygon points="35,35 65,35 75,65 25,65" fill="white" opacity="0.2"/>
           </svg>
           <h3>Trapezoid</h3>
-          <p><strong>4 Sides</strong> with one pair of parallel lines.</p>
+          <p><strong>4 sides</strong> with one pair of parallel lines.</p>
         </div>
 
-        <!-- Pentagon -->
         <div class="shape-card">
           <svg class="shape-visual" viewBox="0 0 100 100">
             <polygon points="50,10 95,45 80,90 20,90 5,45" fill="#ec4899" stroke="#9d174d" stroke-width="4" stroke-linejoin="round"/>
             <polygon points="50,25 75,45 65,75 35,75 25,45" fill="white" opacity="0.2"/>
           </svg>
           <h3>Pentagon</h3>
-          <p><strong>5 Sides</strong>. Like a house shape!</p>
+          <p><strong>5 sides.</strong> Like a house shape!</p>
         </div>
 
-        <!-- Hexagon -->
         <div class="shape-card">
           <svg class="shape-visual" viewBox="0 0 100 100">
             <polygon points="25,15 75,15 95,50 75,85 25,85 5,50" fill="#06b6d4" stroke="#164e63" stroke-width="4" stroke-linejoin="round"/>
             <polygon points="35,25 65,25 80,50 65,75 35,75 20,50" fill="white" opacity="0.2"/>
           </svg>
           <h3>Hexagon</h3>
-          <p><strong>6 Sides</strong>. Think of a honeycomb.</p>
+          <p><strong>6 sides.</strong> Think of a honeycomb.</p>
         </div>
 
-        <!-- Octagon -->
         <div class="shape-card">
           <svg class="shape-visual" viewBox="0 0 100 100">
             <polygon points="30,15 70,15 90,35 90,65 70,85 30,85 10,65 10,35" fill="#ef4444" stroke="#7f1d1d" stroke-width="4" stroke-linejoin="round"/>
             <polygon points="38,25 62,25 78,35 78,65 62,75 38,75 22,65 22,35" fill="white" opacity="0.2"/>
           </svg>
           <h3>Octagon</h3>
-          <p><strong>8 Sides</strong>. Just like a stop sign!</p>
+          <p><strong>8 sides.</strong> Just like a stop sign!</p>
         </div>
 
       </div>
@@ -432,7 +585,7 @@
 
       <div class="button-row">
         <a class="play-btn" href="shapeselection.html">Play Shape Hunter 🚀</a>
-        <a class="home-btn" href="index.html">← Back to Home</a>
+        <a class="home-btn" href="index.html">Back to Home</a>
       </div>
     </section>
 
@@ -448,6 +601,7 @@
         <a href="contact.html" class="hover:underline">Contact</a>
       </div>
     </footer>
+
   </div>
 </body>
 </html>
