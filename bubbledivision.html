@@ -67,6 +67,13 @@
                 stroke-dashoffset: -14;
             }
         }
+
+        /* Mobile only: hide the white dotted helper line so it does not stick out on small screens */
+        @media (max-width: 640px) {
+            .dotted-connector {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-tr from-purple-950 via-violet-900 to-fuchsia-950 min-h-screen text-slate-800 flex flex-col justify-between overflow-x-hidden antialiased">
