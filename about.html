@@ -4,32 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About ShabzLabs</title>
+
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2337631070618916"
      crossorigin="anonymous"></script>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    .footer-box {
-  margin-top: 32px;
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(255,255,255,0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  padding: 24px;
-  text-align: center;
-}
-    body {
-      font-family: 'Quicksand', sans-serif;
-    }
-    .custom-gradient {
-      background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
-    }
 
+  <style>
     :root {
       --primary-blue: #3b82f6;
       --dark-blue: #1d4ed8;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .custom-gradient {
+      background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
     }
 
     .navbar {
@@ -48,17 +44,14 @@
     .nav-left {
       display: flex;
       align-items: center;
-      gap: 15px;
       text-decoration: none;
     }
-    .nav-title {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 24px;
-      font-weight: 700;
-      color: #2563eb;
-      margin: 0;
-      text-shadow: 1px 1px 0px #dbeafe;
-      letter-spacing: -0.01em;
+
+    .site-logo {
+      width: 190px;
+      height: auto;
+      object-fit: contain;
+      display: block;
     }
 
     .nav-links {
@@ -88,28 +81,18 @@
       box-shadow: 0 4px 0 var(--dark-blue);
     }
 
-    .lab-container {
-      position: relative;
-      display: inline-block;
-      font-size: 28px;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
-    }
-
-    .bubble {
-      position: absolute;
-      background: rgba(34, 197, 94, 0.6);
-      border-radius: 50%;
-      animation: floatUp 2s infinite ease-in;
-      bottom: 5px;
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) scale(0.3); opacity: 1; }
-      100% { transform: translateY(-30px) scale(1.2); opacity: 0; }
-    }
-
     .page-wrapper {
       padding: 32px 16px;
+    }
+
+    .footer-box {
+      margin-top: 32px;
+      background: rgba(255, 255, 255, 0.65);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
     }
 
     @media (min-width: 640px) {
@@ -133,6 +116,15 @@
         padding: 15px;
       }
 
+      .nav-left {
+        justify-content: center;
+      }
+
+      .site-logo {
+        width: 170px;
+        height: auto;
+      }
+
       .nav-links {
         width: 100%;
         justify-content: center;
@@ -145,20 +137,13 @@
         padding: 6px 12px;
       }
     }
-
   </style>
 </head>
 
 <body class="custom-gradient min-h-screen text-slate-800 antialiased">
   <nav class="navbar">
     <a href="index.html" class="nav-left">
-      <div class="lab-container">
-        <div class="bubble" style="left:20%; width:8px; height:8px; animation-delay: 0s;"></div>
-        <div class="bubble" style="left:50%; width:6px; height:6px; animation-delay: 0.5s;"></div>
-        <div class="bubble" style="left:80%; width:10px; height:10px; animation-delay: 1s;"></div>
-        🧪
-      </div>
-      <h1 class="nav-title">Shabz Labs</h1>
+      <img src="logo.png" alt="ShabzLabs Logo" class="site-logo">
     </a>
 
     <div class="nav-links">
@@ -173,160 +158,147 @@
   <div class="page-wrapper">
     <div class="max-w-5xl mx-auto">
 
+      <section class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-indigo-100/50 mb-8 relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-48 h-48 bg-yellow-200/40 rounded-full blur-2xl"></div>
+        <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-cyan-200/40 rounded-full blur-2xl"></div>
 
-    <section class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-indigo-100/50 mb-8 relative overflow-hidden">
-      <!-- Decorative Bubbles/Shapes in Background -->
-      <div class="absolute -top-12 -right-12 w-48 h-48 bg-yellow-200/40 rounded-full blur-2xl"></div>
-      <div class="absolute -bottom-12 -left-12 w-48 h-48 bg-cyan-200/40 rounded-full blur-2xl"></div>
+        <div class="relative z-10 text-center max-w-3xl mx-auto">
+          <span class="bg-indigo-100 text-indigo-800 text-sm font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">Welcome to the Lab!</span>
+          <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mt-4 mb-6 tracking-tight leading-tight">
+            Where Learning Feels Like <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-600">Play</span>
+          </h1>
+          <p class="text-lg md:text-xl text-slate-600 leading-relaxed font-medium">
+            ShabzLabs is an educational website created to help primary students practise important learning skills through interactive games. The goal of the site is to make learning feel active, playful, and engaging while still supporting classroom learning.
+          </p>
+        </div>
+      </section>
 
-      <div class="relative z-10 text-center max-w-3xl mx-auto">
-        <span class="bg-indigo-100 text-indigo-800 text-sm font-bold px-4 py-1.5 rounded-full uppercase tracking-wider">Welcome to the Lab!</span>
-        <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mt-4 mb-6 tracking-tight leading-tight">
-          Where Learning Feels Like <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-600">Play time</span>
-        </h1>
-        <p class="text-lg md:text-xl text-slate-600 leading-relaxed font-medium">
-          ShabzLabs is an educational website created to help primary students practise important learning skills through interactive games. The goal of the site is to make learning feel active, playful, and engaging while still supporting classroom learning.
-        </p>
-      </div>
-    </section>
+      <main class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
 
-    <main class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      
-      <!-- Card 1: Our Purpose (Pastel Blue) -->
-      <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-        <div>
-          <div class="w-12 h-12 bg-cyan-100 rounded-2xl flex items-center justify-center text-cyan-600 mb-6 shadow-sm">
-            <!-- Compass / Target Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div>
+            <div class="w-12 h-12 bg-cyan-100 rounded-2xl flex items-center justify-center text-cyan-600 mb-6 shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-4">Our Purpose</h2>
+            <p class="text-slate-600 leading-relaxed">
+              Many young learners benefit from activities that are visual, hands-on, and easy to understand. ShabzLabs was designed with this in mind. Instead of only reading instructions or completing worksheets, students can play short learning games that help them practise concepts such as shapes, word building, object properties, and early math skills.
+            </p>
           </div>
-          <h2 class="text-2xl font-bold text-slate-900 mb-4">Our Purpose</h2>
-          <p class="text-slate-600 leading-relaxed">
-            Many young learners benefit from activities that are visual, hands-on, and easy to understand. ShabzLabs was designed with this in mind. Instead of only reading instructions or completing worksheets, students can play short learning games that help them practise concepts such as shapes, word building, object properties, and early math skills.
-          </p>
-        </div>
-        <div class="mt-6 border-t border-slate-50 pt-4 flex gap-2">
-          <span class="text-xs bg-cyan-50 text-cyan-700 font-semibold px-2.5 py-1 rounded-md">Visual Practice</span>
-          <span class="text-xs bg-cyan-50 text-cyan-700 font-semibold px-2.5 py-1 rounded-md">Early Math</span>
-        </div>
-      </div>
-
-      <!-- Card 2: Learning Through Play (Pastel Amber) -->
-      <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-        <div>
-          <div class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600 mb-6 shadow-sm">
-            <!-- Puzzle / Game controller Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
-            </svg>
+          <div class="mt-6 border-t border-slate-50 pt-4 flex gap-2">
+            <span class="text-xs bg-cyan-50 text-cyan-700 font-semibold px-2.5 py-1 rounded-md">Visual Practice</span>
+            <span class="text-xs bg-cyan-50 text-cyan-700 font-semibold px-2.5 py-1 rounded-md">Early Math</span>
           </div>
-          <h2 class="text-2xl font-bold text-slate-900 mb-4">Learning Through Play</h2>
-          <p class="text-slate-600 leading-relaxed">
-            Play can help students stay motivated while developing confidence. Each game on ShabzLabs is designed to be simple enough for young learners to use, while still encouraging thinking, problem-solving, and practice. Students can click, choose, compare, sort, and receive feedback as they learn.
-          </p>
         </div>
-        <div class="mt-6 border-t border-slate-50 pt-4 flex gap-2">
-          <span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2.5 py-1 rounded-md">Interactive</span>
-          <span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2.5 py-1 rounded-md">Feedback Loop</span>
-        </div>
-      </div>
 
-      <!-- Card 3: Curriculum Connection (Pastel Emerald) -->
-      <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-        <div>
-          <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 shadow-sm">
-            <!-- Graduation Cap / Book Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-            </svg>
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div>
+            <div class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600 mb-6 shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-4">Learning Through Play</h2>
+            <p class="text-slate-600 leading-relaxed">
+              Play can help students stay motivated while developing confidence. Each game on ShabzLabs is designed to be simple enough for young learners to use, while still encouraging thinking, problem-solving, and practice. Students can click, choose, compare, sort, and receive feedback as they learn.
+            </p>
           </div>
-          <h2 class="text-2xl font-bold text-slate-900 mb-4">Curriculum Connection</h2>
-          <p class="text-slate-600 leading-relaxed">
-            ShabzLabs is designed with primary learning goals in mind, especially concepts commonly taught in Ontario classrooms. Activities may support early math, language, science, and problem-solving skills. For example, students may practise identifying two-dimensional shapes, recognizing compound words, sorting objects, or exploring basic probability ideas.
-          </p>
-        </div>
-        <div class="mt-6 border-t border-slate-50 pt-4 flex gap-2">
-          <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-1 rounded-md">Ontario Standards</span>
-          <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-1 rounded-md">Curriculum Support</span>
-        </div>
-      </div>
-
-      <!-- Card 4: Who Can Use ShabzLabs? (Pastel Purple) -->
-      <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-        <div>
-          <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6 shadow-sm">
-            <!-- Group Users Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
+          <div class="mt-6 border-t border-slate-50 pt-4 flex gap-2">
+            <span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2.5 py-1 rounded-md">Interactive</span>
+            <span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2.5 py-1 rounded-md">Feedback Loop</span>
           </div>
-          <h2 class="text-2xl font-bold text-slate-900 mb-4">Who Can Use ShabzLabs?</h2>
-          <p class="text-slate-600 leading-relaxed">
-            ShabzLabs can be used by students, teachers, parents, and tutors. Teachers may use the games as warm-ups, review activities, learning centres, or extra practice. Parents may use the games at home to support learning in a fun and low-pressure way.
-          </p>
         </div>
-        <div class="mt-6 border-t border-slate-50 pt-4 flex gap-2">
-          <span class="text-xs bg-purple-50 text-purple-700 font-semibold px-2.5 py-1 rounded-md">Teachers & Tutors</span>
-          <span class="text-xs bg-purple-50 text-purple-700 font-semibold px-2.5 py-1 rounded-md">Parents</span>
+
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div>
+            <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-4">Curriculum Connection</h2>
+            <p class="text-slate-600 leading-relaxed">
+              ShabzLabs is designed with primary learning goals in mind, especially concepts commonly taught in Ontario classrooms. Activities may support early math, language, science, and problem-solving skills. For example, students may practise identifying two-dimensional shapes, recognizing compound words, sorting objects, or exploring basic probability ideas.
+            </p>
+          </div>
+          <div class="mt-6 border-t border-slate-50 pt-4 flex gap-2">
+            <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-1 rounded-md">Ontario Standards</span>
+            <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-1 rounded-md">Curriculum Support</span>
+          </div>
         </div>
-      </div>
 
-    </main>
-
-    <section class="bg-gradient-to-r from-pink-500 to-indigo-600 rounded-3xl p-8 md:p-10 shadow-xl text-white mb-8 relative overflow-hidden">
-      <!-- Background SVG element -->
-      <div class="absolute right-0 bottom-0 opacity-10 transform translate-x-10 translate-y-10">
-        <svg class="w-72 h-72" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-        </svg>
-      </div>
-
-      <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
-        <div class="max-w-2xl">
-          <h2 class="text-2xl md:text-3xl font-bold mb-3 flex items-center gap-3">
-            <!-- Rocket Launch Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.252.588 1.81l-3.97 2.88a1 1 0 00-.364 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.971-2.88a1 1 0 00-1.178 0l-3.97 2.88c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118l-3.97-2.88c-.772-.558-.372-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-            </svg>
-            Our Future Goal
-          </h2>
-          <p class="text-white/90 text-md md:text-lg leading-relaxed font-medium">
-            The long-term goal of ShabzLabs is to continue adding more interactive games and learning resources for primary students. As the site grows, new activities will be added to support different subjects, skills, and grade levels.
-          </p>
+        <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 flex flex-col justify-between hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+          <div>
+            <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 mb-6 shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-4">Who Can Use ShabzLabs?</h2>
+            <p class="text-slate-600 leading-relaxed">
+              ShabzLabs can be used by students, teachers, parents, and tutors. Teachers may use the games as warm-ups, review activities, learning centres, or extra practice. Parents may use the games at home to support learning in a fun and low-pressure way.
+            </p>
+          </div>
+          <div class="mt-6 border-t border-slate-50 pt-4 flex gap-2">
+            <span class="text-xs bg-purple-50 text-purple-700 font-semibold px-2.5 py-1 rounded-md">Teachers & Tutors</span>
+            <span class="text-xs bg-purple-50 text-purple-700 font-semibold px-2.5 py-1 rounded-md">Parents</span>
+          </div>
         </div>
-        <a href="index.html" class="w-full md:w-auto text-center shrink-0 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold px-6 py-4 rounded-2xl transition duration-300 shadow-md hover:shadow-lg active:scale-95 block">
-          Play Interactive Games!
+
+      </main>
+
+      <section class="bg-gradient-to-r from-pink-500 to-indigo-600 rounded-3xl p-8 md:p-10 shadow-xl text-white mb-8 relative overflow-hidden">
+        <div class="absolute right-0 bottom-0 opacity-10 transform translate-x-10 translate-y-10">
+          <svg class="w-72 h-72" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+          </svg>
+        </div>
+
+        <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
+          <div class="max-w-2xl">
+            <h2 class="text-2xl md:text-3xl font-bold mb-3 flex items-center gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.907c.961 0 1.36 1.252.588 1.81l-3.97 2.88a1 1 0 00-.364 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.971-2.88a1 1 0 00-1.178 0l-3.97 2.88c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.364-1.118l-3.97-2.88c-.772-.558-.372-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+              </svg>
+              Our Future Goal
+            </h2>
+            <p class="text-white/90 text-md md:text-lg leading-relaxed font-medium">
+              The long-term goal of ShabzLabs is to continue adding more interactive games and learning resources for primary students. As the site grows, new activities will be added to support different subjects, skills, and grade levels.
+            </p>
+          </div>
+          <a href="index.html" class="w-full md:w-auto text-center shrink-0 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold px-6 py-4 rounded-2xl transition duration-300 shadow-md hover:shadow-lg active:scale-95 block">
+            Play Interactive Games!
+          </a>
+        </div>
+      </section>
+
+      <footer class="footer-box">
+        <p class="font-semibold text-blue-800 mb-2">© 2026 ShabzLabs</p>
+        <div class="flex justify-center gap-4 text-blue-600 font-normal flex-wrap">
+          <a href="about.html" class="hover:underline">About</a>
+          <span>|</span>
+          <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+          <span>|</span>
+          <a href="terms.html" class="hover:underline">Terms of Service</a>
+          <span>|</span>
+          <a href="contact.html" class="hover:underline">Contact</a>
+        </div>
+      </footer>
+
+      <div class="text-center py-4">
+        <a href="index.html" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 rounded-2xl transition shadow-md hover:shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          <span>Back to Home</span>
         </a>
       </div>
-    </section>
-
-<footer class="footer-box text-center">
-  <p class="font-semibold text-blue-800 mb-2">© 2026 ShabzLabs</p>
-  <div class="flex justify-center gap-4 text-blue-600 font-normal flex-wrap">
-    <a href="about.html" class="hover:underline">About</a>
-    <span>|</span>
-    <a href="privacy.html" class="hover:underline">Privacy Policy</a>
-    <span>|</span>
-    <a href="terms.html" class="hover:underline">Terms of Service</a>
-    <span>|</span>
-    <a href="contact.html" class="hover:underline">Contact</a>
-  </div>
-</footer>
-
-    <div class="text-center py-4">
-      <a href="index.html" class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 rounded-2xl transition shadow-md hover:shadow-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        <span>Back to Home</span>
-      </a>
-    </div>
 
     </div>
   </div>
-
 </body>
 </html>
