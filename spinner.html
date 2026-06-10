@@ -81,6 +81,18 @@
       text-decoration: underline;
     }
 
+    .remaining-pill {
+      display: inline-block;
+      margin-top: 12px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.9rem;
+      font-weight: 900;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 2px solid #bfdbfe;
+    }
+
     .wheel-wrap {
       position: relative;
       width: min(88vw, 430px);
@@ -122,6 +134,7 @@
       border-bottom: 7px solid #c2410c;
       box-shadow: 0 10px 18px rgba(249, 115, 22, 0.3);
       transition: 0.15s ease;
+      margin: 6px;
     }
 
     .spin-btn:hover {
@@ -139,6 +152,25 @@
       border-bottom-color: #9ca3af;
       cursor: not-allowed;
       box-shadow: none;
+    }
+
+    .reset-btn {
+      background: #64748b;
+      color: white;
+      font-size: 1rem;
+      font-weight: 900;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      border-bottom: 5px solid #334155;
+      transition: 0.15s ease;
+      margin: 6px;
+    }
+
+    .reset-btn:hover {
+      background: #475569;
+      transform: translateY(-2px);
     }
 
     #result {
@@ -209,6 +241,14 @@
       font-weight: 900;
       color: #ea580c;
       line-height: 1.1;
+      margin-bottom: 22px;
+    }
+
+    .popup-note {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #64748b;
+      margin-top: -10px;
       margin-bottom: 22px;
     }
 
@@ -293,11 +333,16 @@
 
   <div class="spinner-card">
     <h1 class="text-4xl font-black text-orange-600 uppercase">Name Spinner 🎡</h1>
+
     <div class="powered-by">
       Powered by <a href="https://shabzlabs.com">ShabzLabs.com</a>
     </div>
 
     <p class="text-gray-500 font-bold mt-3">Click spin to randomly choose a name!</p>
+
+    <div class="remaining-pill">
+      Remaining Names: <span id="remainingCount">16</span>
+    </div>
 
     <div class="wheel-wrap">
       <div class="pointer"></div>
@@ -305,6 +350,7 @@
     </div>
 
     <button id="spinBtn" class="spin-btn" onclick="spinWheel()">SPIN! 🚀</button>
+    <button class="reset-btn" onclick="resetSpinner()">Reset Names 🔁</button>
 
     <div id="result"></div>
   </div>
@@ -313,6 +359,7 @@
     <div class="popup-box">
       <div class="popup-title">Selected Person</div>
       <div id="popupName" class="popup-name"></div>
+      <div id="popupNote" class="popup-note">This name has been removed from the spinner.</div>
 
       <div class="popup-buttons">
         <button class="popup-btn close-btn" onclick="closePopup()">Close</button>
@@ -322,28 +369,32 @@
   </div>
 
   <script>
-    const names = [
-      "Jen Hardy",
-      "Jasmine Cauchon",
-      "Kaitlyn Garbutt",
-      "Michelle Evans",
-      "Julia Boni",
-      "Anna Bertoia",
-      "Teresa Kostiuk",
-      "Brooke Benson",
-      "Mackenzie Sprague",
-      "Alicia Atikian",
-      "Broedie Birkhof",
-      "Emma Hustins",
-      "Kayla Quinton",
-      "Jayme Ralston",
-      "Ciara Walsh"
+    const originalPeople = [
+      { name: "Jen Hardy", weight: 1 },
+      { name: "Jasmine Cauchon", weight: 1 },
+      { name: "Kaitlyn Garbutt", weight: 1 },
+      { name: "Michelle Evans", weight: 1 },
+      { name: "Julia Boni", weight: 1 },
+      { name: "Anna Bertoia", weight: 1 },
+      { name: "Teresa Kostiuk", weight: 1 },
+      { name: "Brooke Benson", weight: 1 },
+      { name: "Mackenzie Sprague", weight: 1 },
+      { name: "Alicia Atikian", weight: 1 },
+      { name: "Broedie Birkhof", weight: 1 },
+      { name: "Emma Hustins", weight: 1 },
+      { name: "Kayla Quinton", weight: 1 },
+      { name: "Jayme Ralston", weight: 1 },
+      { name: "Ciara Walsh", weight: 1 },
+      { name: "Matthew Morris", weight: 1 }
     ];
+
+    let people = [...originalPeople];
 
     const colors = [
       "#fde68a", "#bfdbfe", "#fecaca", "#bbf7d0", "#ddd6fe",
       "#fed7aa", "#fbcfe8", "#bae6fd", "#d9f99d", "#e9d5ff",
-      "#fef3c7", "#c7d2fe", "#a7f3d0", "#fda4af", "#93c5fd"
+      "#fef3c7", "#c7d2fe", "#a7f3d0", "#fda4af", "#93c5fd",
+      "#fdba74"
     ];
 
     const wheel = document.getElementById("wheel");
@@ -351,12 +402,23 @@
     const result = document.getElementById("result");
     const winnerPopup = document.getElementById("winnerPopup");
     const popupName = document.getElementById("popupName");
+    const popupNote = document.getElementById("popupNote");
+    const remainingCount = document.getElementById("remainingCount");
 
     let currentRotation = 0;
     let isSpinning = false;
     let audioCtx = null;
 
     const SPIN_DURATION = 5000;
+
+    function updateRemainingCount() {
+      remainingCount.textContent = people.length;
+
+      if (people.length === 0) {
+        spinBtn.disabled = true;
+        result.innerHTML = `<span class="winner">All names have been selected! 🎉</span>`;
+      }
+    }
 
     function startAudio() {
       try {
@@ -423,6 +485,7 @@
 
     function polarToCartesian(cx, cy, r, angleDeg) {
       const angleRad = (angleDeg - 90) * Math.PI / 180;
+
       return {
         x: cx + r * Math.cos(angleRad),
         y: cy + r * Math.sin(angleRad)
@@ -442,17 +505,48 @@
       ].join(" ");
     }
 
+    function getTotalWeight() {
+      return people.reduce((sum, person) => sum + person.weight, 0);
+    }
+
     function drawWheel() {
       wheel.innerHTML = "";
 
       const centerX = 250;
       const centerY = 250;
       const radius = 230;
-      const sliceAngle = 360 / names.length;
 
-      names.forEach((name, index) => {
-        const startAngle = index * sliceAngle;
-        const endAngle = startAngle + sliceAngle;
+      if (people.length === 0) {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", "250");
+        circle.setAttribute("cy", "250");
+        circle.setAttribute("r", "230");
+        circle.setAttribute("fill", "#e5e7eb");
+        circle.setAttribute("stroke", "#374151");
+        circle.setAttribute("stroke-width", "10");
+        wheel.appendChild(circle);
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", "250");
+        text.setAttribute("y", "250");
+        text.setAttribute("fill", "#1f2937");
+        text.setAttribute("font-size", "28");
+        text.setAttribute("font-weight", "900");
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.textContent = "Done!";
+        wheel.appendChild(text);
+
+        return;
+      }
+
+      const totalWeight = getTotalWeight();
+      let currentAngle = 0;
+
+      people.forEach((person, index) => {
+        const sliceAngle = (person.weight / totalWeight) * 360;
+        const startAngle = currentAngle;
+        const endAngle = currentAngle + sliceAngle;
         const midAngle = startAngle + sliceAngle / 2;
 
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -462,19 +556,21 @@
         path.setAttribute("stroke-width", "3");
         wheel.appendChild(path);
 
-        const textPoint = polarToCartesian(centerX, centerY, 145, midAngle);
+        const textPoint = polarToCartesian(centerX, centerY, 150, midAngle);
 
         const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
         text.setAttribute("x", textPoint.x);
         text.setAttribute("y", textPoint.y);
         text.setAttribute("fill", "#1f2937");
-        text.setAttribute("font-size", "12");
+        text.setAttribute("font-size", "11");
         text.setAttribute("font-weight", "900");
         text.setAttribute("text-anchor", "middle");
         text.setAttribute("dominant-baseline", "middle");
         text.setAttribute("transform", `rotate(${midAngle + 90}, ${textPoint.x}, ${textPoint.y})`);
-        text.textContent = name;
+        text.textContent = person.name;
         wheel.appendChild(text);
+
+        currentAngle += sliceAngle;
       });
 
       const rim = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -496,8 +592,54 @@
       wheel.appendChild(hub);
     }
 
+    function pickWeightedPerson() {
+      const totalWeight = getTotalWeight();
+      let randomValue = Math.random() * totalWeight;
+
+      for (const person of people) {
+        randomValue -= person.weight;
+
+        if (randomValue <= 0) {
+          return person;
+        }
+      }
+
+      return people[people.length - 1];
+    }
+
+    function getPersonAngle(personName) {
+      const totalWeight = getTotalWeight();
+      let currentAngle = 0;
+
+      for (const person of people) {
+        const sliceAngle = (person.weight / totalWeight) * 360;
+        const middleAngle = currentAngle + sliceAngle / 2;
+
+        if (person.name === personName) {
+          return middleAngle;
+        }
+
+        currentAngle += sliceAngle;
+      }
+
+      return 0;
+    }
+
+    function removeSelectedPerson(personName) {
+      people = people.filter(person => person.name !== personName);
+      updateRemainingCount();
+      drawWheel();
+    }
+
     function openPopup(name) {
       popupName.textContent = name;
+
+      if (people.length > 1) {
+        popupNote.textContent = "This name has been removed from the spinner.";
+      } else {
+        popupNote.textContent = "That was the final name!";
+      }
+
       winnerPopup.classList.add("show");
     }
 
@@ -510,8 +652,19 @@
       spinWheel();
     }
 
+    function resetSpinner() {
+      closePopup();
+      people = [...originalPeople];
+      currentRotation = 0;
+      wheel.style.transform = `rotate(0deg)`;
+      result.textContent = "";
+      spinBtn.disabled = false;
+      updateRemainingCount();
+      drawWheel();
+    }
+
     function spinWheel() {
-      if (isSpinning) return;
+      if (isSpinning || people.length === 0) return;
 
       closePopup();
       startAudio();
@@ -520,15 +673,15 @@
       spinBtn.disabled = true;
       result.textContent = "Spinning...";
 
-      const sliceAngle = 360 / names.length;
-      const randomIndex = Math.floor(Math.random() * names.length);
+      const selectedPerson = pickWeightedPerson();
+      const targetAngle = getPersonAngle(selectedPerson.name);
 
-      const targetAngle = randomIndex * sliceAngle + sliceAngle / 2;
       const pointerAngle = 0;
       const correction = pointerAngle - targetAngle;
 
       const extraSpins = 360 * 8;
-      const randomOffset = Math.random() * (sliceAngle * 0.5) - (sliceAngle * 0.25);
+      const sectionSize = (selectedPerson.weight / getTotalWeight()) * 360;
+      const randomOffset = Math.random() * (sectionSize * 0.55) - (sectionSize * 0.275);
 
       currentRotation += extraSpins + correction + randomOffset;
 
@@ -546,18 +699,21 @@
       }
 
       setTimeout(() => {
-        const selectedName = names[randomIndex];
-
         playDing();
 
-        result.innerHTML = `Selected: <span class="winner">${selectedName}</span> 🎉`;
-        spinBtn.disabled = false;
+        result.innerHTML = `Selected: <span class="winner">${selectedPerson.name}</span> 🎉`;
         isSpinning = false;
 
-        openPopup(selectedName);
+        openPopup(selectedPerson.name);
+        removeSelectedPerson(selectedPerson.name);
+
+        if (people.length > 0) {
+          spinBtn.disabled = false;
+        }
       }, SPIN_DURATION);
     }
 
+    updateRemainingCount();
     drawWheel();
   </script>
 </body>
