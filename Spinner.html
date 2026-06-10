@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Name Spinner</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fef3c7, #ffedd5, #fce7f3);
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .shabzlabs-home-btn {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 10000;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 16px;
+      background: #4f46e5;
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.28);
+      border-bottom: 4px solid #3730a3;
+      transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .shabzlabs-home-btn:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(79, 70, 229, 0.35);
+    }
+
+    .shabzlabs-home-btn:active {
+      transform: translateY(1px);
+      border-bottom-width: 2px;
+    }
+
+    .spinner-card {
+      width: min(95vw, 700px);
+      background: white;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      border-bottom: 8px solid #e5e7eb;
+    }
+
+    .powered-by {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      font-weight: 900;
+      color: #6366f1;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .powered-by a {
+      color: #4f46e5;
+      text-decoration: none;
+    }
+
+    .powered-by a:hover {
+      text-decoration: underline;
+    }
+
+    .wheel-wrap {
+      position: relative;
+      width: min(88vw, 430px);
+      aspect-ratio: 1 / 1;
+      margin: 25px auto;
+    }
+
+    .pointer {
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 42px solid #ef4444;
+      filter: drop-shadow(0 3px 2px rgba(0,0,0,0.25));
+    }
+
+    #wheel {
+      width: 100%;
+      height: 100%;
+      transition: transform 5s cubic-bezier(0.10, 0.75, 0.12, 1);
+      filter: drop-shadow(0 15px 18px rgba(0,0,0,0.2));
+      transform-origin: center center;
+    }
+
+    .spin-btn {
+      background: #f97316;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 900;
+      padding: 15px 45px;
+      border: none;
+      border-radius: 18px;
+      cursor: pointer;
+      border-bottom: 7px solid #c2410c;
+      box-shadow: 0 10px 18px rgba(249, 115, 22, 0.3);
+      transition: 0.15s ease;
+    }
+
+    .spin-btn:hover {
+      background: #ea580c;
+      transform: translateY(-2px);
+    }
+
+    .spin-btn:active {
+      transform: translateY(2px);
+      border-bottom-width: 3px;
+    }
+
+    .spin-btn:disabled {
+      background: #d1d5db;
+      border-bottom-color: #9ca3af;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    #result {
+      margin-top: 22px;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #1f2937;
+      min-height: 40px;
+    }
+
+    .winner {
+      color: #ea580c;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .popup-overlay.show {
+      display: flex;
+    }
+
+    .popup-box {
+      width: min(92vw, 480px);
+      background: white;
+      border-radius: 30px;
+      padding: 34px 26px;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+      border-bottom: 9px solid #e5e7eb;
+      animation: popIn 0.35s ease;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0.7);
+        opacity: 0;
+      }
+
+      70% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .popup-title {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .popup-name {
+      font-size: 2.3rem;
+      font-weight: 900;
+      color: #ea580c;
+      line-height: 1.1;
+      margin-bottom: 22px;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .popup-btn {
+      border: none;
+      border-radius: 16px;
+      padding: 13px 24px;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .close-btn {
+      background: #e5e7eb;
+      color: #1f2937;
+    }
+
+    .again-btn {
+      background: #f97316;
+      color: white;
+    }
+
+    .popup-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 14px;
+        align-items: flex-start;
+        padding-top: 70px;
+      }
+
+      .shabzlabs-home-btn {
+        top: 10px;
+        right: 10px;
+        padding: 9px 13px;
+        font-size: 0.75rem;
+        border-radius: 14px;
+      }
+
+      .spinner-card {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.7rem !important;
+      }
+
+      .powered-by {
+        font-size: 0.68rem;
+      }
+
+      .spin-btn {
+        font-size: 1.2rem;
+        padding: 13px 34px;
+      }
+
+      #result {
+        font-size: 1.25rem;
+      }
+
+      .popup-name {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="shabzlabs-home-btn" title="Go to ShabzLabs Home">
+    🏠 ShabzLabs
+  </a>
+
+  <div class="spinner-card">
+    <h1 class="text-4xl font-black text-orange-600 uppercase">Name Spinner 🎡</h1>
+    <div class="powered-by">
+      Powered by <a href="https://shabzlabs.com">ShabzLabs.com</a>
+    </div>
+
+    <p class="text-gray-500 font-bold mt-3">Click spin to randomly choose a name!</p>
+
+    <div class="wheel-wrap">
+      <div class="pointer"></div>
+      <svg id="wheel" viewBox="0 0 500 500"></svg>
+    </div>
+
+    <button id="spinBtn" class="spin-btn" onclick="spinWheel()">SPIN! 🚀</button>
+
+    <div id="result"></div>
+  </div>
+
+  <div id="winnerPopup" class="popup-overlay">
+    <div class="popup-box">
+      <div class="popup-title">Selected Person</div>
+      <div id="popupName" class="popup-name"></div>
+
+      <div class="popup-buttons">
+        <button class="popup-btn close-btn" onclick="closePopup()">Close</button>
+        <button class="popup-btn again-btn" onclick="spinAgain()">Spin Again 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const names = [
+      "Jen Hardy",
+      "Jasmine Cauchon",
+      "Kaitlyn Garbutt",
+      "Michelle Evans",
+      "Julia Boni",
+      "Anna Bertoia",
+      "Teresa Kostiuk",
+      "Brooke Benson",
+      "Mackenzie Sprague",
+      "Alicia Atikian",
+      "Broedie Birkhof",
+      "Emma Hustins",
+      "Kayla Quinton",
+      "Jayme Ralston",
+      "Ciara Walsh"
+    ];
+
+    const colors = [
+      "#fde68a", "#bfdbfe", "#fecaca", "#bbf7d0", "#ddd6fe",
+      "#fed7aa", "#fbcfe8", "#bae6fd", "#d9f99d", "#e9d5ff",
+      "#fef3c7", "#c7d2fe", "#a7f3d0", "#fda4af", "#93c5fd"
+    ];
+
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spinBtn");
+    const result = document.getElementById("result");
+    const winnerPopup = document.getElementById("winnerPopup");
+    const popupName = document.getElementById("popupName");
+
+    let currentRotation = 0;
+    let isSpinning = false;
+    let audioCtx = null;
+
+    const SPIN_DURATION = 5000;
+
+    function startAudio() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+      } catch (e) {}
+    }
+
+    function playTick() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(1800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.08);
+
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } catch (e) {}
+    }
+
+    function playDing() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc1.type = "sine";
+        osc1.frequency.setValueAtTime(880, audioCtx.currentTime);
+
+        osc2.type = "sine";
+        osc2.frequency.setValueAtTime(1320, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc1.start();
+        osc2.start();
+
+        osc1.stop(audioCtx.currentTime + 0.8);
+        osc2.stop(audioCtx.currentTime + 0.8);
+      } catch (e) {}
+    }
+
+    function polarToCartesian(cx, cy, r, angleDeg) {
+      const angleRad = (angleDeg - 90) * Math.PI / 180;
+      return {
+        x: cx + r * Math.cos(angleRad),
+        y: cy + r * Math.sin(angleRad)
+      };
+    }
+
+    function createSlicePath(cx, cy, r, startAngle, endAngle) {
+      const start = polarToCartesian(cx, cy, r, endAngle);
+      const end = polarToCartesian(cx, cy, r, startAngle);
+      const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+      return [
+        `M ${cx} ${cy}`,
+        `L ${start.x} ${start.y}`,
+        `A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`,
+        "Z"
+      ].join(" ");
+    }
+
+    function drawWheel() {
+      wheel.innerHTML = "";
+
+      const centerX = 250;
+      const centerY = 250;
+      const radius = 230;
+      const sliceAngle = 360 / names.length;
+
+      names.forEach((name, index) => {
+        const startAngle = index * sliceAngle;
+        const endAngle = startAngle + sliceAngle;
+        const midAngle = startAngle + sliceAngle / 2;
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", createSlicePath(centerX, centerY, radius, startAngle, endAngle));
+        path.setAttribute("fill", colors[index % colors.length]);
+        path.setAttribute("stroke", "#ffffff");
+        path.setAttribute("stroke-width", "3");
+        wheel.appendChild(path);
+
+        const textPoint = polarToCartesian(centerX, centerY, 145, midAngle);
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", textPoint.x);
+        text.setAttribute("y", textPoint.y);
+        text.setAttribute("fill", "#1f2937");
+        text.setAttribute("font-size", "12");
+        text.setAttribute("font-weight", "900");
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.setAttribute("transform", `rotate(${midAngle + 90}, ${textPoint.x}, ${textPoint.y})`);
+        text.textContent = name;
+        wheel.appendChild(text);
+      });
+
+      const rim = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      rim.setAttribute("cx", "250");
+      rim.setAttribute("cy", "250");
+      rim.setAttribute("r", "230");
+      rim.setAttribute("fill", "none");
+      rim.setAttribute("stroke", "#374151");
+      rim.setAttribute("stroke-width", "10");
+      wheel.appendChild(rim);
+
+      const hub = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      hub.setAttribute("cx", "250");
+      hub.setAttribute("cy", "250");
+      hub.setAttribute("r", "30");
+      hub.setAttribute("fill", "white");
+      hub.setAttribute("stroke", "#374151");
+      hub.setAttribute("stroke-width", "6");
+      wheel.appendChild(hub);
+    }
+
+    function openPopup(name) {
+      popupName.textContent = name;
+      winnerPopup.classList.add("show");
+    }
+
+    function closePopup() {
+      winnerPopup.classList.remove("show");
+    }
+
+    function spinAgain() {
+      closePopup();
+      spinWheel();
+    }
+
+    function spinWheel() {
+      if (isSpinning) return;
+
+      closePopup();
+      startAudio();
+
+      isSpinning = true;
+      spinBtn.disabled = true;
+      result.textContent = "Spinning...";
+
+      const sliceAngle = 360 / names.length;
+      const randomIndex = Math.floor(Math.random() * names.length);
+
+      const targetAngle = randomIndex * sliceAngle + sliceAngle / 2;
+      const pointerAngle = 0;
+      const correction = pointerAngle - targetAngle;
+
+      const extraSpins = 360 * 8;
+      const randomOffset = Math.random() * (sliceAngle * 0.5) - (sliceAngle * 0.25);
+
+      currentRotation += extraSpins + correction + randomOffset;
+
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      const ticks = 38;
+
+      for (let i = 0; i < ticks; i++) {
+        let t = i / ticks;
+        let delay = (1 - Math.pow(1 - t, 3)) * SPIN_DURATION;
+
+        setTimeout(() => {
+          if (isSpinning) playTick();
+        }, delay);
+      }
+
+      setTimeout(() => {
+        const selectedName = names[randomIndex];
+
+        playDing();
+
+        result.innerHTML = `Selected: <span class="winner">${selectedName}</span> 🎉`;
+        spinBtn.disabled = false;
+        isSpinning = false;
+
+        openPopup(selectedName);
+      }, SPIN_DURATION);
+    }
+
+    drawWheel();
+  </script>
+</body>
+</html>
