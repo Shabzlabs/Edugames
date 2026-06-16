@@ -235,7 +235,7 @@
 
     .wheel-wrap {
       position: relative;
-      width: min(88vw, 430px);
+      width: min(100%, 430px);
       aspect-ratio: 1 / 1;
       margin: 18px auto 26px;
     }
@@ -260,6 +260,7 @@
       transition: transform 5s cubic-bezier(0.10, 0.75, 0.12, 1);
       filter: drop-shadow(0 15px 18px rgba(0,0,0,0.2));
       transform-origin: center center;
+      display: block;
     }
 
     .button-row {
@@ -479,21 +480,28 @@
         padding: 6px 12px;
       }
 
+      .page {
+        padding: 0 0 20px;
+      }
+
       .hero-box {
         padding: 30px 20px;
-        border-radius: 26px;
+        border-radius: 0 0 26px 26px;
+        margin-bottom: 0;
       }
 
       .section-box {
-        padding: 20px;
+        padding: 18px;
+        border-radius: 0;
       }
 
       .spinner-card {
-        padding: 24px 18px;
+        padding: 24px 14px;
+        border-radius: 24px;
       }
 
       .wheel-wrap {
-        width: min(86vw, 390px);
+        width: min(100%, 390px);
       }
 
       .spin-btn {
