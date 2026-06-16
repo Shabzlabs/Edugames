@@ -21,6 +21,25 @@
       box-sizing: border-box;
     }
 
+    .shabzlabs-logo-link {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      z-index: 10000;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .shabzlabs-logo {
+      width: 120px;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.18));
+    }
+
     .shabzlabs-home-btn {
       position: fixed;
       top: 14px;
@@ -287,7 +306,16 @@
       body {
         padding: 14px;
         align-items: flex-start;
-        padding-top: 70px;
+        padding-top: 78px;
+      }
+
+      .shabzlabs-logo-link {
+        top: 10px;
+        left: 10px;
+      }
+
+      .shabzlabs-logo {
+        width: 92px;
       }
 
       .shabzlabs-home-btn {
@@ -327,6 +355,10 @@
 </head>
 
 <body>
+  <a href="index.html" class="shabzlabs-logo-link" title="Go to ShabzLabs Home">
+    <img src="logo.png" alt="ShabzLabs Logo" class="shabzlabs-logo" />
+  </a>
+
   <a href="index.html" class="shabzlabs-home-btn" title="Go to ShabzLabs Home">
     🏠 ShabzLabs
   </a>
@@ -341,7 +373,7 @@
     <p class="text-gray-500 font-bold mt-3">Click spin to randomly choose a name!</p>
 
     <div class="remaining-pill">
-      Remaining Names: <span id="remainingCount">16</span>
+      Remaining Names: <span id="remainingCount">15</span>
     </div>
 
     <div class="wheel-wrap">
@@ -384,8 +416,7 @@
       { name: "Emma Hustins", weight: 1 },
       { name: "Kayla Quinton", weight: 1 },
       { name: "Jayme Ralston", weight: 1 },
-      { name: "Ciara Walsh", weight: 1 },
-      { name: "Matthew Morris", weight: 1 }
+      { name: "Ciara Walsh", weight: 1 }
     ];
 
     let people = [...originalPeople];
@@ -393,8 +424,7 @@
     const colors = [
       "#fde68a", "#bfdbfe", "#fecaca", "#bbf7d0", "#ddd6fe",
       "#fed7aa", "#fbcfe8", "#bae6fd", "#d9f99d", "#e9d5ff",
-      "#fef3c7", "#c7d2fe", "#a7f3d0", "#fda4af", "#93c5fd",
-      "#fdba74"
+      "#fef3c7", "#c7d2fe", "#a7f3d0", "#fda4af", "#93c5fd"
     ];
 
     const wheel = document.getElementById("wheel");
