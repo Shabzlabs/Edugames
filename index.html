@@ -3,14 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShabzLabs</title>
+  <title>Name Spinner | ShabzLabs</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2337631070618916"
-     crossorigin="anonymous"></script>
 
   <style>
     :root {
@@ -94,7 +90,7 @@
     .hero-box {
       background: white;
       border-radius: 32px;
-      padding: 38px 28px;
+      padding: 32px 24px;
       text-align: center;
       box-shadow: 0 18px 35px rgba(30, 64, 175, 0.12);
       border: 1px solid rgba(99, 102, 241, 0.15);
@@ -144,26 +140,41 @@
       text-transform: uppercase;
       padding: 8px 16px;
       border-radius: 999px;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .menu-title {
-      font-family: 'Quicksand', sans-serif;
       font-size: clamp(36px, 6vw, 56px);
       font-weight: 700;
       color: #0f172a;
-      margin: 0 0 16px;
+      margin: 0 0 10px;
       line-height: 1.08;
       letter-spacing: -0.03em;
     }
 
     .menu-title span {
-      font-family: 'Quicksand', sans-serif;
-      font-weight: 700;
       color: transparent;
       background: linear-gradient(90deg, #06b6d4, #4f46e5);
       -webkit-background-clip: text;
       background-clip: text;
+    }
+
+    .powered-by {
+      font-size: 0.8rem;
+      font-weight: 900;
+      color: #6366f1;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
+
+    .powered-by a {
+      color: #4f46e5;
+      text-decoration: none;
+    }
+
+    .powered-by a:hover {
+      text-decoration: underline;
     }
 
     .hero-description {
@@ -171,7 +182,7 @@
       font-weight: 500;
       color: #475569;
       line-height: 1.7;
-      margin: 0 auto 20px;
+      margin: 0 auto 16px;
     }
 
     .subtitle-tag {
@@ -185,158 +196,259 @@
       border: 2px solid #10b981;
     }
 
-    .section-box {
+    .spinner-section {
       background: rgba(255, 255, 255, 0.72);
       border: 1px solid rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(10px);
       border-radius: 30px;
       padding: 26px;
       box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
-    }
-
-    .section-heading {
       text-align: center;
-      margin-bottom: 24px;
     }
 
-    .section-heading h2 {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 32px;
-      font-weight: 700;
-      color: #1d4ed8;
-      margin: 0 0 8px;
-      letter-spacing: -0.02em;
-    }
-
-    .section-heading p {
-      font-size: 16px;
-      font-weight: 500;
-      color: #475569;
-      margin: 0;
-    }
-
-    .games-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 25px;
-    }
-
-    .game-card {
+    .spinner-card {
       background: white;
       border-radius: 28px;
       padding: 30px 26px;
       text-align: center;
       box-shadow: 0 8px 0 #e5e7eb;
-      transition: 0.2s;
       border: 3px solid #f3f4f6;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
       position: relative;
       overflow: hidden;
+      max-width: 720px;
+      margin: 0 auto;
     }
 
-    .game-card:hover {
-      transform: translateY(-8px) rotate(1deg);
-      border-color: var(--accent-yellow);
-      box-shadow: 0 12px 0 #fde047;
-    }
-
-    .game-card::before {
+    .spinner-card::before {
       content: "";
       position: absolute;
       inset: auto -30px -55px auto;
-      width: 120px;
-      height: 120px;
+      width: 150px;
+      height: 150px;
       background: rgba(250, 204, 21, 0.18);
       border-radius: 999px;
-      transition: 0.2s;
     }
 
-    .game-card:hover::before {
-      transform: scale(1.25);
-      background: rgba(250, 204, 21, 0.28);
-    }
-
-    .game-card > div,
-    .game-card > a,
-    .game-card > span {
+    .spinner-card > * {
       position: relative;
       z-index: 2;
     }
 
-    .game-icon {
-      height: 130px;
-      font-size: 60px;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .game-icon img {
-      max-width: 150px;
-      max-height: 130px;
-      height: auto;
-      object-fit: contain;
-      margin: 0 auto;
-      display: block;
-    }
-
-    .game-card h3 {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 28px;
-      font-weight: 500;
-      margin: 22px 0 14px;
-      color: #2563eb;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-    }
-
-    .game-card p {
-      font-size: 18px;
-      font-weight: 500;
-      line-height: 1.55;
-      color: #4b5563;
-      margin: 0 auto;
-      max-width: 330px;
-    }
-
-    .tag {
+    .remaining-pill {
       display: inline-block;
-      background: #dcfce7;
-      color: #166534;
-      padding: 6px 14px;
+      margin-top: 4px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.95rem;
+      font-weight: 900;
+      padding: 8px 16px;
       border-radius: 999px;
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 12px;
-      border: 2px solid #86efac;
+      border: 2px solid #bfdbfe;
     }
 
-    .play-btn {
+    .wheel-wrap {
+      position: relative;
+      width: min(88vw, 430px);
+      aspect-ratio: 1 / 1;
+      margin: 26px auto;
+    }
+
+    .pointer {
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 42px solid #ef4444;
+      filter: drop-shadow(0 3px 2px rgba(0,0,0,0.25));
+    }
+
+    #wheel {
+      width: 100%;
+      height: 100%;
+      transition: transform 5s cubic-bezier(0.10, 0.75, 0.12, 1);
+      filter: drop-shadow(0 15px 18px rgba(0,0,0,0.2));
+      transform-origin: center center;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .spin-btn {
       display: inline-block;
-      margin-top: 15px;
       background: #f59e0b;
       color: white;
       text-decoration: none;
-      padding: 12px 25px;
+      padding: 13px 34px;
       border-radius: 999px;
-      font-weight: bold;
-      font-size: 18px;
+      font-weight: 900;
+      font-size: 20px;
       box-shadow: 0 5px 0 #b45309;
       transition: 0.1s;
+      border: none;
+      cursor: pointer;
     }
 
-    .play-btn:hover {
+    .spin-btn:hover {
       background: #f97316;
       transform: translateY(-2px);
     }
 
-    .play-btn:active {
+    .spin-btn:active {
       transform: translateY(3px);
       box-shadow: 0 2px 0 #b45309;
+    }
+
+    .spin-btn:disabled {
+      background: #d1d5db;
+      box-shadow: 0 5px 0 #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .reset-btn {
+      display: inline-block;
+      background: #3b82f6;
+      color: white;
+      text-decoration: none;
+      padding: 13px 26px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 17px;
+      box-shadow: 0 5px 0 #1d4ed8;
+      transition: 0.1s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .reset-btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    .reset-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #1d4ed8;
+    }
+
+    #result {
+      margin-top: 22px;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #1f2937;
+      min-height: 40px;
+    }
+
+    .winner {
+      color: #ea580c;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .popup-overlay.show {
+      display: flex;
+    }
+
+    .popup-box {
+      width: min(92vw, 480px);
+      background: white;
+      border-radius: 30px;
+      padding: 34px 26px;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+      border-bottom: 9px solid #e5e7eb;
+      animation: popIn 0.35s ease;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0.7);
+        opacity: 0;
+      }
+
+      70% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .popup-title {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .popup-name {
+      font-size: 2.3rem;
+      font-weight: 900;
+      color: #ea580c;
+      line-height: 1.1;
+      margin-bottom: 22px;
+    }
+
+    .popup-note {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #64748b;
+      margin-top: -10px;
+      margin-bottom: 22px;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .popup-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 13px 24px;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .close-btn {
+      background: #e5e7eb;
+      color: #1f2937;
+    }
+
+    .again-btn {
+      background: #f59e0b;
+      color: white;
+      box-shadow: 0 5px 0 #b45309;
+    }
+
+    .popup-btn:hover {
+      transform: translateY(-2px);
     }
 
     .footer-box {
@@ -377,6 +489,10 @@
         padding: 6px 12px;
       }
 
+      .page {
+        padding-top: 24px;
+      }
+
       .hero-box {
         padding: 30px 20px;
         border-radius: 26px;
@@ -386,29 +502,30 @@
         font-size: 17px;
       }
 
-      .section-box {
+      .spinner-section {
         padding: 20px;
       }
 
-      .section-heading h2 {
-        font-size: 28px;
+      .spinner-card {
+        padding: 22px 18px;
       }
 
-      .game-icon {
-        height: 115px;
+      .spin-btn {
+        font-size: 18px;
+        padding: 12px 28px;
       }
 
-      .game-icon img {
-        max-width: 130px;
-        max-height: 115px;
+      .reset-btn {
+        font-size: 15px;
+        padding: 12px 22px;
       }
 
-      .game-card h3 {
-        font-size: 25px;
+      #result {
+        font-size: 1.25rem;
       }
 
-      .game-card p {
-        font-size: 16px;
+      .popup-name {
+        font-size: 1.8rem;
       }
     }
   </style>
@@ -421,10 +538,10 @@
     </a>
 
     <div class="nav-links">
-      <a href="index.html" class="nav-item active">Home</a>
+      <a href="index.html" class="nav-item">Home</a>
       <a href="learn.html" class="nav-item">Learn</a>
       <a href="teachers.html" class="nav-item">Teachers</a>
-      <a href="games.html" class="nav-item">Games</a>
+      <a href="games.html" class="nav-item active">Games</a>
       <a href="about.html" class="nav-item">About</a>
     </div>
   </nav>
@@ -432,117 +549,39 @@
   <div class="page">
     <header class="hero-box">
       <div class="hero-content">
-        <span class="welcome-pill">Welcome to the Lab!</span>
-        <h2 class="menu-title">Interactive Learning That Feels Like <span>Play</span></h2>
+        <span class="welcome-pill">Classroom Tool</span>
+        <h1 class="menu-title">Name <span>Spinner</span> 🎡</h1>
+
+        <div class="powered-by">
+          Powered by <a href="https://shabzlabs.com">ShabzLabs.com</a>
+        </div>
+
         <p class="hero-description">
-          Explore fun learning games and classroom resources designed for primary students, teachers, parents, and tutors.
-          Build skills in math, literacy, shapes, probability, and more.
+          Randomly choose a student name with a fun spinning wheel. Each selected name is removed until everyone has had a turn.
         </p>
-        <span class="subtitle-tag">Directly aligned with the Ontario Curriculum and regularly updated</span>
+
+        <span class="subtitle-tag">Great for groups, presentations, classroom activities, and participation</span>
       </div>
     </header>
 
-    <section class="section-box">
-      <div class="section-heading">
-        <h2>Choose a Learning Activity</h2>
-        <p>Pick a card below to start playing, practising, or exploring.</p>
+    <section class="spinner-section">
+      <div class="spinner-card">
+        <div class="remaining-pill">
+          Remaining Names: <span id="remainingCount">15</span>
+        </div>
+
+        <div class="wheel-wrap">
+          <div class="pointer"></div>
+          <svg id="wheel" viewBox="0 0 500 500"></svg>
+        </div>
+
+        <div class="button-row">
+          <button id="spinBtn" class="spin-btn" onclick="spinWheel()">SPIN! 🚀</button>
+          <button class="reset-btn" onclick="resetSpinner()">Reset Names 🔁</button>
+        </div>
+
+        <div id="result"></div>
       </div>
-
-      <section class="games-grid">
-        <div class="game-card">
-          <div>
-            <div class="game-icon">
-              <img src="shapespacelogo.png" alt="Shape Space Logo">
-            </div>
-            <span class="tag">Shapes</span>
-            <h3>Shape Space</h3>
-            <p>Can you find all the hidden shapes in the lab?</p>
-          </div>
-          <a class="play-btn" href="shapeselection.html">PLAY! 🚀</a>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">
-              <img src="wizard.png" alt="Wizard Shape Quest Logo">
-            </div>
-            <span class="tag">Patterns</span>
-            <h3>Wizard Shape Quest</h3>
-            <p>Use your magic brain to spot, continue, and complete patterns!</p>
-          </div>
-          <a class="play-btn" href="wizardpattern.html">PLAY! 🚀</a>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🫧</div>
-            <span class="tag">Division</span>
-            <h3>Bubble Division</h3>
-            <p>Division Using Equal Groups!</p>
-          </div>
-          <a class="play-btn" href="bubbledivision.html">PLAY! 🚀</a>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🧩</div>
-            <span class="tag">Words</span>
-            <h3>Word Maker</h3>
-            <p>Smash two words together to make a new one!</p>
-          </div>
-          <a class="play-btn" href="compound.html">PLAY! 🚀</a>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🎾</div>
-            <span class="tag">3D Objects</span>
-            <h3>Roll or Stack?</h3>
-            <p>Will it roll? Will it stack? Let's test it out!</p>
-          </div>
-          <a class="play-btn" href="rollstack.html">PLAY! 🚀</a>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🎡</div>
-            <span class="tag">Math</span>
-            <h3>Spinner Adventure</h3>
-            <p>Spin the wheel and track the data with tallies!</p>
-          </div>
-          <a class="play-btn" href="probability.html">PLAY! 🚀</a>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🎡</div>
-            <span class="tag">Classroom Tool</span>
-            <h3>Name Spinner</h3>
-            <p>Randomly choose a name with a fun spinning wheel!</p>
-          </div>
-          <a class="play-btn" href="spinner.html">OPEN 🎯</a>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🌴</div>
-            <span class="tag">Addition</span>
-            <h3>Addition Jungle</h3>
-            <p>Solve fun addition problems deep in the jungle!</p>
-          </div>
-          <a class="play-btn" href="addition.html">PLAY! 🚀</a>
-        </div>
-
-        <div class="game-card">
-          <div>
-            <div class="game-icon">🔢</div>
-            <span class="tag">Writing Tool</span>
-            <h3>Word Counter</h3>
-            <p>Count your words, characters, and sentences while you write!</p>
-          </div>
-          <a class="play-btn" href="wordcountstudio.html">OPEN ✏️</a>
-        </div>
-      </section>
     </section>
 
     <footer class="footer-box">
@@ -558,5 +597,365 @@
       </div>
     </footer>
   </div>
+
+  <div id="winnerPopup" class="popup-overlay">
+    <div class="popup-box">
+      <div class="popup-title">Selected Person</div>
+      <div id="popupName" class="popup-name"></div>
+      <div id="popupNote" class="popup-note">This name has been removed from the spinner.</div>
+
+      <div class="popup-buttons">
+        <button class="popup-btn close-btn" onclick="closePopup()">Close</button>
+        <button class="popup-btn again-btn" onclick="spinAgain()">Spin Again 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const originalPeople = [
+      { name: "Jen Hardy", weight: 1 },
+      { name: "Jasmine Cauchon", weight: 1 },
+      { name: "Kaitlyn Garbutt", weight: 1 },
+      { name: "Michelle Evans", weight: 1 },
+      { name: "Julia Boni", weight: 1 },
+      { name: "Anna Bertoia", weight: 1 },
+      { name: "Teresa Kostiuk", weight: 1 },
+      { name: "Brooke Benson", weight: 1 },
+      { name: "Mackenzie Sprague", weight: 1 },
+      { name: "Alicia Atikian", weight: 1 },
+      { name: "Broedie Birkhof", weight: 1 },
+      { name: "Emma Hustins", weight: 1 },
+      { name: "Kayla Quinton", weight: 1 },
+      { name: "Jayme Ralston", weight: 1 },
+      { name: "Ciara Walsh", weight: 1 }
+    ];
+
+    let people = [...originalPeople];
+
+    const colors = [
+      "#fde68a", "#bfdbfe", "#fecaca", "#bbf7d0", "#ddd6fe",
+      "#fed7aa", "#fbcfe8", "#bae6fd", "#d9f99d", "#e9d5ff",
+      "#fef3c7", "#c7d2fe", "#a7f3d0", "#fda4af", "#93c5fd"
+    ];
+
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spinBtn");
+    const result = document.getElementById("result");
+    const winnerPopup = document.getElementById("winnerPopup");
+    const popupName = document.getElementById("popupName");
+    const popupNote = document.getElementById("popupNote");
+    const remainingCount = document.getElementById("remainingCount");
+
+    let currentRotation = 0;
+    let isSpinning = false;
+    let audioCtx = null;
+
+    const SPIN_DURATION = 5000;
+
+    function updateRemainingCount() {
+      remainingCount.textContent = people.length;
+
+      if (people.length === 0) {
+        spinBtn.disabled = true;
+        result.innerHTML = `<span class="winner">All names have been selected! 🎉</span>`;
+      }
+    }
+
+    function startAudio() {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+      } catch (e) {}
+    }
+
+    function playTick() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(1800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.08);
+
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+      } catch (e) {}
+    }
+
+    function playDing() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc1.type = "sine";
+        osc1.frequency.setValueAtTime(880, audioCtx.currentTime);
+
+        osc2.type = "sine";
+        osc2.frequency.setValueAtTime(1320, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc1.start();
+        osc2.start();
+
+        osc1.stop(audioCtx.currentTime + 0.8);
+        osc2.stop(audioCtx.currentTime + 0.8);
+      } catch (e) {}
+    }
+
+    function polarToCartesian(cx, cy, r, angleDeg) {
+      const angleRad = (angleDeg - 90) * Math.PI / 180;
+
+      return {
+        x: cx + r * Math.cos(angleRad),
+        y: cy + r * Math.sin(angleRad)
+      };
+    }
+
+    function createSlicePath(cx, cy, r, startAngle, endAngle) {
+      const start = polarToCartesian(cx, cy, r, endAngle);
+      const end = polarToCartesian(cx, cy, r, startAngle);
+      const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+      return [
+        `M ${cx} ${cy}`,
+        `L ${start.x} ${start.y}`,
+        `A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`,
+        "Z"
+      ].join(" ");
+    }
+
+    function getTotalWeight() {
+      return people.reduce((sum, person) => sum + person.weight, 0);
+    }
+
+    function drawWheel() {
+      wheel.innerHTML = "";
+
+      const centerX = 250;
+      const centerY = 250;
+      const radius = 230;
+
+      if (people.length === 0) {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", "250");
+        circle.setAttribute("cy", "250");
+        circle.setAttribute("r", "230");
+        circle.setAttribute("fill", "#e5e7eb");
+        circle.setAttribute("stroke", "#374151");
+        circle.setAttribute("stroke-width", "10");
+        wheel.appendChild(circle);
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", "250");
+        text.setAttribute("y", "250");
+        text.setAttribute("fill", "#1f2937");
+        text.setAttribute("font-size", "28");
+        text.setAttribute("font-weight", "900");
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.textContent = "Done!";
+        wheel.appendChild(text);
+
+        return;
+      }
+
+      const totalWeight = getTotalWeight();
+      let currentAngle = 0;
+
+      people.forEach((person, index) => {
+        const sliceAngle = (person.weight / totalWeight) * 360;
+        const startAngle = currentAngle;
+        const endAngle = currentAngle + sliceAngle;
+        const midAngle = startAngle + sliceAngle / 2;
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", createSlicePath(centerX, centerY, radius, startAngle, endAngle));
+        path.setAttribute("fill", colors[index % colors.length]);
+        path.setAttribute("stroke", "#ffffff");
+        path.setAttribute("stroke-width", "3");
+        wheel.appendChild(path);
+
+        const textPoint = polarToCartesian(centerX, centerY, 150, midAngle);
+
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", textPoint.x);
+        text.setAttribute("y", textPoint.y);
+        text.setAttribute("fill", "#1f2937");
+        text.setAttribute("font-size", "11");
+        text.setAttribute("font-weight", "900");
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.setAttribute("transform", `rotate(${midAngle + 90}, ${textPoint.x}, ${textPoint.y})`);
+        text.textContent = person.name;
+        wheel.appendChild(text);
+
+        currentAngle += sliceAngle;
+      });
+
+      const rim = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      rim.setAttribute("cx", "250");
+      rim.setAttribute("cy", "250");
+      rim.setAttribute("r", "230");
+      rim.setAttribute("fill", "none");
+      rim.setAttribute("stroke", "#374151");
+      rim.setAttribute("stroke-width", "10");
+      wheel.appendChild(rim);
+
+      const hub = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      hub.setAttribute("cx", "250");
+      hub.setAttribute("cy", "250");
+      hub.setAttribute("r", "30");
+      hub.setAttribute("fill", "white");
+      hub.setAttribute("stroke", "#374151");
+      hub.setAttribute("stroke-width", "6");
+      wheel.appendChild(hub);
+    }
+
+    function pickWeightedPerson() {
+      const totalWeight = getTotalWeight();
+      let randomValue = Math.random() * totalWeight;
+
+      for (const person of people) {
+        randomValue -= person.weight;
+
+        if (randomValue <= 0) {
+          return person;
+        }
+      }
+
+      return people[people.length - 1];
+    }
+
+    function getPersonAngle(personName) {
+      const totalWeight = getTotalWeight();
+      let currentAngle = 0;
+
+      for (const person of people) {
+        const sliceAngle = (person.weight / totalWeight) * 360;
+        const middleAngle = currentAngle + sliceAngle / 2;
+
+        if (person.name === personName) {
+          return middleAngle;
+        }
+
+        currentAngle += sliceAngle;
+      }
+
+      return 0;
+    }
+
+    function removeSelectedPerson(personName) {
+      people = people.filter(person => person.name !== personName);
+      updateRemainingCount();
+      drawWheel();
+    }
+
+    function openPopup(name) {
+      popupName.textContent = name;
+
+      if (people.length > 1) {
+        popupNote.textContent = "This name has been removed from the spinner.";
+      } else {
+        popupNote.textContent = "That was the final name!";
+      }
+
+      winnerPopup.classList.add("show");
+    }
+
+    function closePopup() {
+      winnerPopup.classList.remove("show");
+    }
+
+    function spinAgain() {
+      closePopup();
+      spinWheel();
+    }
+
+    function resetSpinner() {
+      closePopup();
+      people = [...originalPeople];
+      currentRotation = 0;
+      wheel.style.transform = `rotate(0deg)`;
+      result.textContent = "";
+      spinBtn.disabled = false;
+      updateRemainingCount();
+      drawWheel();
+    }
+
+    function spinWheel() {
+      if (isSpinning || people.length === 0) return;
+
+      closePopup();
+      startAudio();
+
+      isSpinning = true;
+      spinBtn.disabled = true;
+      result.textContent = "Spinning...";
+
+      const selectedPerson = pickWeightedPerson();
+      const targetAngle = getPersonAngle(selectedPerson.name);
+
+      const pointerAngle = 0;
+      const correction = pointerAngle - targetAngle;
+
+      const extraSpins = 360 * 8;
+      const sectionSize = (selectedPerson.weight / getTotalWeight()) * 360;
+      const randomOffset = Math.random() * (sectionSize * 0.55) - (sectionSize * 0.275);
+
+      currentRotation += extraSpins + correction + randomOffset;
+
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      const ticks = 38;
+
+      for (let i = 0; i < ticks; i++) {
+        let t = i / ticks;
+        let delay = (1 - Math.pow(1 - t, 3)) * SPIN_DURATION;
+
+        setTimeout(() => {
+          if (isSpinning) playTick();
+        }, delay);
+      }
+
+      setTimeout(() => {
+        playDing();
+
+        result.innerHTML = `Selected: <span class="winner">${selectedPerson.name}</span> 🎉`;
+        isSpinning = false;
+
+        openPopup(selectedPerson.name);
+        removeSelectedPerson(selectedPerson.name);
+
+        if (people.length > 0) {
+          spinBtn.disabled = false;
+        }
+      }, SPIN_DURATION);
+    }
+
+    updateRemainingCount();
+    drawWheel();
+  </script>
 </body>
 </html>
