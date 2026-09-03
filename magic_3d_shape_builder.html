@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic 3D Shape Builder - Grade 1 Geometry</title>
+
+    <!-- Tailwind CSS for cheerful responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Fredoka & Outfits for kid-friendly readable typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons for intuitive button cues -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Canvas Confetti for rewards -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            overflow: hidden;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        }
+
+        /* Fun bouncy custom button style */
+        .btn-game {
+            transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+        }
+        .btn-game:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 rgba(0,0,0,0.15);
+        }
+        .btn-game:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        /* Pulse glow animation for active marshmallows */
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+        .glow-active {
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        /* Glassmorphism panel styling */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 3px solid rgba(255, 255, 255, 0.6);
+        }
+
+        canvas {
+            touch-action: none;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col justify-between p-2 md:p-4 select-none">
+
+    <!-- TOP HEADER / CONTROL BAR -->
+    <header class="w-full flex justify-between items-center z-20 gap-2">
+        <!-- Title & Mascot -->
+        <div class="glass-card rounded-2xl px-3 py-2 md:px-5 md:py-3 flex items-center gap-3 shadow-lg">
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-yellow-400 rounded-full flex items-center justify-center text-2xl shadow-inner border-2 border-yellow-200">
+                🤖
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-indigo-900 leading-tight">3D Shape Builder</h1>
+                <p id="subheading" class="text-xs md:text-sm font-semibold text-indigo-600">Grade 1 Geometry Adventure</p>
+            </div>
+        </div>
+
+        <!-- Voice & Audio Controls -->
+        <div class="flex items-center gap-2">
+            <button id="speak-btn" class="btn-game bg-purple-500 hover:bg-purple-600 text-white p-3 md:px-4 md:py-3 rounded-2xl font-bold flex items-center gap-2 shadow-md">
+                <i class="fa-solid fa-volume-high text-lg"></i>
+                <span class="hidden md:inline">Listen</span>
+            </button>
+            <button id="sound-toggle-btn" class="btn-game bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-2xl font-bold shadow-md">
+                <i id="sound-icon" class="fa-solid fa-music text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA WITH 3D VIEWPORT -->
+    <main class="relative flex-1 w-full my-2 rounded-3xl overflow-hidden shadow-2xl border-4 border-white/80 bg-gradient-to-b from-sky-200 to-indigo-100 flex items-center justify-center">
+        
+        <!-- Three.js Canvas Container -->
+        <div id="canvas-container" class="w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing"></div>
+
+        <!-- On-Screen Guidance Banner -->
+        <div id="instruction-card" class="absolute top-4 left-1/2 transform -translate-x-1/2 glass-card rounded-full px-6 py-3 shadow-xl flex items-center gap-3 z-10 max-w-[90%] transition-all duration-300">
+            <span class="text-2xl">✨</span>
+            <span id="instruction-text" class="text-sm md:text-lg font-bold text-indigo-900 text-center">
+                Tap two Marshmallows to draw a Line! Tap any Line to delete it!
+            </span>
+        </div>
+
+        <!-- Floating Live Shape Counter Badge -->
+        <div class="absolute bottom-4 left-4 glass-card rounded-2xl p-3 shadow-xl z-10 flex flex-col gap-1 min-w-[140px]">
+            <div class="text-xs font-bold uppercase tracking-wider text-indigo-400">Shape Stats</div>
+            <div class="flex justify-between items-center text-sm font-bold text-pink-600">
+                <span><i class="fa-solid fa-circle text-xs mr-1"></i> Corners:</span>
+                <span id="corner-count" class="text-lg bg-pink-100 px-2 rounded-md">0</span>
+            </div>
+            <div class="flex justify-between items-center text-sm font-bold text-blue-600">
+                <span><i class="fa-solid fa-grip-lines text-xs mr-1"></i> Lines:</span>
+                <span id="edge-count" class="text-lg bg-blue-100 px-2 rounded-md">0</span>
+            </div>
+            <div id="target-stat-container" class="border-t border-indigo-100 mt-1 pt-1 flex justify-between items-center text-xs font-bold text-indigo-800">
+                <span>Target:</span>
+                <span id="target-stat-text">12 Lines</span>
+            </div>
+        </div>
+
+        <!-- 3D Rotation Touch Helper Control Overlay -->
+        <div class="absolute bottom-4 right-4 flex flex-col gap-2 z-10">
+            <button id="rotate-left-btn" class="btn-game bg-white text-indigo-800 w-10 h-10 md:w-12 md:h-12 rounded-full font-bold shadow-lg flex items-center justify-center text-lg">
+                <i class="fa-solid fa-rotate-left"></i>
+            </button>
+            <button id="rotate-right-btn" class="btn-game bg-white text-indigo-800 w-10 h-10 md:w-12 md:h-12 rounded-full font-bold shadow-lg flex items-center justify-center text-lg">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
+            <button id="reset-cam-btn" class="btn-game bg-white text-indigo-800 w-10 h-10 md:w-12 md:h-12 rounded-full font-bold shadow-lg flex items-center justify-center text-sm" title="Reset Camera">
+                <i class="fa-solid fa-eye"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- BOTTOM LEVEL SELECTOR AND TOOLBAR -->
+    <footer class="w-full flex flex-col md:flex-row justify-between items-center gap-2 z-20">
+        
+        <!-- Mode & Level Selector Tabs -->
+        <div class="flex items-center gap-1 md:gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none">
+            <button class="level-tab btn-game bg-amber-400 text-amber-950 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shrink-0 active-level" data-level="0">
+                <span>🧊</span> Cube
+            </button>
+            <button class="level-tab btn-game bg-white/80 hover:bg-white text-indigo-900 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shrink-0" data-level="1">
+                <span>🔺</span> Tri-Pyramid
+            </button>
+            <button class="level-tab btn-game bg-white/80 hover:bg-white text-indigo-900 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shrink-0" data-level="2">
+                <span>🎪</span> Sq-Pyramid
+            </button>
+            <button class="level-tab btn-game bg-white/80 hover:bg-white text-indigo-900 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shrink-0" data-level="3">
+                <span>⛺</span> Tri-Prism
+            </button>
+            <button class="level-tab btn-game bg-white/80 hover:bg-white text-indigo-900 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shrink-0" data-level="4">
+                <span>📦</span> Rect-Prism
+            </button>
+            <button class="level-tab btn-game bg-emerald-400 text-emerald-950 px-3 py-2 md:px-4 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shrink-0" data-level="free">
+                <span>🎨</span> Free Build
+            </button>
+        </div>
+
+        <!-- Action Buttons (Solidify, Clear, Hints) -->
+        <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+            <button id="add-node-btn" class="btn-game hidden bg-pink-500 hover:bg-pink-600 text-white px-3 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shadow-md">
+                <i class="fa-solid fa-plus-circle"></i> Add Corner
+            </button>
+            <button id="solidify-btn" class="btn-game bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 md:px-4 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shadow-md">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Magic Fill
+            </button>
+            <button id="reset-shape-btn" class="btn-game bg-rose-500 hover:bg-rose-600 text-white px-3 py-2 md:px-4 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shadow-md">
+                <i class="fa-solid fa-rotate-right"></i> Start Over
+            </button>
+        </div>
+    </footer>
+
+    <!-- CELEBRATION MODAL OVERLAY -->
+    <div id="celebration-modal" class="fixed inset-0 bg-indigo-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card rounded-3xl p-6 md:p-8 max-w-sm w-full text-center flex flex-col items-center gap-4 animate-bounce-in shadow-2xl border-4 border-yellow-300">
+            <div class="text-6xl my-2">🌟🎉🌟</div>
+            <h2 id="modal-title" class="text-2xl md:text-3xl font-extrabold text-indigo-900">Awesome Job!</h2>
+            <p id="modal-desc" class="text-sm md:text-base font-semibold text-indigo-700">
+                You built a perfect Cube! It has 8 Corners and 12 Lines!
+            </p>
+            <div class="flex items-center justify-center gap-1 text-3xl text-yellow-400 my-1">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+            </div>
+            <button id="next-level-btn" class="btn-game w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-2xl text-lg font-bold shadow-lg">
+                Next Shape <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- DELETE CONFIRMATION MODAL OVERLAY -->
+    <div id="delete-confirm-modal" class="fixed inset-0 bg-indigo-950/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card rounded-3xl p-5 max-w-xs w-full text-center flex flex-col items-center gap-3 shadow-2xl border-4 border-yellow-400">
+            <div class="text-4xl">✂️</div>
+            <h3 class="text-xl font-extrabold text-indigo-900">Delete this line?</h3>
+            <p class="text-xs font-semibold text-indigo-700">Do you want to erase this toothpick?</p>
+            <div class="flex items-center justify-center gap-3 w-full mt-2">
+                <button id="cancel-delete-btn" class="btn-game flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2.5 rounded-2xl text-sm font-bold shadow-md">
+                    Keep It
+                </button>
+                <button id="confirm-delete-btn" class="btn-game flex-1 bg-rose-500 hover:bg-rose-600 text-white py-2.5 rounded-2xl text-sm font-bold shadow-md">
+                    Yes, Delete!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* WEB AUDIO SYNTHESIS FOR KID-FRIENDLY SFX */
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.enabled = true;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                }
+            }
+
+            playPop() {
+                if (!this.enabled) return;
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
+
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.08);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.08);
+            }
+
+            playSnap() {
+                if (!this.enabled) return;
+                this.init();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.05); // E5
+
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                osc.start();
+                osc.stop(this.ctx.currentTime + 0.15);
+            }
+
+            playFanfare() {
+                if (!this.enabled) return;
+                this.init();
+                const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.1);
+
+                    gain.gain.setValueAtTime(0.25, this.ctx.currentTime + idx * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.1 + 0.3);
+
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+
+                    osc.start(this.ctx.currentTime + idx * 0.1);
+                    osc.stop(this.ctx.currentTime + idx * 0.1 + 0.3);
+                });
+            }
+        }
+
+        const sounds = new SoundEngine();
+    </script>
+
+    <script>
+        /* 3D SHAPE LEVEL DEFINITIONS FOR GRADE 1
+           Includes 3D target coordinates for Marshmallows & line connection blueprints */
+        const LEVELS = [
+            {
+                name: "Cube",
+                speechName: "Cube",
+                description: "A Cube has 8 Corners and 12 Lines! Connect corners to build it, or tap a line to delete it.",
+                nodes: [
+                    { x: -1.2, y: -1.2, z: -1.2 }, { x: 1.2, y: -1.2, z: -1.2 },
+                    { x: 1.2, y: 1.2, z: -1.2 },  { x: -1.2, y: 1.2, z: -1.2 },
+                    { x: -1.2, y: -1.2, z: 1.2 },  { x: 1.2, y: -1.2, z: 1.2 },
+                    { x: 1.2, y: 1.2, z: 1.2 },   { x: -1.2, y: 1.2, z: 1.2 }
+                ],
+                targetEdges: [
+                    [0,1],[1,2],[2,3],[3,0], // Bottom square
+                    [4,5],[5,6],[6,7],[7,4], // Top square
+                    [0,4],[1,5],[2,6],[3,7]  // Vertical toothpicks
+                ],
+                faces: [
+                    [0,1,2,3], [4,5,6,7], [0,1,5,4],
+                    [2,3,7,6], [0,3,7,4], [1,2,6,5]
+                ]
+            },
+            {
+                name: "Triangular Pyramid",
+                speechName: "Triangular Pyramid",
+                description: "A Triangular Pyramid has 4 Corners and 6 Lines! Tap two corners to draw, or tap a line to delete.",
+                nodes: [
+                    { x: -1.4, y: -1.0, z: -1.0 },
+                    { x: 1.4, y: -1.0, z: -1.0 },
+                    { x: 0.0, y: -1.0, z: 1.4 },
+                    { x: 0.0, y: 1.4, z: 0.0 }
+                ],
+                targetEdges: [
+                    [0,1],[1,2],[2,0], // Base triangle
+                    [0,3],[1,3],[2,3]  // Sides to top
+                ],
+                faces: [
+                    [0,1,2], [0,1,3], [1,2,3], [2,0,3]
+                ]
+            },
+            {
+                name: "Square Pyramid",
+                speechName: "Square Pyramid",
+                description: "A Square Pyramid has 5 Corners and 8 Lines! Tap lines if you need to erase them.",
+                nodes: [
+                    { x: -1.2, y: -1.2, z: -1.2 },
+                    { x: 1.2, y: -1.2, z: -1.2 },
+                    { x: 1.2, y: -1.2, z: 1.2 },
+                    { x: -1.2, y: -1.2, z: 1.2 },
+                    { x: 0.0, y: 1.4, z: 0.0 }
+                ],
+                targetEdges: [
+                    [0,1],[1,2],[2,3],[3,0], // Square base
+                    [0,4],[1,4],[2,4],[3,4]  // Sides to top peak
+                ],
+                faces: [
+                    [0,1,2,3], [0,1,4], [1,2,4], [2,3,4], [3,0,4]
+                ]
+            },
+            {
+                name: "Triangular Prism",
+                speechName: "Triangular Prism",
+                description: "A Triangular Prism looks like a camping tent! It has 6 Corners and 9 Lines.",
+                nodes: [
+                    { x: -1.2, y: -1.0, z: -1.2 }, { x: 1.2, y: -1.0, z: -1.2 }, { x: 0.0, y: 1.2, z: -1.2 },
+                    { x: -1.2, y: -1.0, z: 1.2 },  { x: 1.2, y: -1.0, z: 1.2 },  { x: 0.0, y: 1.2, z: 1.2 }
+                ],
+                targetEdges: [
+                    [0,1],[1,2],[2,0], // Back triangle
+                    [3,4],[4,5],[5,3], // Front triangle
+                    [0,3],[1,4],[2,5]  // Connecting toothpicks
+                ],
+                faces: [
+                    [0,1,2], [3,4,5], [0,1,4,3], [1,2,5,4], [2,0,3,5]
+                ]
+            },
+            {
+                name: "Rectangular Prism",
+                speechName: "Rectangular Prism",
+                description: "A Rectangular Prism looks like a cereal box! Connect 12 lines to complete it.",
+                nodes: [
+                    { x: -1.6, y: -0.9, z: -1.0 }, { x: 1.6, y: -0.9, z: -1.0 },
+                    { x: 1.6, y: 0.9, z: -1.0 },  { x: -1.6, y: 0.9, z: -1.0 },
+                    { x: -1.6, y: -0.9, z: 1.0 },  { x: 1.6, y: -0.9, z: 1.0 },
+                    { x: 1.6, y: 0.9, z: 1.0 },   { x: -1.6, y: 0.9, z: 1.0 }
+                ],
+                targetEdges: [
+                    [0,1],[1,2],[2,3],[3,0],
+                    [4,5],[5,6],[6,7],[7,4],
+                    [0,4],[1,5],[2,6],[3,7]
+                ],
+                faces: [
+                    [0,1,2,3], [4,5,6,7], [0,1,5,4],
+                    [2,3,7,6], [0,3,7,4], [1,2,6,5]
+                ]
+            }
+        ];
+    </script>
+
+    <script>
+        /* MAIN GAME APPLICATION LOGIC */
+        let scene, camera, renderer;
+        let nodeMeshes = [];
+        let edgeMeshes = [];
+        let blueprintLines = [];
+        let faceMeshes = [];
+        
+        let currentLevelIndex = 0; // 0..4 or 'free'
+        let isFreeBuild = false;
+        let userEdges = []; // Array of string pairs "i-j"
+        let selectedNodeIndex = null;
+        let pendingDeleteEdgeKey = null;
+        let isSolidified = false;
+
+        // Custom Orbit Controller State
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+        let cameraAngleX = 0.4;
+        let cameraAngleY = 0.6;
+        let cameraRadius = 6.5;
+
+        // Colors
+        const NODE_COLOR = 0xff6b8b;      // Pink Marshmallow
+        const NODE_SELECT = 0xffd166;     // Yellow Selected
+        const EDGE_COLOR = 0x4cc9f0;      // Bright Sky Blue Toothpick
+        const BLUEPRINT_COLOR = 0xcbdfbd; // Soft Ghost Line
+        const FACE_COLOR = 0x7209b7;      // Magic Filled Surface
+
+        // Initialize 3D Engine on load
+        window.onload = function() {
+            initThreeJS();
+            setupEvents();
+            loadLevel(0);
+            animate();
+        };
+
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            
+            // Scene
+            scene = new THREE.Scene();
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            updateCameraPosition();
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(5, 10, 7);
+            dirLight.castShadow = true;
+            scene.add(dirLight);
+
+            // Floor Grid Platform
+            const gridHelper = new THREE.GridHelper(10, 10, 0x4361ee, 0x4895ef);
+            gridHelper.position.y = -2.5;
+            scene.add(gridHelper);
+
+            // Soft Floating Particles for Magical Atmosphere
+            const particleGeo = new THREE.BufferGeometry();
+            const particleCount = 40;
+            const posArray = new Float32Array(particleCount * 3);
+            for(let i=0; i<particleCount*3; i+=3) {
+                posArray[i] = (Math.random() - 0.5) * 12;
+                posArray[i+1] = (Math.random() - 0.5) * 8;
+                posArray[i+2] = (Math.random() - 0.5) * 12;
+            }
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particleMat = new THREE.PointsMaterial({
+                size: 0.1,
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.6
+            });
+            const particles = new THREE.Points(particleGeo, particleMat);
+            scene.add(particles);
+        }
+
+        /* Update Orbit Camera Position from Angles */
+        function updateCameraPosition() {
+            camera.position.x = cameraRadius * Math.sin(cameraAngleY) * Math.cos(cameraAngleX);
+            camera.position.y = cameraRadius * Math.sin(cameraAngleX);
+            camera.position.z = cameraRadius * Math.cos(cameraAngleY) * Math.cos(cameraAngleX);
+            camera.lookAt(0, 0, 0);
+        }
+
+        /* LOAD A GEOMETRY LEVEL OR SANDBOX */
+        function loadLevel(index) {
+            cancelDeleteEdge();
+            clearSceneShapes();
+            selectedNodeIndex = null;
+            userEdges = [];
+            isSolidified = false;
+
+            if (index === 'free') {
+                isFreeBuild = true;
+                currentLevelIndex = 'free';
+                document.getElementById('subheading').innerText = "Free Build Sandbox Mode";
+                document.getElementById('instruction-text').innerText = "Tap 'Add Corner' to create marshmallows and draw freely!";
+                document.getElementById('target-stat-container').classList.add('hidden');
+                document.getElementById('add-node-btn').classList.remove('hidden');
+                
+                // Add default starter 3 corners for sandbox
+                createNodeMesh({ x: -1, y: 0, z: 0 }, 0);
+                createNodeMesh({ x: 1, y: 0, z: 0 }, 1);
+                createNodeMesh({ x: 0, y: 1.5, z: 0 }, 2);
+            } else {
+                isFreeBuild = false;
+                currentLevelIndex = index;
+                const level = LEVELS[index];
+                document.getElementById('subheading').innerText = `Level ${index + 1}: ${level.name}`;
+                document.getElementById('instruction-text').innerText = level.description;
+                document.getElementById('target-stat-container').classList.remove('hidden');
+                document.getElementById('target-stat-text').innerText = `${level.targetEdges.length} Lines`;
+                document.getElementById('add-node-btn').classList.add('hidden');
+
+                // Spawn Marshmallow Nodes for Level
+                level.nodes.forEach((pos, idx) => {
+                    createNodeMesh(pos, idx);
+                });
+
+                // Spawn Dashed Blueprint Guide Lines
+                level.targetEdges.forEach(pair => {
+                    createBlueprintLine(level.nodes[pair[0]], level.nodes[pair[1]]);
+                });
+            }
+
+            updateStats();
+            speakInstruction();
+            
+            // Highlight active level tab button
+            document.querySelectorAll('.level-tab').forEach(tab => {
+                if (tab.dataset.level == index.toString()) {
+                    tab.classList.remove('bg-white/80', 'text-indigo-900');
+                    tab.classList.add('bg-amber-400', 'text-amber-950');
+                } else {
+                    tab.classList.remove('bg-amber-400', 'text-amber-950');
+                    tab.classList.add('bg-white/80', 'text-indigo-900');
+                }
+            });
+        }
+
+        /* CREATE MARSHMALLOW SPHERE MESH */
+        function createNodeMesh(pos, index) {
+            const geometry = new THREE.SphereGeometry(0.28, 32, 32);
+            const material = new THREE.MeshStandardMaterial({
+                color: NODE_COLOR,
+                roughness: 0.3,
+                metalness: 0.1
+            });
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(pos.x, pos.y, pos.z);
+            mesh.userData = { index: index };
+            scene.add(mesh);
+            nodeMeshes.push(mesh);
+        }
+
+        /* CREATE BLUEPRINT GUIDE LINE */
+        function createBlueprintLine(p1, p2) {
+            const points = [
+                new THREE.Vector3(p1.x, p1.y, p1.z),
+                new THREE.Vector3(p2.x, p2.y, p2.z)
+            ];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineDashedMaterial({
+                color: BLUEPRINT_COLOR,
+                dashSize: 0.15,
+                gapSize: 0.1,
+                linewidth: 2
+            });
+            const line = new THREE.Line(geometry, material);
+            line.computeLineDistances();
+            scene.add(line);
+            blueprintLines.push(line);
+        }
+
+        /* DRAW A TOOTHPICK / LINE BETWEEN TWO NODES */
+        function addEdge(idx1, idx2) {
+            const key = idx1 < idx2 ? `${idx1}-${idx2}` : `${idx2}-${idx1}`;
+            if (userEdges.includes(key)) return; // Already exists
+
+            userEdges.push(key);
+            sounds.playSnap();
+
+            const p1 = nodeMeshes[idx1].position;
+            const p2 = nodeMeshes[idx2].position;
+
+            // Create slightly thicker 3D Cylinder Edge for easy tapping and plush look
+            const distance = p1.distanceTo(p2);
+            const cylinderGeo = new THREE.CylinderGeometry(0.12, 0.12, distance, 16);
+            const cylinderMat = new THREE.MeshStandardMaterial({
+                color: EDGE_COLOR,
+                roughness: 0.2,
+                metalness: 0.2
+            });
+            const edgeMesh = new THREE.Mesh(cylinderGeo, cylinderMat);
+
+            // Position & Align Cylinder along vector
+            const midpoint = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
+            edgeMesh.position.copy(midpoint);
+            edgeMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), p2.clone().sub(p1).normalize());
+            
+            // Attach identifier key for direct line raycast selection & deletion
+            edgeMesh.userData = { key: key };
+
+            // Simple scale pop-in animation
+            edgeMesh.scale.set(0.01, 1, 0.01);
+            scene.add(edgeMesh);
+            edgeMeshes.push({ mesh: edgeMesh, key: key });
+
+            // Animate scale up
+            let scale = 0.1;
+            const anim = setInterval(() => {
+                scale += 0.2;
+                if (scale >= 1) {
+                    edgeMesh.scale.set(1, 1, 1);
+                    clearInterval(anim);
+                } else {
+                    edgeMesh.scale.set(scale, 1, scale);
+                }
+            }, 16);
+
+            updateStats();
+            checkLevelCompletion();
+        }
+
+        /* DELETE AN EXISTING LINE/EDGE BY KEY */
+        function deleteEdge(key) {
+            const edgeIndex = edgeMeshes.findIndex(e => e.key === key);
+            if (edgeIndex === -1) return;
+
+            // Remove mesh from scene
+            const edgeObj = edgeMeshes[edgeIndex];
+            scene.remove(edgeObj.mesh);
+            if (edgeObj.mesh.geometry) edgeObj.mesh.geometry.dispose();
+            if (edgeObj.mesh.material) edgeObj.mesh.material.dispose();
+
+            edgeMeshes.splice(edgeIndex, 1);
+
+            // Remove key from userEdges
+            const uIdx = userEdges.indexOf(key);
+            if (uIdx !== -1) userEdges.splice(uIdx, 1);
+
+            // If shape was solidified, unsolidify so user can re-edit
+            if (isSolidified) {
+                unsolidifyShape();
+            }
+
+            sounds.playPop();
+            updateStats();
+        }
+
+        /* REMOVE SOLIDIFIED FACES IF EDITED */
+        function unsolidifyShape() {
+            isSolidified = false;
+            faceMeshes.forEach(f => {
+                scene.remove(f);
+                if (f.geometry) f.geometry.dispose();
+                if (f.material) f.material.dispose();
+            });
+            faceMeshes = [];
+        }
+
+        /* CHECK IF THE SHAPE MATCHES BLUEPRINT TARGET */
+        function checkLevelCompletion() {
+            if (isFreeBuild) return;
+
+            const level = LEVELS[currentLevelIndex];
+            if (userEdges.length === level.targetEdges.length) {
+                // Check if all required target edges are filled
+                let allMatched = true;
+                level.targetEdges.forEach(pair => {
+                    const key = pair[0] < pair[1] ? `${pair[0]}-${pair[1]}` : `${pair[1]}-${pair[0]}`;
+                    if (!userEdges.includes(key)) {
+                        allMatched = false;
+                    }
+                });
+
+                if (allMatched) {
+                    setTimeout(() => {
+                        solidifyShape();
+                        sounds.playFanfare();
+                        triggerConfetti();
+                        showCelebrationModal();
+                    }, 300);
+                }
+            }
+        }
+
+        /* SOLIDIFY FACES WITH COLORED MAGIC MESH */
+        function solidifyShape() {
+            if (isSolidified) return;
+            isSolidified = true;
+
+            let faceIndices = [];
+            if (!isFreeBuild) {
+                faceIndices = LEVELS[currentLevelIndex].faces;
+            } else {
+                // Auto generate triangles for free build
+                for (let i = 0; i < nodeMeshes.length - 2; i++) {
+                    faceIndices.push([i, i+1, i+2]);
+                }
+            }
+
+            faceIndices.forEach((face) => {
+                const geometry = new THREE.BufferGeometry();
+                const vertices = [];
+
+                if (face.length === 3) {
+                    // Triangle Face
+                    const p0 = nodeMeshes[face[0]].position;
+                    const p1 = nodeMeshes[face[1]].position;
+                    const p2 = nodeMeshes[face[2]].position;
+                    vertices.push(p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+                } else if (face.length === 4) {
+                    // Quad Face (2 Triangles)
+                    const p0 = nodeMeshes[face[0]].position;
+                    const p1 = nodeMeshes[face[1]].position;
+                    const p2 = nodeMeshes[face[2]].position;
+                    const p3 = nodeMeshes[face[3]].position;
+                    vertices.push(
+                        p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z,
+                        p0.x, p0.y, p0.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z
+                    );
+                }
+
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+                geometry.computeVertexNormals();
+
+                const material = new THREE.MeshPhongMaterial({
+                    color: FACE_COLOR,
+                    transparent: true,
+                    opacity: 0.65,
+                    side: THREE.DoubleSide,
+                    shininess: 80
+                });
+
+                const mesh = new THREE.Mesh(geometry, material);
+                scene.add(mesh);
+                faceMeshes.push(mesh);
+            });
+
+            sounds.playPop();
+        }
+
+        /* UPDATE LIVE UI COUNTERS */
+        function updateStats() {
+            document.getElementById('corner-count').innerText = nodeMeshes.length;
+            document.getElementById('edge-count').innerText = userEdges.length;
+        }
+
+        /* CLEAR THREE.JS SCENE OBJECTS */
+        function clearSceneShapes() {
+            nodeMeshes.forEach(m => scene.remove(m));
+            edgeMeshes.forEach(e => scene.remove(e.mesh));
+            blueprintLines.forEach(l => scene.remove(l));
+            faceMeshes.forEach(f => scene.remove(f));
+
+            nodeMeshes = [];
+            edgeMeshes = [];
+            blueprintLines = [];
+            faceMeshes = [];
+        }
+
+        /* CONFETTI ANIMATION */
+        function triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        /* SHOW LEVEL COMPLETE MODAL */
+        function showCelebrationModal() {
+            const level = LEVELS[currentLevelIndex];
+            document.getElementById('modal-title').innerText = `Great Job!`;
+            document.getElementById('modal-desc').innerText = `You built a ${level.name}! It has ${level.nodes.length} Corners and ${level.targetEdges.length} Lines!`;
+            document.getElementById('celebration-modal').classList.remove('hidden');
+
+            // Speech readout for early readers
+            speakText(`Awesome work! You built a ${level.speechName}!`);
+        }
+
+        /* RAYCASTING CLICK / TOUCH SELECTION */
+        function setupEvents() {
+            const container = document.getElementById('canvas-container');
+            const raycaster = new THREE.Raycaster();
+            const mouse = new THREE.Vector2();
+
+            // Handle Pointer Down (Click or Tap)
+            container.addEventListener('pointerdown', (e) => {
+                isDragging = true;
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+
+                const rect = renderer.domElement.getBoundingClientRect();
+                mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+                raycaster.setFromCamera(mouse, camera);
+
+                // 1. Check if a Marshmallow (Node) was clicked
+                const intersectsNodes = raycaster.intersectObjects(nodeMeshes);
+
+                if (intersectsNodes.length > 0) {
+                    const clickedNodeIndex = intersectsNodes[0].object.userData.index;
+                    sounds.playPop();
+
+                    // If a line delete confirmation was open, cancel it
+                    if (pendingDeleteEdgeKey) {
+                        cancelDeleteEdge();
+                    }
+
+                    if (selectedNodeIndex === null) {
+                        // First Node Clicked
+                        selectedNodeIndex = clickedNodeIndex;
+                        highlightNode(selectedNodeIndex, true);
+                    } else if (selectedNodeIndex === clickedNodeIndex) {
+                        // Deselect if clicked same node
+                        highlightNode(selectedNodeIndex, false);
+                        selectedNodeIndex = null;
+                    } else {
+                        // Second Node Clicked -> Create Edge
+                        addEdge(selectedNodeIndex, clickedNodeIndex);
+                        highlightNode(selectedNodeIndex, false);
+                        selectedNodeIndex = null;
+                    }
+                } else {
+                    // 2. Check if an existing Toothpick (Line) was clicked to delete it
+                    const activeEdgeMeshes = edgeMeshes.map(e => e.mesh);
+                    const intersectsEdges = raycaster.intersectObjects(activeEdgeMeshes);
+
+                    if (intersectsEdges.length > 0) {
+                        const hitEdgeMesh = intersectsEdges[0].object;
+                        if (hitEdgeMesh.userData && hitEdgeMesh.userData.key) {
+                            const clickedKey = hitEdgeMesh.userData.key;
+
+                            // Reset previous line highlight if selecting another line
+                            if (pendingDeleteEdgeKey) {
+                                highlightEdge(pendingDeleteEdgeKey, false);
+                            }
+
+                            // Deselect any currently active node
+                            if (selectedNodeIndex !== null) {
+                                highlightNode(selectedNodeIndex, false);
+                                selectedNodeIndex = null;
+                            }
+
+                            // Highlight selected line in yellow & show modal prompt
+                            pendingDeleteEdgeKey = clickedKey;
+                            highlightEdge(pendingDeleteEdgeKey, true);
+                            sounds.playPop();
+
+                            document.getElementById('delete-confirm-modal').classList.remove('hidden');
+                        }
+                    }
+                }
+            });
+
+            // Pointer Move for Orbit Rotation
+            container.addEventListener('pointermove', (e) => {
+                if (!isDragging) return;
+
+                const deltaX = e.clientX - previousMousePosition.x;
+                const deltaY = e.clientY - previousMousePosition.y;
+
+                // Threshold check to avoid tiny drags blocking clicks
+                if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
+                    cameraAngleY += deltaX * 0.008;
+                    cameraAngleX = Math.max(-1.2, Math.min(1.2, cameraAngleX - deltaY * 0.008));
+                    updateCameraPosition();
+                }
+
+                previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            container.addEventListener('pointerup', () => { isDragging = false; });
+            container.addEventListener('pointerleave', () => { isDragging = false; });
+
+            // UI Button Listeners
+            document.querySelectorAll('.level-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const levelAttr = e.currentTarget.dataset.level;
+                    loadLevel(levelAttr === 'free' ? 'free' : parseInt(levelAttr));
+                });
+            });
+
+            document.getElementById('rotate-left-btn').addEventListener('click', () => {
+                cameraAngleY -= 0.4;
+                updateCameraPosition();
+            });
+            document.getElementById('rotate-right-btn').addEventListener('click', () => {
+                cameraAngleY += 0.4;
+                updateCameraPosition();
+            });
+            document.getElementById('reset-cam-btn').addEventListener('click', () => {
+                cameraAngleX = 0.4;
+                cameraAngleY = 0.6;
+                updateCameraPosition();
+            });
+
+            document.getElementById('solidify-btn').addEventListener('click', solidifyShape);
+            document.getElementById('reset-shape-btn').addEventListener('click', () => loadLevel(currentLevelIndex));
+            
+            document.getElementById('next-level-btn').addEventListener('click', () => {
+                document.getElementById('celebration-modal').classList.add('hidden');
+                if (currentLevelIndex === 'free' || currentLevelIndex >= LEVELS.length - 1) {
+                    loadLevel(0);
+                } else {
+                    loadLevel(currentLevelIndex + 1);
+                }
+            });
+
+            // Sandbox Mode Add Node Button
+            document.getElementById('add-node-btn').addEventListener('click', () => {
+                if (!isFreeBuild) return;
+                const newIdx = nodeMeshes.length;
+                const randomX = (Math.random() - 0.5) * 3;
+                const randomY = (Math.random() - 0.5) * 3;
+                const randomZ = (Math.random() - 0.5) * 3;
+                createNodeMesh({ x: randomX, y: randomY, z: randomZ }, newIdx);
+                sounds.playPop();
+                updateStats();
+            });
+
+            // Sound Toggle
+            document.getElementById('sound-toggle-btn').addEventListener('click', () => {
+                sounds.enabled = !sounds.enabled;
+                const icon = document.getElementById('sound-icon');
+                if (sounds.enabled) {
+                    icon.className = "fa-solid fa-music text-lg";
+                } else {
+                    icon.className = "fa-solid fa-volume-xmark text-lg";
+                }
+            });
+
+            // Delete Modal Confirmation Handlers
+            document.getElementById('confirm-delete-btn').addEventListener('click', confirmDeleteEdge);
+            document.getElementById('cancel-delete-btn').addEventListener('click', cancelDeleteEdge);
+
+            // Speech Assistant Button
+            document.getElementById('speak-btn').addEventListener('click', speakInstruction);
+
+            // Responsive Window Resize
+            window.addEventListener('resize', () => {
+                const container = document.getElementById('canvas-container');
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        /* HIGHLIGHT SELECTED MARSHMALLOW */
+        function highlightNode(idx, highlight) {
+            if (!nodeMeshes[idx]) return;
+            nodeMeshes[idx].material.color.setHex(highlight ? NODE_SELECT : NODE_COLOR);
+            nodeMeshes[idx].scale.setScalar(highlight ? 1.3 : 1.0);
+        }
+
+        /* HIGHLIGHT SELECTED LINE/EDGE */
+        function highlightEdge(key, highlight) {
+            const edgeObj = edgeMeshes.find(e => e.key === key);
+            if (edgeObj && edgeObj.mesh) {
+                edgeObj.mesh.material.color.setHex(highlight ? NODE_SELECT : EDGE_COLOR);
+            }
+        }
+
+        /* CANCEL PENDING LINE DELETION */
+        function cancelDeleteEdge() {
+            if (pendingDeleteEdgeKey) {
+                highlightEdge(pendingDeleteEdgeKey, false);
+                pendingDeleteEdgeKey = null;
+            }
+            const modal = document.getElementById('delete-confirm-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        /* CONFIRM AND EXECUTE LINE DELETION */
+        function confirmDeleteEdge() {
+            if (pendingDeleteEdgeKey) {
+                const keyToDelete = pendingDeleteEdgeKey;
+                pendingDeleteEdgeKey = null;
+                document.getElementById('delete-confirm-modal').classList.add('hidden');
+                deleteEdge(keyToDelete);
+            }
+        }
+
+        /* SPEECH SYNTHESIS ASSISTANT FOR GRADE 1 READABILITY */
+        function speakInstruction() {
+            const text = document.getElementById('instruction-text').innerText;
+            speakText(text);
+        }
+
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop ongoing speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9; // Slightly slower for kids
+                utterance.pitch = 1.1; // Cheerful tone
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        /* RENDER & ANIMATION LOOP */
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Slow subtle idle float animation for nodes
+            const time = Date.now() * 0.0015;
+            nodeMeshes.forEach((mesh, i) => {
+                mesh.position.y += Math.sin(time + i) * 0.0015;
+            });
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
