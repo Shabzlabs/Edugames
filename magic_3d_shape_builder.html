@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Magic 3D Shape Builder - Grade 1 Geometry</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2337631070618916"
+        crossorigin="anonymous"></script>
 
     <!-- Tailwind CSS for cheerful responsive styling -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -67,9 +69,172 @@
             touch-action: none;
             outline: none;
         }
+
+
+        /* ShabzLabs navigation + desktop educational content */
+        .shabzlabs-home-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(79, 70, 229, 0.94);
+            border: 2px solid rgba(255, 255, 255, 0.55);
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 800;
+            line-height: 1;
+            text-decoration: none;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+            transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+            white-space: nowrap;
+        }
+
+        .shabzlabs-home-btn:hover {
+            background: rgba(67, 56, 202, 0.98);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 rgba(0,0,0,0.15);
+        }
+
+        .shabzlabs-home-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.15);
+        }
+
+        .desktop-education-content,
+        .desktop-site-footer {
+            display: none;
+        }
+
+        @media (min-width: 641px) {
+            html, body {
+                height: auto;
+                min-height: 100%;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+
+            #game-shell {
+                min-height: 100vh;
+                width: 100%;
+            }
+
+            .desktop-education-content {
+                display: block;
+                width: 100%;
+                max-width: 1100px;
+                margin: 26px auto 0;
+                padding: 0 24px 28px;
+                position: relative;
+                z-index: 10;
+            }
+
+            .education-card {
+                background: rgba(255, 255, 255, 0.82);
+                backdrop-filter: blur(14px);
+                border: 3px solid rgba(255, 255, 255, 0.72);
+                border-radius: 28px;
+                box-shadow: 0 18px 48px rgba(49, 46, 129, 0.16);
+                padding: 28px;
+                color: #312e81;
+            }
+
+            .education-card h2 {
+                color: #312e81;
+                font-size: 1.35rem;
+                line-height: 1.6rem;
+                font-weight: 800;
+                margin-bottom: 10px;
+            }
+
+            .education-card p {
+                color: #4f46a5;
+                font-family: 'Outfit', sans-serif;
+                font-size: 0.98rem;
+                line-height: 1.7;
+                margin-bottom: 18px;
+            }
+
+            .education-grid {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+                margin-top: 8px;
+            }
+
+            .education-mini-card {
+                background: rgba(255, 255, 255, 0.55);
+                border: 2px solid rgba(129, 140, 248, 0.18);
+                border-radius: 20px;
+                padding: 18px;
+            }
+
+            .desktop-site-footer {
+                display: block;
+                width: 100%;
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 0 24px 28px;
+                text-align: center;
+                position: relative;
+                z-index: 10;
+            }
+
+            .desktop-site-footer p {
+                color: #4f46a5;
+                font-size: 0.78rem;
+                font-weight: 700;
+                margin-bottom: 8px;
+            }
+
+            .desktop-footer-links {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .desktop-footer-links a {
+                color: #4338ca;
+                font-size: 0.78rem;
+                font-weight: 800;
+                text-decoration: underline;
+                text-underline-offset: 3px;
+            }
+
+            .desktop-footer-links a:hover {
+                color: #1e1b4b;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shabzlabs-home-btn {
+                width: 44px;
+                height: 44px;
+                padding: 0;
+                border-radius: 14px;
+                gap: 0;
+                flex-shrink: 0;
+            }
+
+            .shabzlabs-home-btn span {
+                display: none;
+            }
+
+            #game-shell {
+                height: 100dvh;
+                width: 100vw;
+                overflow: hidden;
+            }
+        }
+
     </style>
 </head>
-<body class="h-screen w-screen flex flex-col justify-between p-2 md:p-4 select-none">
+<body class="select-none">
+
+    <div id="game-shell" class="h-screen w-screen flex flex-col justify-between p-2 md:p-4">
 
     <!-- TOP HEADER / CONTROL BAR -->
     <header class="w-full flex justify-between items-center z-20 gap-2">
@@ -84,8 +249,12 @@
             </div>
         </div>
 
-        <!-- Voice & Audio Controls -->
+        <!-- ShabzLabs Home + Voice & Audio Controls -->
         <div class="flex items-center gap-2">
+            <a href="index.html" class="shabzlabs-home-btn" title="Go to ShabzLabs Home" aria-label="Go to ShabzLabs Home">
+                <i class="fa-solid fa-house"></i>
+                <span>ShabzLabs</span>
+            </a>
             <button id="speak-btn" class="btn-game bg-purple-500 hover:bg-purple-600 text-white p-3 md:px-4 md:py-3 rounded-2xl font-bold flex items-center gap-2 shadow-md">
                 <i class="fa-solid fa-volume-high text-lg"></i>
                 <span class="hidden md:inline">Listen</span>
@@ -184,6 +353,58 @@
             <button id="reset-shape-btn" class="btn-game bg-rose-500 hover:bg-rose-600 text-white px-3 py-2 md:px-4 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm flex items-center gap-1.5 shadow-md">
                 <i class="fa-solid fa-rotate-right"></i> Start Over
             </button>
+        </div>
+    </footer>
+    </div>
+
+    <!-- Desktop-only educational content, matching the ShabzLabs Shape Hunter page structure. -->
+    <section class="desktop-education-content" aria-label="Magic 3D Shape Builder educational information">
+        <div class="education-card">
+            <h2>About Magic 3D Shape Builder</h2>
+            <p>
+                Magic 3D Shape Builder is an interactive geometry game that helps primary students explore how three-dimensional shapes are constructed. Students connect corners with lines to build cubes, pyramids, and prisms, then use Magic Fill to reveal the completed solid.
+            </p>
+
+            <div class="education-grid">
+                <div class="education-mini-card">
+                    <h2>What Students Learn</h2>
+                    <p>
+                        Students practise recognizing and describing 3D shapes while noticing important attributes such as corners, edges, faces, and overall structure. The levels include a cube, triangular pyramid, square pyramid, triangular prism, and rectangular prism.
+                    </p>
+                </div>
+
+                <div class="education-mini-card">
+                    <h2>How to Play</h2>
+                    <p>
+                        Read or listen to the shape prompt, then tap two marshmallow corners to connect them with a line. Follow the faint guide lines to complete the shape. Tap an existing line if you need to delete it, and use the rotation controls to view the model from different angles.
+                    </p>
+                </div>
+
+                <div class="education-mini-card">
+                    <h2>For Teachers and Parents</h2>
+                    <p>
+                        This activity can support geometry lessons, math centres, small-group instruction, or independent practice. It gives young learners a hands-on visual way to connect 3D shape vocabulary with the parts they can actually see and build.
+                    </p>
+                </div>
+
+                <div class="education-mini-card">
+                    <h2>Learning Goals</h2>
+                    <p>
+                        Students develop spatial reasoning by constructing solids, counting corners and lines, comparing different 3D shapes, and rotating models to examine them from multiple viewpoints. Free Build mode also encourages experimentation and creative geometric thinking.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="desktop-site-footer">
+        <p>Magic 3D Shape Builder Geometry Learning Game &copy; 2026 ShabzLabs</p>
+        <div class="desktop-footer-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="contact.html">Contact</a>
         </div>
     </footer>
 
