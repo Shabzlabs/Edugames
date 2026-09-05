@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shape Hunter Geometry Worksheet | ShabzLabs</title>
+  <meta name="description" content="Download a free Shape Hunter geometry worksheet for primary students. Includes 2D shape drawing, sides and corners, classroom shape hunt, and reflection activities.">
+  <link rel="canonical" href="https://shabzlabs.com/shape-hunter-geometry-worksheet.html">
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2337631070618916"
+     crossorigin="anonymous"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --primary-blue: #3b82f6;
+      --dark-blue: #1d4ed8;
+      --accent-yellow: #facc15;
+      --soft-bg: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+      background: var(--soft-bg);
+      min-height: 100vh;
+      color: #1f2937;
+    }
+
+    .navbar {
+      background: white;
+      border-bottom: 4px solid var(--primary-blue);
+      padding: 10px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .site-logo {
+      width: 130px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-item {
+      text-decoration: none;
+      color: #1e40af;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover {
+      background: #eff6ff;
+      color: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    .nav-item.active {
+      background: var(--primary-blue);
+      color: white;
+      box-shadow: 0 4px 0 var(--dark-blue);
+    }
+
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 16px 20px;
+    }
+
+    .hero-box {
+      background: white;
+      border-radius: 32px;
+      padding: 38px 28px;
+      text-align: center;
+      box-shadow: 0 18px 35px rgba(30,64,175,0.12);
+      border: 1px solid rgba(99,102,241,0.15);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-box::before {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 210px;
+      height: 210px;
+      background: rgba(250,204,21,0.35);
+      border-radius: 999px;
+      filter: blur(12px);
+    }
+
+    .hero-box::after {
+      content: "";
+      position: absolute;
+      bottom: -90px;
+      left: -90px;
+      width: 220px;
+      height: 220px;
+      background: rgba(165,243,252,0.6);
+      border-radius: 999px;
+      filter: blur(14px);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .welcome-pill {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #3730a3;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 999px;
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 16px;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title span {
+      color: transparent;
+      background: linear-gradient(90deg, #06b6d4, #4f46e5);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .hero-description {
+      font-size: 18px;
+      font-weight: 500;
+      color: #475569;
+      line-height: 1.7;
+      margin: 0 auto 20px;
+    }
+
+    .subtitle-tag {
+      font-size: 14px;
+      font-weight: 700;
+      color: #059669;
+      background: #ecfdf5;
+      display: inline-block;
+      padding: 7px 16px;
+      border-radius: 20px;
+      border: 2px solid #10b981;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: white;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 8px 0 #e5e7eb;
+      border: 3px solid #f3f4f6;
+      margin-bottom: 24px;
+    }
+
+    .card h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1d4ed8;
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .card h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #2563eb;
+      margin: 22px 0 8px;
+    }
+
+    .card p,
+    .card li {
+      font-size: 17px;
+      font-weight: 500;
+      line-height: 1.7;
+      color: #4b5563;
+    }
+
+    .card ul,
+    .card ol {
+      margin-top: 8px;
+      padding-left: 24px;
+    }
+
+    .download-box {
+      background: #fffbeb;
+      border: 3px dashed #f59e0b;
+      border-radius: 28px;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 8px 0 #fde68a;
+      margin-bottom: 24px;
+    }
+
+    .download-box h2 {
+      color: #b45309;
+      font-size: 26px;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+
+    .download-btn {
+      display: inline-block;
+      margin-top: 18px;
+      background: #f59e0b;
+      color: white;
+      text-decoration: none;
+      padding: 13px 26px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 5px 0 #b45309;
+      transition: 0.1s;
+    }
+
+    .download-btn:hover {
+      background: #f97316;
+      transform: translateY(-2px);
+    }
+
+    .game-btn {
+      display: inline-block;
+      margin-top: 14px;
+      background: #3b82f6;
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 17px;
+      box-shadow: 0 5px 0 #1d4ed8;
+      transition: 0.1s;
+    }
+
+    .game-btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    .quick-info {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .info-row {
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-weight: 700;
+      color: #1e40af;
+    }
+
+    .footer-box {
+      margin-top: 32px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .navbar {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .site-logo { width: 120px; }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .nav-item {
+        font-size: 14px;
+        padding: 6px 12px;
+      }
+
+      .hero-box {
+        padding: 30px 20px;
+        border-radius: 26px;
+      }
+
+      .hero-title { font-size: 36px; }
+
+      .hero-description { font-size: 17px; }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card,
+      .download-box {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <a href="index.html" class="nav-left">
+      <img src="logo.png" alt="ShabzLabs Logo" class="site-logo">
+    </a>
+
+    <div class="nav-links">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="teachers.html" class="nav-item active">Teachers</a>
+      <a href="games.html" class="nav-item">Games</a>
+      <a href="about.html" class="nav-item">About</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <header class="hero-box">
+      <div class="hero-content">
+        <span class="welcome-pill">Free Teacher Resource</span>
+        <h1 class="hero-title">Shape Hunter <span>Geometry Worksheet</span></h1>
+        <p class="hero-description">
+          A printable primary geometry activity that helps students identify, draw, count, and describe common 2D shapes after playing Shape Hunter.
+        </p>
+        <span class="subtitle-tag">2D shapes • sides and corners • classroom shape hunt</span>
+      </div>
+    </header>
+
+    <div class="content-grid">
+      <main>
+        <section class="card">
+          <h2>About This Worksheet</h2>
+          <p>
+            The Shape Hunter Geometry Worksheet gives students a simple way to connect digital gameplay with pencil-and-paper thinking. After students practise identifying shapes in the Shape Hunter game, they can use this worksheet to draw shapes, count sides and corners, find real-life examples, and explain their favourite shape.
+          </p>
+          <p>
+            This resource works well for math centres, small-group review, whole-class follow-up, early-finisher work, or at-home practice.
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>What Students Practise</h2>
+          <ul>
+            <li>Recognizing common 2D shapes such as circles, squares, triangles, and rectangles.</li>
+            <li>Drawing shapes with care and attention to their properties.</li>
+            <li>Counting sides and corners to compare different shapes.</li>
+            <li>Finding real-life objects that match classroom geometry vocabulary.</li>
+            <li>Explaining shape choices using simple written reflection.</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <h2>Suggested Lesson Flow</h2>
+          <ol>
+            <li><strong>Warm up:</strong> Review the names of common 2D shapes with the class.</li>
+            <li><strong>Play:</strong> Let students play Shape Hunter and identify shapes on screen.</li>
+            <li><strong>Discuss:</strong> Ask students which shapes were easiest or hardest to find.</li>
+            <li><strong>Complete:</strong> Students finish the worksheet independently or with a partner.</li>
+            <li><strong>Share:</strong> Invite students to share one real-life shape they found in the room.</li>
+          </ol>
+        </section>
+
+        <section class="card">
+          <h2>Differentiation Ideas</h2>
+          <h3>Extra Support</h3>
+          <p>
+            Provide shape cards, traceable examples, or a word bank with shape names. Students can also work with a partner during the classroom shape hunt.
+          </p>
+          <h3>Extra Challenge</h3>
+          <p>
+            Ask students to add more shapes such as pentagons, hexagons, ovals, or trapezoids. They can also describe how two shapes are the same and different.
+          </p>
+        </section>
+
+        <section class="card">
+          <h2>Assessment Ideas</h2>
+          <p>
+            Teachers can use the completed worksheet as a quick check for shape recognition, geometry vocabulary, and understanding of sides and corners. The reflection question also shows whether students can explain their thinking in a simple sentence.
+          </p>
+        </section>
+      </main>
+
+      <aside>
+        <section class="download-box">
+          <h2>Download the Worksheet</h2>
+          <p>
+            Use this printable Word document for classroom practice, small groups, centres, or homework.
+          </p>
+          <a class="download-btn" href="shape_hunter_geometry_worksheet.docx" download>
+            DOWNLOAD WORD FILE 📄
+          </a>
+          <br>
+          <a class="game-btn" href="games.html">
+            VIEW RELATED GAME 🎮
+          </a>
+        </section>
+
+        <section class="card">
+          <h2>Quick Info</h2>
+          <div class="quick-info">
+            <div class="info-row">Subject: Math</div>
+            <div class="info-row">Topic: 2D Geometry</div>
+            <div class="info-row">Grade Range: Primary</div>
+            <div class="info-row">Format: Word Document</div>
+            <div class="info-row">Use: Centres, lesson follow-up, homework</div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Classroom Use</h2>
+          <p>
+            ShabzLabs teacher resources are free for classroom and learning use. Teachers, parents, tutors, and homeschool educators may print and share this worksheet with students. Please do not sell, repackage, or upload the file as your own work.
+          </p>
+        </section>
+      </aside>
+    </div>
+
+    <footer class="footer-box">
+      <p class="font-semibold text-blue-800 mb-2">© 2026 ShabzLabs</p>
+      <div class="flex justify-center gap-4 text-blue-600 font-normal flex-wrap">
+        <a href="teachers.html" class="hover:underline">Teacher Resources</a>
+        <span>|</span>
+        <a href="about.html" class="hover:underline">About</a>
+        <span>|</span>
+        <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+        <span>|</span>
+        <a href="terms.html" class="hover:underline">Terms of Service</a>
+        <span>|</span>
+        <a href="contact.html" class="hover:underline">Contact</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
