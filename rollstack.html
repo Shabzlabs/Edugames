@@ -3,28 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShabzLabs - Shape Sorting Game</title>
+  <title>Roll or Stack? 3D Shape Sorting Game | ShabzLabs</title>
+  <meta name="description" content="Play Roll or Stack, a free 3D shape sorting game from ShabzLabs. Students practise identifying objects that roll, stack, or do both using real-world geometry examples." />
+  <link rel="canonical" href="https://shabzlabs.com/rollstack.html" />
+
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2337631070618916"
      crossorigin="anonymous"></script>
-  <style>
-    /* New styles for the top-right link */
-    .top-right-link {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      text-decoration: none;
-      font-weight: bold;
-      color: #2563eb;
-      background: rgba(255, 255, 255, 0.7);
-      padding: 8px 15px;
-      border-radius: 12px;
-      transition: background 0.3s ease;
-      font-size: 0.9rem;
-    }
 
-    .top-right-link:hover {
-      background: white;
-      text-decoration: underline;
+  <style>
+    * {
+      box-sizing: border-box;
     }
 
     body {
@@ -32,20 +21,45 @@
       font-family: Arial, sans-serif;
       background: linear-gradient(to bottom right, #dbeafe, #fef3c7);
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative; /* Added to keep link relative to body */
+      color: #1f2937;
+    }
+
+    .top-right-link {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #2563eb;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 8px 15px;
+      border-radius: 12px;
+      transition: background 0.3s ease;
+      font-size: 0.9rem;
+      z-index: 10;
+    }
+
+    .top-right-link:hover {
+      background: white;
+      text-decoration: underline;
+    }
+
+    .page-wrap {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 70px 16px 32px;
     }
 
     .game-container {
-      width: 90%;
-      max-width: 700px;
+      width: 100%;
+      max-width: 720px;
       background: white;
       border-radius: 25px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
       padding: 30px;
       text-align: center;
+      margin: 0 auto 30px;
     }
 
     .title {
@@ -184,7 +198,70 @@
       display: none;
     }
 
+    .info-section {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.10);
+      padding: 30px;
+      margin: 0 auto 24px;
+      max-width: 920px;
+      line-height: 1.7;
+    }
+
+    .info-section h2 {
+      color: #1d4ed8;
+      font-size: 1.7rem;
+      margin: 0 0 12px;
+    }
+
+    .info-section h3 {
+      color: #0f172a;
+      font-size: 1.2rem;
+      margin: 22px 0 8px;
+    }
+
+    .info-section p {
+      font-size: 1rem;
+      color: #4b5563;
+      margin: 0 0 14px;
+    }
+
+    .info-section ul {
+      margin: 0 0 16px;
+      padding-left: 22px;
+      color: #4b5563;
+    }
+
+    .info-section li {
+      margin-bottom: 8px;
+    }
+
+    .activity-box {
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 20px;
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .footer-box {
+      text-align: center;
+      padding: 18px;
+      color: #1e40af;
+      font-weight: bold;
+    }
+
+    .footer-box a {
+      color: #2563eb;
+      text-decoration: underline;
+      margin: 0 8px;
+    }
+
     @media (max-width: 600px) {
+      .page-wrap {
+        padding-top: 64px;
+      }
+
       .button-grid {
         grid-template-columns: 1fr;
       }
@@ -201,43 +278,116 @@
         top: 10px;
         right: 10px;
       }
+
+      .game-container,
+      .info-section {
+        padding: 24px 18px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <a href="index.html" class="top-right-link">Shabzlabs</a>
+  <a href="index.html" class="top-right-link">ShabzLabs</a>
   
-  <div class="game-container">
-    <h1 class="title">ShabzLabs</h1>
-    <p class="subtitle">Shape Sorting Game</p>
+  <main class="page-wrap">
+    <section class="game-container" aria-labelledby="game-title">
+      <h1 class="title" id="game-title">Roll or Stack?</h1>
+      <p class="subtitle">A 3D shape sorting game for young learners</p>
 
-    <div class="top-bar">
-      <div class="level-box" id="levelText">Question 1 of 5</div>
-      <div class="score-box" id="scoreText">Score: 0</div>
-    </div>
+      <div class="top-bar">
+        <div class="level-box" id="levelText">Question 1 of 5</div>
+        <div class="score-box" id="scoreText">Score: 0</div>
+      </div>
 
-    <div class="progress-wrapper">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
+      <div class="progress-wrapper" aria-label="Game progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
 
-    <div class="shape-card">
-      <div class="shape-emoji" id="shapeEmoji">⚽</div>
-      <h2 class="shape-name" id="shapeName">Ball</h2>
-      <p class="question">What can this object do?</p>
-    </div>
+      <div class="shape-card">
+        <div class="shape-emoji" id="shapeEmoji">⚽</div>
+        <h2 class="shape-name" id="shapeName">Ball</h2>
+        <p class="question">What can this object do?</p>
+      </div>
 
-    <div class="button-grid">
-      <button class="choice-btn rolls" onclick="checkAnswer('rolls')">Rolls</button>
-      <button class="choice-btn stacks" onclick="checkAnswer('stacks')">Stacks</button>
-      <button class="choice-btn both" onclick="checkAnswer('both')">Both</button>
-    </div>
+      <div class="button-grid">
+        <button class="choice-btn rolls" onclick="checkAnswer('rolls')">Rolls</button>
+        <button class="choice-btn stacks" onclick="checkAnswer('stacks')">Stacks</button>
+        <button class="choice-btn both" onclick="checkAnswer('both')">Both</button>
+      </div>
 
-    <div class="feedback" id="feedback"></div>
-    <div class="stars" id="stars"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+      <div class="stars" id="stars"></div>
 
-    <button class="restart-btn" id="restartBtn" onclick="restartGame()">Play Again</button>
-  </div>
+      <button class="restart-btn" id="restartBtn" onclick="restartGame()">Play Again</button>
+    </section>
+
+    <section class="info-section">
+      <h2>About Roll or Stack</h2>
+      <p>
+        Roll or Stack is a simple 3D shape sorting game from ShabzLabs. Students look at a real-world object and decide whether it can roll, stack, or do both. The activity helps students connect geometry vocabulary to everyday objects they can see, touch, and describe.
+      </p>
+      <p>
+        This game is designed for primary learners who are beginning to compare three-dimensional objects. Instead of only naming shapes, students think about the properties that make an object move or stay in place.
+      </p>
+    </section>
+
+    <section class="info-section">
+      <h2>What Students Learn</h2>
+      <p>
+        Students practise noticing the difference between curved surfaces and flat faces. A ball rolls because it is round. A box stacks because it has flat faces. A can may roll on its curved side and stack on its flat circular faces.
+      </p>
+      <ul>
+        <li>Identify common 3D objects such as spheres, cubes, cylinders, boxes, and dice.</li>
+        <li>Describe objects using words such as roll, stack, curved, flat, face, edge, and corner.</li>
+        <li>Compare how different objects move.</li>
+        <li>Explain answers using shape properties, not only guesses.</li>
+      </ul>
+    </section>
+
+    <section class="info-section">
+      <h2>How to Play</h2>
+      <p>
+        Look carefully at the object on the screen. Ask yourself whether the object has curved parts, flat parts, or both. Then choose Rolls, Stacks, or Both. After each answer, the game moves to the next object.
+      </p>
+      <p>
+        Teachers and parents can pause after each question and ask students to explain their thinking. For example: “How do you know a ball rolls?” or “What part of the can helps it stack?”
+      </p>
+    </section>
+
+    <section class="info-section">
+      <h2>Teacher and Parent Tips</h2>
+      <p>
+        This activity works well before or after a hands-on geometry lesson. Students can play the game first, then test real objects in the classroom or at home. They can sort blocks, balls, cans, boxes, cups, and containers into groups.
+      </p>
+      <div class="activity-box">
+        <h3>Quick classroom activity</h3>
+        <p>
+          Give students three labels: Rolls, Stacks, and Both. Ask them to place real objects under the correct label. Then have students explain one object using a sentence such as, “A can can roll and stack because it has a curved side and flat faces.”
+        </p>
+      </div>
+    </section>
+
+    <section class="info-section">
+      <h2>Learning Goals</h2>
+      <p>
+        By the end of this activity, students should be able to sort simple 3D objects by how they move, describe why an object rolls or stacks, and use early geometry vocabulary in a clear explanation.
+      </p>
+      <p>
+        This game can support math centres, small-group lessons, tutoring, home practice, and quick review at the start or end of a geometry lesson.
+      </p>
+    </section>
+
+    <footer class="footer-box">
+      <p>© 2026 ShabzLabs</p>
+      <p>
+        <a href="index.html">Home</a>
+        <a href="games.html">Games</a>
+        <a href="teachers.html">Teachers</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </p>
+    </footer>
+  </main>
 
   <script>
     const shapes = [
