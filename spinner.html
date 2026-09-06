@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Name Spinner | ShabzLabs</title>
+  <title>Name Spinner Classroom Tool | ShabzLabs</title>
+  <meta name="description" content="Use the ShabzLabs Name Spinner as a fair classroom selection tool for turn-taking, participation, group work, review games, and teacher-led activities.">
+  <link rel="canonical" href="https://shabzlabs.com/spinner.html">
 
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -191,6 +193,151 @@
       border-radius: 30px;
       padding: 26px;
       box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+
+
+    .tool-note {
+      max-width: 720px;
+      margin: 0 auto 18px;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      color: #1e3a8a;
+      border-radius: 20px;
+      padding: 16px 18px;
+      font-weight: 700;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .setup-box {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 22px;
+      padding: 18px;
+      margin: 0 auto 20px;
+      text-align: left;
+    }
+
+    .setup-box label {
+      display: block;
+      font-size: 1rem;
+      font-weight: 900;
+      color: #1d4ed8;
+      margin-bottom: 8px;
+    }
+
+    .setup-box textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 12px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1f2937;
+      background: white;
+      outline: none;
+    }
+
+    .setup-box textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    }
+
+    .setup-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .apply-btn {
+      border: none;
+      background: #10b981;
+      color: white;
+      padding: 11px 22px;
+      border-radius: 999px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #047857;
+      transition: 0.15s ease;
+    }
+
+    .apply-btn:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .help-text {
+      color: #64748b;
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: 26px;
+      padding: 24px;
+      border: 3px solid #f3f4f6;
+      box-shadow: 0 8px 0 #e5e7eb;
+    }
+
+    .info-card h2 {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #2563eb;
+      margin: 0 0 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .info-card p,
+    .info-card li {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.65;
+      color: #4b5563;
+    }
+
+    .info-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .wide-info {
+      margin-top: 24px;
+      background: white;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+    }
+
+    .wide-info h2 {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #1d4ed8;
+      margin: 0 0 12px;
+    }
+
+    .wide-info p {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.7;
+      color: #4b5563;
     }
 
     .spinner-card {
@@ -495,7 +642,152 @@
         border-radius: 0;
       }
 
-      .spinner-card {
+  
+    .tool-note {
+      max-width: 720px;
+      margin: 0 auto 18px;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
+      color: #1e3a8a;
+      border-radius: 20px;
+      padding: 16px 18px;
+      font-weight: 700;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .setup-box {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 22px;
+      padding: 18px;
+      margin: 0 auto 20px;
+      text-align: left;
+    }
+
+    .setup-box label {
+      display: block;
+      font-size: 1rem;
+      font-weight: 900;
+      color: #1d4ed8;
+      margin-bottom: 8px;
+    }
+
+    .setup-box textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      border: 2px solid #cbd5e1;
+      border-radius: 16px;
+      padding: 12px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1f2937;
+      background: white;
+      outline: none;
+    }
+
+    .setup-box textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    }
+
+    .setup-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .apply-btn {
+      border: none;
+      background: #10b981;
+      color: white;
+      padding: 11px 22px;
+      border-radius: 999px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #047857;
+      transition: 0.15s ease;
+    }
+
+    .apply-btn:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    .help-text {
+      color: #64748b;
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.45;
+      margin: 0;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: 26px;
+      padding: 24px;
+      border: 3px solid #f3f4f6;
+      box-shadow: 0 8px 0 #e5e7eb;
+    }
+
+    .info-card h2 {
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #2563eb;
+      margin: 0 0 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .info-card p,
+    .info-card li {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.65;
+      color: #4b5563;
+    }
+
+    .info-card ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .wide-info {
+      margin-top: 24px;
+      background: white;
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+    }
+
+    .wide-info h2 {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: #1d4ed8;
+      margin: 0 0 12px;
+    }
+
+    .wide-info p {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.7;
+      color: #4b5563;
+    }
+
+    .spinner-card {
         padding: 24px 14px;
         border-radius: 24px;
       }
@@ -520,6 +812,21 @@
 
       .popup-name {
         font-size: 1.8rem;
+      }
+
+      .setup-box {
+        padding: 16px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+        padding: 0 16px;
+      }
+
+      .wide-info {
+        margin-left: 16px;
+        margin-right: 16px;
+        padding: 24px;
       }
     }
   </style>
@@ -553,9 +860,22 @@
     </header>
 
     <section class="section-box">
+      <p class="tool-note">
+        Use this classroom spinner to choose students, teams, activities, questions, or review prompts in a fair and simple way.
+      </p>
+
       <div class="spinner-card">
+        <div class="setup-box">
+          <label for="nameInput">Names or choices</label>
+          <textarea id="nameInput" aria-label="Enter one name or choice per line"></textarea>
+          <div class="setup-actions">
+            <button class="apply-btn" type="button" onclick="applyNamesFromInput()">Update Spinner</button>
+            <p class="help-text">Enter one name or choice per line. Use first names, initials, nicknames, group names, or activity choices when appropriate.</p>
+          </div>
+        </div>
+
         <div class="remaining-pill">
-          Remaining Names: <span id="remainingCount">11</span>
+          Remaining Names: <span id="remainingCount">8</span>
         </div>
 
         <div class="wheel-wrap">
@@ -570,6 +890,70 @@
 
         <div id="result"></div>
       </div>
+    </section>
+
+
+    <section class="info-grid" aria-label="Name Spinner classroom information">
+      <article class="info-card">
+        <h2>About the Name Spinner</h2>
+        <p>
+          The ShabzLabs Name Spinner is a classroom selection tool for teachers, parents, and tutors.
+          It can be used to choose names, groups, questions, reading turns, math prompts, review tasks,
+          or activity choices during lessons.
+        </p>
+      </article>
+
+      <article class="info-card">
+        <h2>How Teachers Can Use It</h2>
+        <p>
+          Add one name or choice per line, update the spinner, and press spin. After a name is selected,
+          it is removed from the wheel so the remaining choices still get a fair chance.
+        </p>
+      </article>
+
+      <article class="info-card">
+        <h2>Fair Student Selection</h2>
+        <p>
+          A spinner can help make participation feel random and fair. It reduces repeated hand-picking,
+          supports turn-taking, and helps more students take part in classroom routines and review games.
+        </p>
+      </article>
+
+      <article class="info-card">
+        <h2>Student Privacy Note</h2>
+        <p>
+          Teachers should avoid entering sensitive personal information. Use first names, initials,
+          nicknames, group names, or activity labels when appropriate. The tool is intended for simple
+          classroom use and does not require accounts or sign-ins.
+        </p>
+      </article>
+
+      <article class="info-card">
+        <h2>Classroom Ideas</h2>
+        <ul>
+          <li>Choose a student to answer a question.</li>
+          <li>Select a partner or small group.</li>
+          <li>Pick a vocabulary word or math problem.</li>
+          <li>Choose a movement break or classroom helper.</li>
+        </ul>
+      </article>
+
+      <article class="info-card">
+        <h2>Learning and Routine Benefits</h2>
+        <p>
+          The spinner supports classroom routines, student engagement, speaking practice, review activities,
+          and cooperative learning. It can also make transitions and participation more playful.
+        </p>
+      </article>
+    </section>
+
+    <section class="wide-info">
+      <h2>Teacher Tip</h2>
+      <p>
+        Before spinning, explain how the selection will be used. For younger students, remind the class
+        that the spinner is a fun way to take turns and that every result should be treated respectfully.
+        For group work, enter team names instead of individual student names.
+      </p>
     </section>
 
     <footer class="footer-box">
@@ -600,18 +984,15 @@
   </div>
 
   <script>
-    const originalPeople = [
-      { name: "Julia Boni", weight: 1 },
-      { name: "Anna Bertoia", weight: 1 },
-      { name: "Teresa Kostiuk", weight: 1 },
-      { name: "Brooke Benson", weight: 1 },
-      { name: "Mackenzie Sprague", weight: 1 },
-      { name: "Alicia Atikian", weight: 1 },
-      { name: "Broedie Birkhof", weight: 1 },
-      { name: "Emma Hustins", weight: 1 },
-      { name: "Kayla Quinton", weight: 1 },
-      { name: "Jayme Ralston", weight: 1 },
-      { name: "Ciara Walsh", weight: 1 }
+    let originalPeople = [
+      { name: "Student 1", weight: 1 },
+      { name: "Student 2", weight: 1 },
+      { name: "Student 3", weight: 1 },
+      { name: "Student 4", weight: 1 },
+      { name: "Student 5", weight: 1 },
+      { name: "Student 6", weight: 1 },
+      { name: "Student 7", weight: 1 },
+      { name: "Student 8", weight: 1 }
     ];
 
     let people = [...originalPeople];
@@ -629,12 +1010,48 @@
     const popupName = document.getElementById("popupName");
     const popupNote = document.getElementById("popupNote");
     const remainingCount = document.getElementById("remainingCount");
+    const nameInput = document.getElementById("nameInput");
 
     let currentRotation = 0;
     let isSpinning = false;
     let audioCtx = null;
 
     const SPIN_DURATION = 5000;
+
+
+    function setDefaultNamesInTextarea() {
+      nameInput.value = originalPeople.map(person => person.name).join("\n");
+    }
+
+    function getNamesFromInput() {
+      return nameInput.value
+        .split(/\n+/)
+        .map(name => name.trim())
+        .filter(name => name.length > 0)
+        .slice(0, 40)
+        .map(name => ({ name, weight: 1 }));
+    }
+
+    function applyNamesFromInput() {
+      if (isSpinning) return;
+
+      const newPeople = getNamesFromInput();
+
+      if (newPeople.length === 0) {
+        result.innerHTML = `<span class="winner">Add at least one name or choice first.</span>`;
+        return;
+      }
+
+      closePopup();
+      originalPeople = newPeople;
+      people = [...originalPeople];
+      currentRotation = 0;
+      wheel.style.transform = `rotate(0deg)`;
+      result.textContent = "";
+      spinBtn.disabled = false;
+      updateRemainingCount();
+      drawWheel();
+    }
 
     function updateRemainingCount() {
       remainingCount.textContent = people.length;
@@ -938,6 +1355,7 @@
       }, SPIN_DURATION);
     }
 
+    setDefaultNamesInTextarea();
     updateRemainingCount();
     drawWheel();
   </script>
